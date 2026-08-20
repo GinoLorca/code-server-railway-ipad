@@ -21,9 +21,6 @@
     --gold: #9c6f22;
     --gold-bright: #b9852b;
     --gold-ink: #6f4f18;
-    --win: #2c7a4b;
-    --loss: #a1442b;
-    --draw: #806f4d;
     --shadow: 0 1px 2px rgba(28,20,10,0.06), 0 8px 24px -12px rgba(28,20,10,0.18);
     --silver: #7c7e86;
     --bronze: #9a5f34;
@@ -44,9 +41,6 @@
       --gold: #d8ac5b;
       --gold-bright: #eec87c;
       --gold-ink: #f0d193;
-      --win: #5cb27e;
-      --loss: #d3735a;
-      --draw: #a89a78;
       --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6);
       --silver: #a7abb5;
       --bronze: #c98a55;
@@ -67,9 +61,6 @@
     --gold: #d8ac5b;
     --gold-bright: #eec87c;
     --gold-ink: #f0d193;
-    --win: #5cb27e;
-    --loss: #d3735a;
-    --draw: #a89a78;
     --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6);
     --silver: #a7abb5;
     --bronze: #c98a55;
@@ -151,6 +142,7 @@
     display:flex; flex-direction:column; align-items:flex-end; gap:6px;
     font-size: 13px;
     color: var(--ink-dim);
+    text-align: right;
   }
   .season-chip .season-label{
     font-family: "Spline Sans Mono", monospace;
@@ -185,6 +177,7 @@
   }
   .intro-legend span{ display:inline-flex; align-items:center; gap:6px; }
   .legend-dot{ width:9px; height:9px; border-radius:2px; display:inline-block; flex:none; }
+  .legend-line{ width:14px; height:0; border-top:1px dashed var(--gold); display:inline-block; flex:none; }
 
   /* ---------- Layout ---------- */
   .page{
@@ -200,14 +193,15 @@
     .page{ grid-template-columns: 1fr; }
   }
 
-  /* ---------- Conference tabs ---------- */
+  /* ---------- Tabs ---------- */
   .tabs{
     display:flex;
     gap: 6px;
-    margin-bottom: 18px;
     overflow-x: auto;
     padding-bottom: 2px;
   }
+  .tabs.regions{ margin-bottom: 10px; }
+  .tabs.divisions{ margin-bottom: 18px; }
   .tab{
     position: relative;
     cursor: pointer;
@@ -228,11 +222,10 @@
     color: var(--bg);
     border-color: var(--ink);
   }
-  .tab .tab-count{
-    font-family:"Spline Sans Mono", monospace;
-    font-size: 11px;
-    opacity: 0.65;
-    margin-left: 6px;
+  .tab.small{
+    padding: 7px 14px 7px 12px;
+    font-size: 12.5px;
+    border-radius: 0;
   }
 
   /* ---------- Standings card ---------- */
@@ -250,127 +243,84 @@
     border-bottom: 1px solid var(--line-soft);
   }
   .card-head h2{ font-size: 20px; font-weight: 600; }
-  .card-head .sub{ font-size: 12.5px; color: var(--ink-faint); }
+  .card-head .sub{ font-size: 12.5px; color: var(--ink-faint); white-space:nowrap; }
 
-  .table-scroll{ overflow-x: auto; }
-  table{ width: 100%; border-collapse: collapse; min-width: 620px; }
-  thead th{
-    position: sticky; top:0;
-    text-align: left;
+  .ladder-head, .ladder-row{
+    display: grid;
+    grid-template-columns: 40px 1fr minmax(110px, 260px) 76px 84px;
+    align-items: center;
+    gap: 14px;
+    padding: 0 20px;
+  }
+  .ladder-head{
+    padding-top: 10px; padding-bottom: 10px;
     font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-faint);
     font-weight: 700;
-    padding: 10px 10px;
     background: var(--surface-2);
     border-bottom: 1px solid var(--line);
-    cursor: pointer;
-    user-select: none;
-    white-space: nowrap;
   }
-  thead th:hover{ color: var(--ink); }
-  thead th.sorted{ color: var(--gold-ink); }
-  :root[data-theme="dark"] thead th.sorted{ color: var(--gold); }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) thead th.sorted{ color: var(--gold); } }
-  thead th .arrow{ font-size: 9px; margin-left: 3px; opacity: 0.8; }
-  thead th:first-child{ padding-left: 20px; }
-  thead th:last-child{ padding-right: 20px; }
+  .ladder-head span:nth-child(4),
+  .ladder-row .val{ text-align: right; }
+  .ladder-head span:nth-child(5),
+  .ladder-row .behind{ text-align: right; }
 
-  tbody td{
-    padding: 12px 10px;
+  .ladder-body .ladder-row{
+    padding-top: 11px; padding-bottom: 11px;
     border-bottom: 1px solid var(--line-soft);
-    font-size: 14px;
-    vertical-align: middle;
+    transition: background .12s ease;
   }
-  tbody td:first-child{ padding-left: 20px; }
-  tbody td:last-child{ padding-right: 20px; }
-  tbody tr:last-child td{ border-bottom: none; }
-  tbody tr{ transition: background .12s ease; }
-  tbody tr:hover{ background: var(--surface-2); }
-  tbody tr.in-playoffs{ box-shadow: inset 3px 0 0 var(--gold); }
+  .ladder-body .ladder-row:last-child{ border-bottom: none; }
+  .ladder-body .ladder-row:hover{ background: var(--surface-2); }
+  .ladder-body .ladder-row.leader{ box-shadow: inset 3px 0 0 var(--gold); }
 
-  .rank-cell{ display:flex; align-items:center; gap:8px; font-family:"Spline Sans Mono", monospace; }
+  .rank-cell{ font-family:"Spline Sans Mono", monospace; }
   .medal{
-    width: 22px; height: 22px;
+    width: 24px; height: 24px;
     border-radius: 50%;
     display:inline-flex; align-items:center; justify-content:center;
-    font-size: 11px; font-weight: 700;
+    font-size: 11.5px; font-weight: 700;
     font-family: "Spline Sans Mono", monospace;
-    color: var(--surface);
-    flex: none;
   }
   .medal.g{ background: var(--gold-bright); color:#3a2a05; }
   .medal.s{ background: var(--silver); color:#2a2a2f; }
   .medal.b{ background: var(--bronze); color:#3a1f0c; }
-  .rank-plain{ width:22px; text-align:center; color: var(--ink-faint); }
+  .rank-plain{ color: var(--ink-faint); }
 
-  .team-cell{ display:flex; align-items:center; gap: 10px; }
-  .piece{
-    font-family:"Fraunces", serif;
-    font-size: 19px;
-    width: 26px; height:26px;
-    border-radius: 6px;
-    display:flex; align-items:center; justify-content:center;
-    background: var(--surface-2);
-    color: var(--ink-dim);
-    flex: none;
-    border: 1px solid var(--line);
-  }
-  .team-name{ font-weight: 600; font-size: 14.5px; }
-  .team-name .locale{ display:block; font-weight: 400; font-size: 11.5px; color: var(--ink-faint); }
+  .school-name{ font-weight: 600; font-size: 14.5px; }
 
-  .pct-wrap{ display:flex; align-items:center; gap:8px; min-width: 108px; }
-  .pct-bar{
-    width: 60px; height: 6px; border-radius: 4px;
+  .bar-track{
+    height: 8px; border-radius: 5px;
     background: var(--line-soft);
     overflow: hidden;
-    flex: none;
   }
-  .pct-bar > span{ display:block; height:100%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); }
+  .bar-fill{ display:block; height:100%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius: 5px; }
 
-  .pts{ font-weight: 700; font-family:"Spline Sans Mono", monospace; color: var(--gold-ink); }
-  :root[data-theme="dark"] .pts{ color: var(--gold); }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .pts{ color: var(--gold); } }
+  .val{ font-weight: 700; font-family:"Spline Sans Mono", monospace; color: var(--gold-ink); font-size: 14px; }
+  :root[data-theme="dark"] .val{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .val{ color: var(--gold); } }
 
-  .streak{
-    display:inline-flex; align-items:center; gap:5px;
-    font-size: 12px; font-weight: 700;
-    font-family:"Spline Sans Mono", monospace;
-    padding: 3px 8px; border-radius: 100px;
-  }
-  .streak.win{ color: var(--win); background: color-mix(in srgb, var(--win) 14%, transparent); }
-  .streak.loss{ color: var(--loss); background: color-mix(in srgb, var(--loss) 14%, transparent); }
-  .streak.draw{ color: var(--draw); background: color-mix(in srgb, var(--draw) 14%, transparent); }
+  .behind{ font-family:"Spline Sans Mono", monospace; font-size: 12px; color: var(--ink-faint); }
+  .behind.is-leader{ color: var(--gold-ink); font-weight: 700; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.06em; }
+  :root[data-theme="dark"] .behind.is-leader{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .behind.is-leader{ color: var(--gold); } }
 
-  .form{ display:flex; gap:4px; }
-  .form i{
-    width:8px; height:8px; border-radius:2px;
-    display:inline-block;
-  }
-  .form i.W{ background: var(--win); }
-  .form i.L{ background: var(--loss); }
-  .form i.D{ background: var(--draw); }
-
-  .playoff-line td{
-    padding: 0;
-    border-bottom: none;
-    height: 0;
-  }
-  .playoff-line-inner{
+  .cutoff{
     position: relative;
-    margin: 2px 0;
+    margin: 4px 20px;
     border-top: 1px dashed color-mix(in srgb, var(--gold) 55%, transparent);
   }
-  .playoff-line-inner span{
-    position: absolute; left: 20px; top: -8px;
+  .cutoff span{
+    position: absolute; left: 0; top: -8px;
     background: var(--surface);
-    padding: 0 8px;
+    padding: 0 8px 0 0;
     font-size: 10px; letter-spacing:0.08em; text-transform: uppercase;
     color: var(--gold-ink); font-weight: 700;
   }
-  :root[data-theme="dark"] .playoff-line-inner span{ color: var(--gold); }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .playoff-line-inner span{ color: var(--gold); } }
+  :root[data-theme="dark"] .cutoff span{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .cutoff span{ color: var(--gold); } }
 
   .card-foot{
     padding: 12px 20px 16px;
@@ -379,22 +329,32 @@
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
   }
 
+  @media (max-width: 560px){
+    .ladder-head, .ladder-row{ grid-template-columns: 30px 1fr 64px; }
+    .ladder-head span:nth-child(3), .ladder-row .bar-track{ display:none; }
+    .ladder-head span:nth-child(5), .ladder-row .behind{ display:none; }
+  }
+
   /* ---------- Sidebar ---------- */
   .rail{ display:flex; flex-direction:column; gap: 18px; position: sticky; top: 18px; }
   .rail .card-head h2{ font-size: 16px; }
-  .leaderboard{ padding: 6px 8px 14px; }
-  .leaderboard-row{
-    display:flex; align-items:center; gap:10px;
-    padding: 9px 12px;
+
+  .leaders{ padding: 6px 8px 14px; display:flex; flex-direction:column; gap:2px; }
+  .leader-row{
+    display:grid; grid-template-columns: 74px 1fr auto; align-items:center; gap:10px;
+    padding: 10px 12px;
     border-radius: 8px;
   }
-  .leaderboard-row:hover{ background: var(--surface-2); }
-  .leaderboard-row .rank-plain{ font-family:"Spline Sans Mono", monospace; font-size:12px; }
-  .leaderboard-row .lb-name{ flex:1; font-size: 13.5px; font-weight: 600; }
-  .leaderboard-row .lb-conf{ font-size: 10.5px; color: var(--ink-faint); font-weight: 400; display:block; }
-  .leaderboard-row .lb-pts{ font-family:"Spline Sans Mono", monospace; font-weight:700; color: var(--gold-ink); font-size: 13px; }
-  :root[data-theme="dark"] .leaderboard-row .lb-pts{ color: var(--gold); }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .leaderboard-row .lb-pts{ color: var(--gold); } }
+  .leader-row:hover{ background: var(--surface-2); }
+  .leader-row .division-tag{
+    font-size: 9.5px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700;
+    white-space: nowrap;
+  }
+  .leader-row .lb-name{ flex:1; font-size: 13.5px; font-weight: 600; }
+  .leader-row .lb-pts{ font-family:"Spline Sans Mono", monospace; font-weight:700; color: var(--gold-ink); font-size: 13px; }
+  :root[data-theme="dark"] .leader-row .lb-pts{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .leader-row .lb-pts{ color: var(--gold); } }
 
   .note-card{ padding: 16px 18px; font-size: 12.5px; color: var(--ink-dim); line-height:1.55; }
   .note-card strong{ color: var(--ink); }
@@ -430,301 +390,273 @@
       </div>
     </div>
     <div class="season-chip">
-      <span class="season-label" id="season-label">Fall 2026 Season &middot; Week 4</span>
-      <span>Updated every Monday after weekend matches</span>
+      <span class="season-label" id="season-label">Season Points Ladder</span>
+      <span>Update <code style="font-family:'Spline Sans Mono',monospace">LEAGUE_DATA</code> as new scores come in</span>
     </div>
   </div>
   <div class="intro">
-    <p>Every ICN program runs as a conference, every school runs as a team &mdash; same shape as the pros: conferences, division standings, win&ndash;loss records, and a points table. Kings, queens, and future grandmasters climb the table one match at a time.</p>
+    <p>Every ICN partner school competes in a season-long points ladder, split by borough and by grade division &mdash; same shape as the pros: conferences, standings, and a scoreboard everyone can watch climb.</p>
     <div class="intro-legend">
-      <span><span class="legend-dot" style="background:var(--gold)"></span>Playoff position (top 4)</span>
-      <span><span class="legend-dot" style="background:var(--win)"></span>Win streak</span>
-      <span><span class="legend-dot" style="background:var(--loss)"></span>Losing streak</span>
-      <span><span class="legend-dot" style="background:var(--draw)"></span>Draw streak</span>
+      <span><span class="legend-dot" style="background:var(--gold)"></span>Division leader</span>
+      <span><span class="legend-line"></span>Top 10 cutoff</span>
     </div>
   </div>
 </header>
 
 <main class="page">
   <section>
-    <nav class="tabs" id="tabs"></nav>
+    <nav class="tabs regions" id="region-tabs"></nav>
+    <nav class="tabs divisions" id="division-tabs"></nav>
     <div class="card">
       <div class="card-head">
-        <h2 id="conf-title">Conference</h2>
-        <span class="sub" id="conf-sub"></span>
+        <h2 id="board-title">Region &mdash; Division</h2>
+        <span class="sub" id="board-sub"></span>
       </div>
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr id="thead-row"></tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
+      <div class="ladder-head">
+        <span>#</span>
+        <span>School</span>
+        <span>Score</span>
+        <span>Pts</span>
+        <span>Behind</span>
       </div>
+      <div class="ladder-body" id="ladder-body"></div>
       <div class="card-foot">
-        <span>2 pts per match win &middot; 1 pt per draw &middot; 0 pts per loss</span>
-        <span>Top 4 teams advance to the ICN Cup</span>
+        <span id="card-foot-left">Ranked by season points</span>
+        <span id="card-foot-right"></span>
       </div>
     </div>
   </section>
 
   <aside class="rail">
     <div class="card">
-      <div class="card-head"><h2>League Leaderboard</h2></div>
-      <div class="leaderboard" id="leaderboard"></div>
+      <div class="card-head"><h2>Division Leaders</h2></div>
+      <div class="leaders" id="leaders"></div>
     </div>
 
     <div class="card structure-card">
-      <div class="card-head" style="border:none; padding-bottom:0;"><h2>How the League Works</h2></div>
+      <div class="card-head" style="border:none; padding-bottom:0;"><h2>How the Ladder Works</h2></div>
       <ul class="structure-list">
-        <li><b>Conference</b> An ICN program &mdash; Midtown, Upper East Side, Lower East Side, Brooklyn.</li>
-        <li><b>Team</b> A partner school within that program.</li>
-        <li><b>Match</b> A weekly round of boards between two schools.</li>
-        <li><b>Points</b> 2 for a match win, 1 for a draw, 0 for a loss.</li>
-        <li><b>ICN Cup</b> Top 4 per conference qualify for end&#8209;of&#8209;season playoffs.</li>
+        <li><b>Region</b> Overall (leaguewide) or a borough &mdash; Manhattan, Brooklyn.</li>
+        <li><b>Division</b> A grade band: K&ndash;1, Primary, or Elementary.</li>
+        <li><b>School</b> An ICN partner school competing as a team.</li>
+        <li><b>Points</b> Cumulative season score for that school in that division.</li>
       </ul>
     </div>
 
     <div class="card note-card">
-      <strong>This is sample data.</strong> The real ICN program names, schools, and results weren&rsquo;t reachable from this session, so the four conferences above use placeholder teams. Open <code>chess-league/index.html</code> and edit the <code>LEAGUE_DATA</code> object near the top of the <code>&lt;script&gt;</code> to drop in your real rosters and scores.
+      <strong>This board is running on the standings you shared.</strong> Manhattan and Brooklyn are loaded; add Queens, the Bronx, Staten Island, or weekly deltas by editing the <code>LEAGUE_DATA</code> object near the top of the <code>&lt;script&gt;</code> in <code>chess-league/index.html</code>.
     </div>
   </aside>
 </main>
 
-<footer>ICN Chess League &middot; a friendly, made-up-for-now standings board for Impact Coaching Network&rsquo;s after-school chess programs.</footer>
+<footer>ICN Chess League &middot; a standings board for Impact Coaching Network&rsquo;s after-school chess programs.</footer>
 
 <script>
   /* ============================================================
-     LEAGUE_DATA — replace with the real programs / schools / results.
-     Each conference = an ICN program. Each team = a partner school.
-     record: { w, l, d }  (wins / losses / draws, match-level)
-     form:   last 5 results, most recent last, using "W" "L" "D"
+     LEAGUE_DATA — each region (Overall + boroughs) holds three grade
+     divisions (k1, primary, elementary). Each entry is a school's
+     cumulative season score. Add a region by adding a key here; add
+     a school by pushing a { name, points } object into a division.
      ============================================================ */
   const LEAGUE_DATA = {
-    season: "Fall 2026 Season · Week 4",
-    conferences: [
+    regions: [
       {
-        name: "Midtown",
-        teams: [
-          { name: "Turtle Bay",        mascot: "Knights",   piece: "♞", record: { w:7, l:1, d:1 }, form: ["W","W","D","W","W"] },
-          { name: "Herald Square",     mascot: "Rooks",     piece: "♜", record: { w:6, l:2, d:1 }, form: ["W","L","W","W","D"] },
-          { name: "Tudor City",        mascot: "Bishops",   piece: "♝", record: { w:5, l:3, d:1 }, form: ["L","W","W","D","W"] },
-          { name: "Sutton Prep",       mascot: "Pawns",     piece: "♟", record: { w:3, l:5, d:1 }, form: ["L","W","L","D","L"] },
-          { name: "Garment District",  mascot: "Kings",     piece: "♚", record: { w:1, l:7, d:1 }, form: ["L","L","D","L","L"] }
-        ]
+        key: "overall", label: "Overall",
+        divisions: {
+          k1: [
+            { name:"Nest+M", points:758 }, { name:"PS 166", points:651 }, { name:"PS 11", points:575 },
+            { name:"PS 290", points:533 }, { name:"PS 10", points:524 }, { name:"PS 77", points:481 },
+            { name:"PS 281", points:444 }, { name:"PS 59", points:409 }, { name:"PS 282", points:399 },
+            { name:"PS 118", points:352 }, { name:"PS 33", points:330 }, { name:"PS 40", points:297 },
+            { name:"PS 198", points:290 }, { name:"PS 124", points:289 }, { name:"PS 20", points:268 },
+            { name:"PS 889", points:254 }, { name:"PS 130M", points:224 }, { name:"A-S", points:210 },
+            { name:"PS 230", points:208 }, { name:"BASIS-B", points:201 }, { name:"PS 340", points:194 },
+            { name:"PS 31", points:149 }, { name:"PS 32", points:130 }, { name:"PS 184M", points:112 },
+            { name:"PS 3", points:111 }
+          ],
+          primary: [
+            { name:"PS 166", points:1346 }, { name:"PS 281", points:1266 }, { name:"PS 77", points:1216 },
+            { name:"Nest+M", points:1212 }, { name:"PS 198", points:1186 }, { name:"PS 130", points:1118 },
+            { name:"PS 11", points:1075 }, { name:"PS 59", points:1038 }, { name:"PS 33", points:1008 },
+            { name:"PS 118", points:990 }, { name:"PS 282", points:961 }, { name:"PS 10", points:941 },
+            { name:"PS 290", points:935 }, { name:"PS 31", points:870 }, { name:"PS 124", points:856 },
+            { name:"BSI", points:802 }, { name:"PS 32", points:790 }, { name:"PS 230", points:788 },
+            { name:"PS 20", points:754 }, { name:"PS 130M", points:713 }, { name:"PS 116", points:646 },
+            { name:"PS 40", points:644 }, { name:"PS 39", points:640 }, { name:"A-S", points:618 },
+            { name:"PS 527", points:607 }
+          ],
+          elementary: [
+            { name:"PS 130", points:1575 }, { name:"PS 77", points:1567 }, { name:"PS 198", points:1560 },
+            { name:"PS 59", points:1551 }, { name:"PS 130M", points:1471 }, { name:"PS 33", points:1457 },
+            { name:"Nest+M", points:1437 }, { name:"PS 10", points:1390 }, { name:"PS 166", points:1369 },
+            { name:"PS 527", points:1337 }, { name:"PS 11", points:1301 }, { name:"PS 39", points:1291 },
+            { name:"PS 290", points:1217 }, { name:"PS 281", points:1177 }, { name:"PS 32", points:1170 },
+            { name:"PS 230", points:1156 }, { name:"PS 20", points:1126 }, { name:"PS 31", points:1092 },
+            { name:"PS 282", points:1067 }, { name:"PS 124", points:1034 }, { name:"PS 40", points:1016 },
+            { name:"BSI", points:980 }, { name:"A-S", points:881 }, { name:"PS 111", points:872 },
+            { name:"Brooklyn Prospect IES", points:863 }
+          ]
+        }
       },
       {
-        name: "Upper East Side",
-        teams: [
-          { name: "Yorkville",         mascot: "Knights",   piece: "♞", record: { w:8, l:1, d:0 }, form: ["W","W","W","W","W"] },
-          { name: "Carnegie Hill",     mascot: "Bishops",   piece: "♝", record: { w:6, l:3, d:0 }, form: ["W","L","W","W","W"] },
-          { name: "Lenox Hill",        mascot: "Rooks",     piece: "♜", record: { w:5, l:3, d:1 }, form: ["D","W","L","W","W"] },
-          { name: "Gracie Green",      mascot: "Pawns",     piece: "♟", record: { w:4, l:5, d:0 }, form: ["L","W","L","W","L"] },
-          { name: "Ruppert",           mascot: "Rangers",   piece: "♚", record: { w:2, l:6, d:1 }, form: ["L","L","D","L","W"] }
-        ]
+        key: "manhattan", label: "Manhattan",
+        divisions: {
+          k1: [
+            { name:"Nest+M", points:758 }, { name:"PS 166", points:651 }, { name:"PS 11", points:575 },
+            { name:"PS 290", points:533 }, { name:"PS 77", points:481 }, { name:"PS 281", points:444 },
+            { name:"PS 59", points:409 }, { name:"PS 33", points:330 }, { name:"Saddle River Day", points:299 },
+            { name:"PS 40", points:297 }
+          ],
+          primary: [
+            { name:"PS 166", points:1346 }, { name:"PS 281", points:1266 }, { name:"PS 77", points:1216 },
+            { name:"Nest+M", points:1212 }, { name:"PS 198", points:1186 }, { name:"PS 11", points:1075 },
+            { name:"PS 59", points:1038 }, { name:"PS 33", points:1008 }, { name:"PS 290", points:935 },
+            { name:"PS 124", points:856 }
+          ],
+          elementary: [
+            { name:"PS 77", points:1567 }, { name:"PS 198", points:1560 }, { name:"PS 59", points:1551 },
+            { name:"PS 130M", points:1471 }, { name:"PS 33", points:1457 }, { name:"Nest+M", points:1437 },
+            { name:"PS 166", points:1369 }, { name:"PS 527", points:1337 }, { name:"PS 11", points:1301 },
+            { name:"PS 290", points:1217 }
+          ]
+        }
       },
       {
-        name: "Lower East Side",
-        teams: [
-          { name: "Seward Park",       mascot: "Knights",   piece: "♞", record: { w:7, l:2, d:0 }, form: ["W","W","L","W","W"] },
-          { name: "Two Bridges",       mascot: "Bishops",   piece: "♝", record: { w:6, l:2, d:1 }, form: ["W","D","W","L","W"] },
-          { name: "Essex Crossing",    mascot: "Rooks",     piece: "♜", record: { w:4, l:4, d:1 }, form: ["L","W","D","L","W"] },
-          { name: "Alphabet City",     mascot: "Pawns",     piece: "♟", record: { w:3, l:5, d:1 }, form: ["W","L","L","D","L"] },
-          { name: "Chinatown",         mascot: "Champions", piece: "♚", record: { w:2, l:7, d:0 }, form: ["L","L","W","L","L"] }
-        ]
-      },
-      {
-        name: "Brooklyn",
-        teams: [
-          { name: "Park Slope",        mascot: "Knights",   piece: "♞", record: { w:8, l:0, d:1 }, form: ["W","W","W","D","W"] },
-          { name: "Williamsburg",      mascot: "Rooks",     piece: "♜", record: { w:6, l:2, d:1 }, form: ["W","W","L","W","D"] },
-          { name: "Bed-Stuy",          mascot: "Bishops",   piece: "♝", record: { w:5, l:4, d:0 }, form: ["L","W","W","L","W"] },
-          { name: "Dumbo",             mascot: "Pawns",     piece: "♟", record: { w:3, l:6, d:0 }, form: ["L","L","W","L","L"] },
-          { name: "Brooklyn Heights",  mascot: "Kings",     piece: "♚", record: { w:1, l:8, d:0 }, form: ["L","L","L","W","L"] }
-        ]
+        key: "brooklyn", label: "Brooklyn",
+        divisions: {
+          k1: [
+            { name:"PS 10", points:524 }, { name:"PS 282", points:399 }, { name:"PS 118", points:352 },
+            { name:"Saddle River Day", points:299 }, { name:"PS 20", points:268 }, { name:"PS 889", points:254 },
+            { name:"PS 230", points:208 }, { name:"BASIS-B", points:201 }, { name:"PS 31", points:149 },
+            { name:"PS 32", points:130 }
+          ],
+          primary: [
+            { name:"PS 130", points:1118 }, { name:"PS 118", points:990 }, { name:"PS 282", points:961 },
+            { name:"PS 10", points:941 }, { name:"PS 31", points:870 }, { name:"BSI", points:802 },
+            { name:"PS 32", points:790 }, { name:"PS 230", points:788 }, { name:"PS 20", points:754 },
+            { name:"PS 39", points:640 }
+          ],
+          elementary: [
+            { name:"PS 130", points:1575 }, { name:"PS 10", points:1390 }, { name:"PS 39", points:1291 },
+            { name:"PS 32", points:1170 }, { name:"PS 230", points:1156 }, { name:"PS 20", points:1126 },
+            { name:"PS 31", points:1092 }, { name:"PS 282", points:1067 }, { name:"BSI", points:980 },
+            { name:"Brooklyn Prospect IES", points:863 }
+          ]
+        }
       }
     ]
   };
 
-  /* ---------------- rendering logic ---------------- */
-
-  function withStats(team){
-    const gp = team.record.w + team.record.l + team.record.d;
-    const pts = team.record.w * 2 + team.record.d;
-    const pct = gp ? (team.record.w + team.record.d * 0.5) / gp : 0;
-    return { ...team, gp, pts, pct };
-  }
-
-  function computeStreak(form){
-    if(!form || !form.length) return { type:"draw", label:"—" };
-    const last = form[form.length - 1];
-    let count = 0;
-    for(let i = form.length - 1; i >= 0; i--){
-      if(form[i] === last) count++; else break;
-    }
-    const type = last === "W" ? "win" : last === "L" ? "loss" : "draw";
-    return { type, label: `${last}${count}` };
-  }
-
-  let currentConfIndex = 0;
-  let sortKey = "pts";
-  let sortDir = -1;
-
-  const columns = [
-    { key: "rank",   label: "#",     sortable: false },
-    { key: "team",   label: "Team",  sortable: false },
-    { key: "gp",     label: "GP",    sortable: true },
-    { key: "w",      label: "W",     sortable: true },
-    { key: "l",      label: "L",     sortable: true },
-    { key: "d",      label: "D",     sortable: true },
-    { key: "pct",    label: "Win %", sortable: true },
-    { key: "streak", label: "Streak",sortable: false },
-    { key: "form",   label: "Last 5",sortable: false },
-    { key: "pts",    label: "Pts",   sortable: true }
+  const DIVISIONS = [
+    { key: "k1", label: "K–1" },
+    { key: "primary", label: "Primary" },
+    { key: "elementary", label: "Elementary" }
   ];
 
-  function sortedTeams(conf){
-    const withData = conf.teams.map(withStats);
-    withData.sort((a, b) => {
-      let av, bv;
-      if(sortKey === "w") { av = a.record.w; bv = b.record.w; }
-      else if(sortKey === "l"){ av = a.record.l; bv = b.record.l; }
-      else if(sortKey === "d"){ av = a.record.d; bv = b.record.d; }
-      else { av = a[sortKey]; bv = b[sortKey]; }
-      if(av === bv) return b.pts - a.pts || b.pct - a.pct;
-      return (av - bv) * sortDir;
-    });
-    return withData;
+  let currentRegionIndex = 0;
+  let currentDivisionKey = "k1";
+
+  function sortedSchools(list){
+    return [...list].sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
   }
 
-  function renderTabs(){
-    const tabs = document.getElementById("tabs");
-    tabs.innerHTML = "";
-    LEAGUE_DATA.conferences.forEach((conf, i) => {
-      const btn = document.createElement("button");
-      btn.className = "tab" + (i === currentConfIndex ? " active" : "");
-      btn.innerHTML = `${conf.name} <span class="tab-count">${conf.teams.length}</span>`;
-      btn.addEventListener("click", () => { currentConfIndex = i; sortKey = "pts"; sortDir = -1; render(); });
-      tabs.appendChild(btn);
-    });
-  }
-
-  function renderHead(){
-    const row = document.getElementById("thead-row");
-    row.innerHTML = "";
-    columns.forEach(col => {
-      const th = document.createElement("th");
-      th.textContent = col.label;
-      if(col.sortable){
-        th.classList.toggle("sorted", sortKey === col.key);
-        const arrow = document.createElement("span");
-        arrow.className = "arrow";
-        arrow.textContent = sortKey === col.key ? (sortDir === -1 ? "▼" : "▲") : "";
-        th.appendChild(arrow);
-        th.addEventListener("click", () => {
-          if(sortKey === col.key){ sortDir *= -1; }
-          else { sortKey = col.key; sortDir = -1; }
-          render();
-        });
-      }
-      row.appendChild(th);
-    });
-  }
-
-  function renderTable(){
-    const conf = LEAGUE_DATA.conferences[currentConfIndex];
-    document.getElementById("conf-title").textContent = conf.name + " Conference";
-    document.getElementById("conf-sub").textContent = `${conf.teams.length} schools`;
-
-    const teams = sortedTeams(conf);
-    const tbody = document.getElementById("tbody");
-    tbody.innerHTML = "";
-
-    teams.forEach((team, i) => {
-      const rankIndex = i + 1;
-      const tr = document.createElement("tr");
-      if(rankIndex <= 4) tr.classList.add("in-playoffs");
-
-      const medal = rankIndex === 1 ? "g" : rankIndex === 2 ? "s" : rankIndex === 3 ? "b" : null;
-      const rankHtml = medal
-        ? `<span class="medal ${medal}">${rankIndex}</span>`
-        : `<span class="rank-plain">${rankIndex}</span>`;
-
-      const streak = computeStreak(team.form);
-      const formHtml = team.form.map(r => `<i class="${r}"></i>`).join("");
-      const pctDisplay = Math.round(team.pct * 100);
-
-      tr.innerHTML = `
-        <td><div class="rank-cell">${rankHtml}</div></td>
-        <td>
-          <div class="team-cell">
-            <span class="piece">${team.piece}</span>
-            <span class="team-name">${team.name}<span class="locale">${team.mascot}</span></span>
-          </div>
-        </td>
-        <td class="num">${team.gp}</td>
-        <td class="num">${team.record.w}</td>
-        <td class="num">${team.record.l}</td>
-        <td class="num">${team.record.d}</td>
-        <td>
-          <div class="pct-wrap">
-            <span class="num">${pctDisplay}%</span>
-            <span class="pct-bar"><span style="width:${pctDisplay}%"></span></span>
-          </div>
-        </td>
-        <td><span class="streak ${streak.type}">${streak.label}</span></td>
-        <td><div class="form">${formHtml}</div></td>
-        <td class="num pts">${team.pts}</td>
-      `;
-      tbody.appendChild(tr);
-
-      if(rankIndex === 4 && teams.length > 4){
-        const lineTr = document.createElement("tr");
-        lineTr.className = "playoff-line";
-        const td = document.createElement("td");
-        td.colSpan = columns.length;
-        td.innerHTML = `<div class="playoff-line-inner"><span>ICN Cup line</span></div>`;
-        lineTr.appendChild(td);
-        tbody.appendChild(lineTr);
-      }
-    });
-  }
-
-  function renderLeaderboard(){
-    const all = [];
-    LEAGUE_DATA.conferences.forEach(conf => {
-      conf.teams.forEach(team => all.push({ ...withStats(team), conf: conf.name }));
-    });
-    all.sort((a, b) => b.pts - a.pts || b.pct - a.pct);
-    const top = all.slice(0, 6);
-
-    const el = document.getElementById("leaderboard");
+  function renderRegionTabs(){
+    const el = document.getElementById("region-tabs");
     el.innerHTML = "";
-    top.forEach((team, i) => {
-      const row = document.createElement("div");
-      row.className = "leaderboard-row";
+    LEAGUE_DATA.regions.forEach((region, i) => {
+      const btn = document.createElement("button");
+      btn.className = "tab" + (i === currentRegionIndex ? " active" : "");
+      btn.textContent = region.label;
+      btn.addEventListener("click", () => { currentRegionIndex = i; render(); });
+      el.appendChild(btn);
+    });
+  }
+
+  function renderDivisionTabs(){
+    const el = document.getElementById("division-tabs");
+    el.innerHTML = "";
+    DIVISIONS.forEach(div => {
+      const btn = document.createElement("button");
+      btn.className = "tab small" + (div.key === currentDivisionKey ? " active" : "");
+      btn.textContent = div.label;
+      btn.addEventListener("click", () => { currentDivisionKey = div.key; render(); });
+      el.appendChild(btn);
+    });
+  }
+
+  function rankRowHtml(rankIndex, school, leaderPoints){
+    const medal = rankIndex === 1 ? "g" : rankIndex === 2 ? "s" : rankIndex === 3 ? "b" : null;
+    const rankHtml = medal
+      ? `<span class="medal ${medal}">${rankIndex}</span>`
+      : `<span class="rank-plain">${rankIndex}</span>`;
+    const pct = leaderPoints ? Math.round((school.points / leaderPoints) * 100) : 0;
+    const behindHtml = rankIndex === 1
+      ? `<span class="behind is-leader">Leader</span>`
+      : `<span class="behind">&minus;${leaderPoints - school.points}</span>`;
+
+    const row = document.createElement("div");
+    row.className = "ladder-row" + (rankIndex === 1 ? " leader" : "");
+    row.innerHTML = `
+      <span class="rank-cell">${rankHtml}</span>
+      <span class="school-name">${school.name}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${pct}%"></span></span>
+      <span class="val num">${school.points.toLocaleString()}</span>
+      ${behindHtml}
+    `;
+    return row;
+  }
+
+  function renderBoard(){
+    const region = LEAGUE_DATA.regions[currentRegionIndex];
+    const divLabel = DIVISIONS.find(d => d.key === currentDivisionKey).label;
+    const schools = sortedSchools(region.divisions[currentDivisionKey] || []);
+    const leaderPoints = schools.length ? schools[0].points : 0;
+
+    document.getElementById("board-title").textContent = `${region.label} — ${divLabel}`;
+    document.getElementById("board-sub").textContent = `${schools.length} school${schools.length === 1 ? "" : "s"}`;
+    document.getElementById("card-foot-right").textContent =
+      region.key === "overall" ? "Boroughs shown separately as regions" : "Top 10 shown for this borough";
+
+    const body = document.getElementById("ladder-body");
+    body.innerHTML = "";
+    schools.forEach((school, i) => {
       const rankIndex = i + 1;
-      const medal = rankIndex === 1 ? "g" : rankIndex === 2 ? "s" : rankIndex === 3 ? "b" : null;
-      const rankHtml = medal
-        ? `<span class="medal ${medal}">${rankIndex}</span>`
-        : `<span class="rank-plain">${rankIndex}</span>`;
+      body.appendChild(rankRowHtml(rankIndex, school, leaderPoints));
+      if(rankIndex === 10 && schools.length > 10){
+        const div = document.createElement("div");
+        div.className = "cutoff";
+        div.innerHTML = `<span>Top 10</span>`;
+        body.appendChild(div);
+      }
+    });
+  }
+
+  function renderLeaders(){
+    const region = LEAGUE_DATA.regions[currentRegionIndex];
+    const el = document.getElementById("leaders");
+    el.innerHTML = "";
+    DIVISIONS.forEach(div => {
+      const schools = sortedSchools(region.divisions[div.key] || []);
+      if(!schools.length) return;
+      const leader = schools[0];
+      const row = document.createElement("div");
+      row.className = "leader-row";
       row.innerHTML = `
-        ${rankHtml}
-        <span class="lb-name">${team.name} ${team.mascot}<span class="lb-conf">${team.conf}</span></span>
-        <span class="lb-pts">${team.pts}</span>
+        <span class="division-tag">${div.label}</span>
+        <span class="lb-name">${leader.name}</span>
+        <span class="lb-pts">${leader.points.toLocaleString()}</span>
       `;
       el.appendChild(row);
     });
   }
 
   function render(){
-    renderTabs();
-    renderHead();
-    renderTable();
-    renderLeaderboard();
+    renderRegionTabs();
+    renderDivisionTabs();
+    renderBoard();
+    renderLeaders();
   }
 
-  document.getElementById("season-label").textContent = LEAGUE_DATA.season;
   render();
 </script>
 </body>
