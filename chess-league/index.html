@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ICN Chess League Standings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f4efe2;
+    --bg-inset: #ece3cf;
+    --surface: #ffffff;
+    --surface-2: #f7f2e6;
+    --ink: #1c1c22;
+    --ink-dim: #5b5a58;
+    --ink-faint: #8a8578;
+    --line: rgba(28,28,34,0.12);
+    --line-soft: rgba(28,28,34,0.07);
+    --gold: #9c6f22;
+    --gold-bright: #b9852b;
+    --gold-ink: #6f4f18;
+    --win: #2c7a4b;
+    --loss: #a1442b;
+    --draw: #806f4d;
+    --shadow: 0 1px 2px rgba(28,20,10,0.06), 0 8px 24px -12px rgba(28,20,10,0.18);
+    --silver: #7c7e86;
+    --bronze: #9a5f34;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #131319;
+      --bg-inset: #0d0d12;
+      --surface: #1b1b23;
+      --surface-2: #21212b;
+      --ink: #f1ede1;
+      --ink-dim: #b3ada0;
+      --ink-faint: #7d7869;
+      --line: rgba(241,237,225,0.12);
+      --line-soft: rgba(241,237,225,0.07);
+      --gold: #d8ac5b;
+      --gold-bright: #eec87c;
+      --gold-ink: #f0d193;
+      --win: #5cb27e;
+      --loss: #d3735a;
+      --draw: #a89a78;
+      --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6);
+      --silver: #a7abb5;
+      --bronze: #c98a55;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"]{
+    --bg: #131319;
+    --bg-inset: #0d0d12;
+    --surface: #1b1b23;
+    --surface-2: #21212b;
+    --ink: #f1ede1;
+    --ink-dim: #b3ada0;
+    --ink-faint: #7d7869;
+    --line: rgba(241,237,225,0.12);
+    --line-soft: rgba(241,237,225,0.07);
+    --gold: #d8ac5b;
+    --gold-bright: #eec87c;
+    --gold-ink: #f0d193;
+    --win: #5cb27e;
+    --loss: #d3735a;
+    --draw: #a89a78;
+    --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6);
+    --silver: #a7abb5;
+    --bronze: #c98a55;
+    color-scheme: dark;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ text-size-adjust: 100%; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Libre Franklin", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection{ background: var(--gold); color: #1c1c22; }
+  a{ color: inherit; }
+  button{ font-family: inherit; }
+  .num{ font-family: "Spline Sans Mono", ui-monospace, SFMono-Regular, monospace; font-variant-numeric: tabular-nums; }
+  h1,h2,h3{ font-family: "Fraunces", Georgia, serif; text-wrap: balance; margin: 0; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-inset);
+    border-bottom: 1px solid var(--line);
+  }
+  .masthead::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      repeating-conic-gradient(from 0deg, var(--ink) 0% 25%, transparent 0% 50%);
+    background-size: 64px 64px;
+    opacity: 0.035;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+  }
+  .masthead-inner{
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 44px 28px 30px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .brand{ display:flex; align-items:center; gap:16px; }
+  .brand-mark{
+    width: 52px; height: 52px;
+    border-radius: 10px;
+    background: linear-gradient(155deg, var(--gold-bright), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Fraunces", serif;
+    font-size: 28px;
+    color: var(--bg-inset);
+    box-shadow: var(--shadow);
+    flex: none;
+  }
+  .brand-text .eyebrow{
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  .brand-text h1{
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 700;
+    line-height: 1.05;
+  }
+  .season-chip{
+    display:flex; flex-direction:column; align-items:flex-end; gap:6px;
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+  .season-chip .season-label{
+    font-family: "Spline Sans Mono", monospace;
+    font-size: 12px;
+    padding: 5px 10px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    background: var(--surface);
+  }
+
+  .intro{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 22px 28px 0;
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 780px){ .intro{ grid-template-columns: 1fr; } }
+  .intro p{
+    margin:0;
+    max-width: 62ch;
+    color: var(--ink-dim);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .intro-legend{
+    display:flex; flex-wrap:wrap; gap: 10px 18px;
+    align-items:center;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+  }
+  .intro-legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .legend-dot{ width:9px; height:9px; border-radius:2px; display:inline-block; flex:none; }
+
+  /* ---------- Layout ---------- */
+  .page{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 28px 80px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 26px;
+    align-items: start;
+  }
+  @media (max-width: 900px){
+    .page{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Conference tabs ---------- */
+  .tabs{
+    display:flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+  .tab{
+    position: relative;
+    cursor: pointer;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-dim);
+    padding: 10px 18px 10px 16px;
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 0 100%);
+    transition: color .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .tab:hover{ color: var(--ink); }
+  .tab.active{
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .tab .tab-count{
+    font-family:"Spline Sans Mono", monospace;
+    font-size: 11px;
+    opacity: 0.65;
+    margin-left: 6px;
+  }
+
+  /* ---------- Standings card ---------- */
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .card-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    gap: 12px;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .card-head h2{ font-size: 20px; font-weight: 600; }
+  .card-head .sub{ font-size: 12.5px; color: var(--ink-faint); }
+
+  .table-scroll{ overflow-x: auto; }
+  table{ width: 100%; border-collapse: collapse; min-width: 620px; }
+  thead th{
+    position: sticky; top:0;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 700;
+    padding: 10px 10px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  thead th:hover{ color: var(--ink); }
+  thead th.sorted{ color: var(--gold-ink); }
+  :root[data-theme="dark"] thead th.sorted{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) thead th.sorted{ color: var(--gold); } }
+  thead th .arrow{ font-size: 9px; margin-left: 3px; opacity: 0.8; }
+  thead th:first-child{ padding-left: 20px; }
+  thead th:last-child{ padding-right: 20px; }
+
+  tbody td{
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  tbody td:first-child{ padding-left: 20px; }
+  tbody td:last-child{ padding-right: 20px; }
+  tbody tr:last-child td{ border-bottom: none; }
+  tbody tr{ transition: background .12s ease; }
+  tbody tr:hover{ background: var(--surface-2); }
+  tbody tr.in-playoffs{ box-shadow: inset 3px 0 0 var(--gold); }
+
+  .rank-cell{ display:flex; align-items:center; gap:8px; font-family:"Spline Sans Mono", monospace; }
+  .medal{
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size: 11px; font-weight: 700;
+    font-family: "Spline Sans Mono", monospace;
+    color: var(--surface);
+    flex: none;
+  }
+  .medal.g{ background: var(--gold-bright); color:#3a2a05; }
+  .medal.s{ background: var(--silver); color:#2a2a2f; }
+  .medal.b{ background: var(--bronze); color:#3a1f0c; }
+  .rank-plain{ width:22px; text-align:center; color: var(--ink-faint); }
+
+  .team-cell{ display:flex; align-items:center; gap: 10px; }
+  .piece{
+    font-family:"Fraunces", serif;
+    font-size: 19px;
+    width: 26px; height:26px;
+    border-radius: 6px;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--surface-2);
+    color: var(--ink-dim);
+    flex: none;
+    border: 1px solid var(--line);
+  }
+  .team-name{ font-weight: 600; font-size: 14.5px; }
+  .team-name .locale{ display:block; font-weight: 400; font-size: 11.5px; color: var(--ink-faint); }
+
+  .pct-wrap{ display:flex; align-items:center; gap:8px; min-width: 108px; }
+  .pct-bar{
+    width: 60px; height: 6px; border-radius: 4px;
+    background: var(--line-soft);
+    overflow: hidden;
+    flex: none;
+  }
+  .pct-bar > span{ display:block; height:100%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); }
+
+  .pts{ font-weight: 700; font-family:"Spline Sans Mono", monospace; color: var(--gold-ink); }
+  :root[data-theme="dark"] .pts{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .pts{ color: var(--gold); } }
+
+  .streak{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size: 12px; font-weight: 700;
+    font-family:"Spline Sans Mono", monospace;
+    padding: 3px 8px; border-radius: 100px;
+  }
+  .streak.win{ color: var(--win); background: color-mix(in srgb, var(--win) 14%, transparent); }
+  .streak.loss{ color: var(--loss); background: color-mix(in srgb, var(--loss) 14%, transparent); }
+  .streak.draw{ color: var(--draw); background: color-mix(in srgb, var(--draw) 14%, transparent); }
+
+  .form{ display:flex; gap:4px; }
+  .form i{
+    width:8px; height:8px; border-radius:2px;
+    display:inline-block;
+  }
+  .form i.W{ background: var(--win); }
+  .form i.L{ background: var(--loss); }
+  .form i.D{ background: var(--draw); }
+
+  .playoff-line td{
+    padding: 0;
+    border-bottom: none;
+    height: 0;
+  }
+  .playoff-line-inner{
+    position: relative;
+    margin: 2px 0;
+    border-top: 1px dashed color-mix(in srgb, var(--gold) 55%, transparent);
+  }
+  .playoff-line-inner span{
+    position: absolute; left: 20px; top: -8px;
+    background: var(--surface);
+    padding: 0 8px;
+    font-size: 10px; letter-spacing:0.08em; text-transform: uppercase;
+    color: var(--gold-ink); font-weight: 700;
+  }
+  :root[data-theme="dark"] .playoff-line-inner span{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .playoff-line-inner span{ color: var(--gold); } }
+
+  .card-foot{
+    padding: 12px 20px 16px;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .rail{ display:flex; flex-direction:column; gap: 18px; position: sticky; top: 18px; }
+  .rail .card-head h2{ font-size: 16px; }
+  .leaderboard{ padding: 6px 8px 14px; }
+  .leaderboard-row{
+    display:flex; align-items:center; gap:10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+  }
+  .leaderboard-row:hover{ background: var(--surface-2); }
+  .leaderboard-row .rank-plain{ font-family:"Spline Sans Mono", monospace; font-size:12px; }
+  .leaderboard-row .lb-name{ flex:1; font-size: 13.5px; font-weight: 600; }
+  .leaderboard-row .lb-conf{ font-size: 10.5px; color: var(--ink-faint); font-weight: 400; display:block; }
+  .leaderboard-row .lb-pts{ font-family:"Spline Sans Mono", monospace; font-weight:700; color: var(--gold-ink); font-size: 13px; }
+  :root[data-theme="dark"] .leaderboard-row .lb-pts{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .leaderboard-row .lb-pts{ color: var(--gold); } }
+
+  .note-card{ padding: 16px 18px; font-size: 12.5px; color: var(--ink-dim); line-height:1.55; }
+  .note-card strong{ color: var(--ink); }
+  .note-card code{
+    font-family:"Spline Sans Mono", monospace;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 11.5px;
+  }
+
+  .structure-card{ padding: 16px 18px 18px; }
+  .structure-list{ list-style:none; margin: 10px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .structure-list li{ font-size: 12.5px; color: var(--ink-dim); display:flex; gap:10px; }
+  .structure-list b{ color: var(--ink); font-weight:700; min-width: 78px; flex:none; }
+
+  footer{
+    max-width: 1180px; margin: 0 auto; padding: 0 28px 50px;
+    color: var(--ink-faint); font-size: 11.5px;
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">
+      <div class="brand-mark">&#9822;</div>
+      <div class="brand-text">
+        <p class="eyebrow">Impact Coaching Network</p>
+        <h1>ICN Chess League Standings</h1>
+      </div>
+    </div>
+    <div class="season-chip">
+      <span class="season-label" id="season-label">Fall 2026 Season &middot; Week 4</span>
+      <span>Updated every Monday after weekend matches</span>
+    </div>
+  </div>
+  <div class="intro">
+    <p>Every ICN program runs as a conference, every school runs as a team &mdash; same shape as the pros: conferences, division standings, win&ndash;loss records, and a points table. Kings, queens, and future grandmasters climb the table one match at a time.</p>
+    <div class="intro-legend">
+      <span><span class="legend-dot" style="background:var(--gold)"></span>Playoff position (top 4)</span>
+      <span><span class="legend-dot" style="background:var(--win)"></span>Win streak</span>
+      <span><span class="legend-dot" style="background:var(--loss)"></span>Losing streak</span>
+      <span><span class="legend-dot" style="background:var(--draw)"></span>Draw streak</span>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <section>
+    <nav class="tabs" id="tabs"></nav>
+    <div class="card">
+      <div class="card-head">
+        <h2 id="conf-title">Conference</h2>
+        <span class="sub" id="conf-sub"></span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr id="thead-row"></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="card-foot">
+        <span>2 pts per match win &middot; 1 pt per draw &middot; 0 pts per loss</span>
+        <span>Top 4 teams advance to the ICN Cup</span>
+      </div>
+    </div>
+  </section>
+
+  <aside class="rail">
+    <div class="card">
+      <div class="card-head"><h2>League Leaderboard</h2></div>
+      <div class="leaderboard" id="leaderboard"></div>
+    </div>
+
+    <div class="card structure-card">
+      <div class="card-head" style="border:none; padding-bottom:0;"><h2>How the League Works</h2></div>
+      <ul class="structure-list">
+        <li><b>Conference</b> An ICN program &mdash; Midtown, Upper East Side, Lower East Side, Brooklyn.</li>
+        <li><b>Team</b> A partner school within that program.</li>
+        <li><b>Match</b> A weekly round of boards between two schools.</li>
+        <li><b>Points</b> 2 for a match win, 1 for a draw, 0 for a loss.</li>
+        <li><b>ICN Cup</b> Top 4 per conference qualify for end&#8209;of&#8209;season playoffs.</li>
+      </ul>
+    </div>
+
+    <div class="card note-card">
+      <strong>This is sample data.</strong> The real ICN program names, schools, and results weren&rsquo;t reachable from this session, so the four conferences above use placeholder teams. Open <code>chess-league/index.html</code> and edit the <code>LEAGUE_DATA</code> object near the top of the <code>&lt;script&gt;</code> to drop in your real rosters and scores.
+    </div>
+  </aside>
+</main>
+
+<footer>ICN Chess League &middot; a friendly, made-up-for-now standings board for Impact Coaching Network&rsquo;s after-school chess programs.</footer>
+
+<script>
+  /* ============================================================
+     LEAGUE_DATA — replace with the real programs / schools / results.
+     Each conference = an ICN program. Each team = a partner school.
+     record: { w, l, d }  (wins / losses / draws, match-level)
+     form:   last 5 results, most recent last, using "W" "L" "D"
+     ============================================================ */
+  const LEAGUE_DATA = {
+    season: "Fall 2026 Season · Week 4",
+    conferences: [
+      {
+        name: "Midtown",
+        teams: [
+          { name: "Turtle Bay",        mascot: "Knights",   piece: "♞", record: { w:7, l:1, d:1 }, form: ["W","W","D","W","W"] },
+          { name: "Herald Square",     mascot: "Rooks",     piece: "♜", record: { w:6, l:2, d:1 }, form: ["W","L","W","W","D"] },
+          { name: "Tudor City",        mascot: "Bishops",   piece: "♝", record: { w:5, l:3, d:1 }, form: ["L","W","W","D","W"] },
+          { name: "Sutton Prep",       mascot: "Pawns",     piece: "♟", record: { w:3, l:5, d:1 }, form: ["L","W","L","D","L"] },
+          { name: "Garment District",  mascot: "Kings",     piece: "♚", record: { w:1, l:7, d:1 }, form: ["L","L","D","L","L"] }
+        ]
+      },
+      {
+        name: "Upper East Side",
+        teams: [
+          { name: "Yorkville",         mascot: "Knights",   piece: "♞", record: { w:8, l:1, d:0 }, form: ["W","W","W","W","W"] },
+          { name: "Carnegie Hill",     mascot: "Bishops",   piece: "♝", record: { w:6, l:3, d:0 }, form: ["W","L","W","W","W"] },
+          { name: "Lenox Hill",        mascot: "Rooks",     piece: "♜", record: { w:5, l:3, d:1 }, form: ["D","W","L","W","W"] },
+          { name: "Gracie Green",      mascot: "Pawns",     piece: "♟", record: { w:4, l:5, d:0 }, form: ["L","W","L","W","L"] },
+          { name: "Ruppert",           mascot: "Rangers",   piece: "♚", record: { w:2, l:6, d:1 }, form: ["L","L","D","L","W"] }
+        ]
+      },
+      {
+        name: "Lower East Side",
+        teams: [
+          { name: "Seward Park",       mascot: "Knights",   piece: "♞", record: { w:7, l:2, d:0 }, form: ["W","W","L","W","W"] },
+          { name: "Two Bridges",       mascot: "Bishops",   piece: "♝", record: { w:6, l:2, d:1 }, form: ["W","D","W","L","W"] },
+          { name: "Essex Crossing",    mascot: "Rooks",     piece: "♜", record: { w:4, l:4, d:1 }, form: ["L","W","D","L","W"] },
+          { name: "Alphabet City",     mascot: "Pawns",     piece: "♟", record: { w:3, l:5, d:1 }, form: ["W","L","L","D","L"] },
+          { name: "Chinatown",         mascot: "Champions", piece: "♚", record: { w:2, l:7, d:0 }, form: ["L","L","W","L","L"] }
+        ]
+      },
+      {
+        name: "Brooklyn",
+        teams: [
+          { name: "Park Slope",        mascot: "Knights",   piece: "♞", record: { w:8, l:0, d:1 }, form: ["W","W","W","D","W"] },
+          { name: "Williamsburg",      mascot: "Rooks",     piece: "♜", record: { w:6, l:2, d:1 }, form: ["W","W","L","W","D"] },
+          { name: "Bed-Stuy",          mascot: "Bishops",   piece: "♝", record: { w:5, l:4, d:0 }, form: ["L","W","W","L","W"] },
+          { name: "Dumbo",             mascot: "Pawns",     piece: "♟", record: { w:3, l:6, d:0 }, form: ["L","L","W","L","L"] },
+          { name: "Brooklyn Heights",  mascot: "Kings",     piece: "♚", record: { w:1, l:8, d:0 }, form: ["L","L","L","W","L"] }
+        ]
+      }
+    ]
+  };
+
+  /* ---------------- rendering logic ---------------- */
+
+  function withStats(team){
+    const gp = team.record.w + team.record.l + team.record.d;
+    const pts = team.record.w * 2 + team.record.d;
+    const pct = gp ? (team.record.w + team.record.d * 0.5) / gp : 0;
+    return { ...team, gp, pts, pct };
+  }
+
+  function computeStreak(form){
+    if(!form || !form.length) return { type:"draw", label:"—" };
+    const last = form[form.length - 1];
+    let count = 0;
+    for(let i = form.length - 1; i >= 0; i--){
+      if(form[i] === last) count++; else break;
+    }
+    const type = last === "W" ? "win" : last === "L" ? "loss" : "draw";
+    return { type, label: `${last}${count}` };
+  }
+
+  let currentConfIndex = 0;
+  let sortKey = "pts";
+  let sortDir = -1;
+
+  const columns = [
+    { key: "rank",   label: "#",     sortable: false },
+    { key: "team",   label: "Team",  sortable: false },
+    { key: "gp",     label: "GP",    sortable: true },
+    { key: "w",      label: "W",     sortable: true },
+    { key: "l",      label: "L",     sortable: true },
+    { key: "d",      label: "D",     sortable: true },
+    { key: "pct",    label: "Win %", sortable: true },
+    { key: "streak", label: "Streak",sortable: false },
+    { key: "form",   label: "Last 5",sortable: false },
+    { key: "pts",    label: "Pts",   sortable: true }
+  ];
+
+  function sortedTeams(conf){
+    const withData = conf.teams.map(withStats);
+    withData.sort((a, b) => {
+      let av, bv;
+      if(sortKey === "w") { av = a.record.w; bv = b.record.w; }
+      else if(sortKey === "l"){ av = a.record.l; bv = b.record.l; }
+      else if(sortKey === "d"){ av = a.record.d; bv = b.record.d; }
+      else { av = a[sortKey]; bv = b[sortKey]; }
+      if(av === bv) return b.pts - a.pts || b.pct - a.pct;
+      return (av - bv) * sortDir;
+    });
+    return withData;
+  }
+
+  function renderTabs(){
+    const tabs = document.getElementById("tabs");
+    tabs.innerHTML = "";
+    LEAGUE_DATA.conferences.forEach((conf, i) => {
+      const btn = document.createElement("button");
+      btn.className = "tab" + (i === currentConfIndex ? " active" : "");
+      btn.innerHTML = `${conf.name} <span class="tab-count">${conf.teams.length}</span>`;
+      btn.addEventListener("click", () => { currentConfIndex = i; sortKey = "pts"; sortDir = -1; render(); });
+      tabs.appendChild(btn);
+    });
+  }
+
+  function renderHead(){
+    const row = document.getElementById("thead-row");
+    row.innerHTML = "";
+    columns.forEach(col => {
+      const th = document.createElement("th");
+      th.textContent = col.label;
+      if(col.sortable){
+        th.classList.toggle("sorted", sortKey === col.key);
+        const arrow = document.createElement("span");
+        arrow.className = "arrow";
+        arrow.textContent = sortKey === col.key ? (sortDir === -1 ? "▼" : "▲") : "";
+        th.appendChild(arrow);
+        th.addEventListener("click", () => {
+          if(sortKey === col.key){ sortDir *= -1; }
+          else { sortKey = col.key; sortDir = -1; }
+          render();
+        });
+      }
+      row.appendChild(th);
+    });
+  }
+
+  function renderTable(){
+    const conf = LEAGUE_DATA.conferences[currentConfIndex];
+    document.getElementById("conf-title").textContent = conf.name + " Conference";
+    document.getElementById("conf-sub").textContent = `${conf.teams.length} schools`;
+
+    const teams = sortedTeams(conf);
+    const tbody = document.getElementById("tbody");
+    tbody.innerHTML = "";
+
+    teams.forEach((team, i) => {
+      const rankIndex = i + 1;
+      const tr = document.createElement("tr");
+      if(rankIndex <= 4) tr.classList.add("in-playoffs");
+
+      const medal = rankIndex === 1 ? "g" : rankIndex === 2 ? "s" : rankIndex === 3 ? "b" : null;
+      const rankHtml = medal
+        ? `<span class="medal ${medal}">${rankIndex}</span>`
+        : `<span class="rank-plain">${rankIndex}</span>`;
+
+      const streak = computeStreak(team.form);
+      const formHtml = team.form.map(r => `<i class="${r}"></i>`).join("");
+      const pctDisplay = Math.round(team.pct * 100);
+
+      tr.innerHTML = `
+        <td><div class="rank-cell">${rankHtml}</div></td>
+        <td>
+          <div class="team-cell">
+            <span class="piece">${team.piece}</span>
+            <span class="team-name">${team.name}<span class="locale">${team.mascot}</span></span>
+          </div>
+        </td>
+        <td class="num">${team.gp}</td>
+        <td class="num">${team.record.w}</td>
+        <td class="num">${team.record.l}</td>
+        <td class="num">${team.record.d}</td>
+        <td>
+          <div class="pct-wrap">
+            <span class="num">${pctDisplay}%</span>
+            <span class="pct-bar"><span style="width:${pctDisplay}%"></span></span>
+          </div>
+        </td>
+        <td><span class="streak ${streak.type}">${streak.label}</span></td>
+        <td><div class="form">${formHtml}</div></td>
+        <td class="num pts">${team.pts}</td>
+      `;
+      tbody.appendChild(tr);
+
+      if(rankIndex === 4 && teams.length > 4){
+        const lineTr = document.createElement("tr");
+        lineTr.className = "playoff-line";
+        const td = document.createElement("td");
+        td.colSpan = columns.length;
+        td.innerHTML = `<div class="playoff-line-inner"><span>ICN Cup line</span></div>`;
+        lineTr.appendChild(td);
+        tbody.appendChild(lineTr);
+      }
+    });
+  }
+
+  function renderLeaderboard(){
+    const all = [];
+    LEAGUE_DATA.conferences.forEach(conf => {
+      conf.teams.forEach(team => all.push({ ...withStats(team), conf: conf.name }));
+    });
+    all.sort((a, b) => b.pts - a.pts || b.pct - a.pct);
+    const top = all.slice(0, 6);
+
+    const el = document.getElementById("leaderboard");
+    el.innerHTML = "";
+    top.forEach((team, i) => {
+      const row = document.createElement("div");
+      row.className = "leaderboard-row";
+      const rankIndex = i + 1;
+      const medal = rankIndex === 1 ? "g" : rankIndex === 2 ? "s" : rankIndex === 3 ? "b" : null;
+      const rankHtml = medal
+        ? `<span class="medal ${medal}">${rankIndex}</span>`
+        : `<span class="rank-plain">${rankIndex}</span>`;
+      row.innerHTML = `
+        ${rankHtml}
+        <span class="lb-name">${team.name} ${team.mascot}<span class="lb-conf">${team.conf}</span></span>
+        <span class="lb-pts">${team.pts}</span>
+      `;
+      el.appendChild(row);
+    });
+  }
+
+  function render(){
+    renderTabs();
+    renderHead();
+    renderTable();
+    renderLeaderboard();
+  }
+
+  document.getElementById("season-label").textContent = LEAGUE_DATA.season;
+  render();
+</script>
+</body>
+</html>
