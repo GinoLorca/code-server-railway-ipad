@@ -26,6 +26,8 @@
     --bronze: #9a5f34;
     --pos: #2c7a4b;
     --neg: #a1442b;
+    --accent-2: #2b6f74;
+    --accent-2-bright: #3a8b91;
     color-scheme: light;
   }
 
@@ -48,6 +50,8 @@
       --bronze: #c98a55;
       --pos: #5cb27e;
       --neg: #d3735a;
+      --accent-2: #5fa8ad;
+      --accent-2-bright: #7ec1c6;
       color-scheme: dark;
     }
   }
@@ -70,6 +74,8 @@
     --bronze: #c98a55;
     --pos: #5cb27e;
     --neg: #d3735a;
+    --accent-2: #5fa8ad;
+    --accent-2-bright: #7ec1c6;
     color-scheme: dark;
   }
 
@@ -197,6 +203,30 @@
   @media (max-width: 900px){
     .page{ grid-template-columns: 1fr; }
   }
+
+  /* ---------- View toggle ---------- */
+  .view-toggle{
+    display:inline-flex;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 4px;
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+  .view-toggle button{
+    border:none; cursor:pointer;
+    background: transparent;
+    color: var(--ink-dim);
+    padding: 9px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    transition: background .15s ease, color .15s ease;
+  }
+  .view-toggle button:hover{ color: var(--ink); }
+  .view-toggle button.active{ background: var(--ink); color: var(--bg); }
 
   /* ---------- Tabs ---------- */
   .tabs{
@@ -392,6 +422,37 @@
     .player-panel{ padding-left: 20px; }
   }
 
+  /* ---------- Player rankings (plist) ---------- */
+  .ladder-head.plist-head, .ladder-row.plist-row{
+    grid-template-columns: 40px 1fr 90px 90px;
+  }
+  .ladder-head.plist-head span:nth-child(3){ text-align:right; }
+  .ladder-row.plist-row .val{ text-align:right; }
+  .player-cell{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+  .player-cell .school-sub{ font-size: 11.5px; color: var(--ink-faint); font-weight: 400; }
+  @media (max-width: 560px){
+    .ladder-head.plist-head, .ladder-row.plist-row{ grid-template-columns: 30px 1fr 64px; }
+    .ladder-head.plist-head span:nth-child(4), .ladder-row.plist-row .behind{ display:none; }
+  }
+
+  /* ---------- Player-panel grade filter ---------- */
+  .filter-chips{ display:flex; flex-wrap:wrap; gap:6px; padding: 10px 0 4px; }
+  .filter-chip{
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-dim);
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 4px 11px;
+    border-radius: 100px;
+    cursor: pointer;
+  }
+  .filter-chip:hover{ color: var(--ink); }
+  .filter-chip.active{ background: var(--gold); color: #2a1c04; border-color: var(--gold); }
+  :root[data-theme="dark"] .filter-chip.active{ color: #241804; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .filter-chip.active{ color: #241804; } }
+
   /* ---------- Sidebar ---------- */
   .rail{ display:flex; flex-direction:column; gap: 18px; position: sticky; top: 18px; }
   .rail .card-head h2{ font-size: 16px; }
@@ -408,7 +469,8 @@
     color: var(--ink-faint); font-weight: 700;
     white-space: nowrap;
   }
-  .leader-row .lb-name{ flex:1; font-size: 13.5px; font-weight: 600; }
+  .leader-row .lb-name{ flex:1; font-size: 13.5px; font-weight: 600; min-width:0; }
+  .leader-row .lb-name .lb-sub{ display:block; font-weight:400; font-size: 11px; color: var(--ink-faint); }
   .leader-row .lb-pts{ font-family:"Spline Sans Mono", monospace; font-weight:700; color: var(--gold-ink); font-size: 13px; }
   :root[data-theme="dark"] .leader-row .lb-pts{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .leader-row .lb-pts{ color: var(--gold); } }
@@ -432,6 +494,40 @@
   footer{
     max-width: 1180px; margin: 0 auto; padding: 0 28px 50px;
     color: var(--ink-faint); font-size: 11.5px;
+  }
+
+  /* ---------- Division crests ---------- */
+  .badge-section{ border-top: 1px solid var(--line); background: var(--bg-inset); }
+  .badge-section-inner{ max-width: 1180px; margin: 0 auto; padding: 40px 28px 50px; }
+  .badge-section-head{ max-width: 62ch; margin-bottom: 26px; }
+  .badge-section-head h2{ font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+  .badge-section-head p{ margin:0; color: var(--ink-dim); font-size: 14px; line-height: 1.6; }
+  .badge-section-head code{
+    font-family:"Spline Sans Mono", monospace;
+    background: var(--surface-2); border: 1px solid var(--line);
+    padding: 1px 5px; border-radius: 4px; font-size: 12.5px;
+  }
+  .badge-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+  }
+  .badge-card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 18px 14px 16px;
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+  }
+  .badge-card svg{ width: 100%; height: auto; max-width: 200px; }
+  .badge-caption{ text-align:center; }
+  .badge-caption .badge-borough{
+    display:block; font-size: 10.5px; letter-spacing:0.08em; text-transform:uppercase;
+    font-weight:700; color: var(--ink-faint);
+  }
+  .badge-caption .badge-division{
+    display:block; font-family:"Fraunces", serif; font-size: 16px; font-weight:600; color: var(--ink);
   }
 </style>
 </head>
@@ -465,44 +561,77 @@
 
 <main class="page">
   <section>
-    <nav class="tabs regions" id="region-tabs"></nav>
-    <nav class="tabs divisions" id="division-tabs"></nav>
-    <div class="card">
-      <div class="card-head">
-        <h2 id="board-title">Region &mdash; Division</h2>
-        <span class="sub" id="board-sub"></span>
+    <nav class="view-toggle" id="view-toggle">
+      <button data-view="teams">Team Standings</button>
+      <button data-view="players">Player Rankings</button>
+    </nav>
+
+    <div id="team-view">
+      <nav class="tabs regions" id="region-tabs"></nav>
+      <nav class="tabs divisions" id="division-tabs"></nav>
+      <div class="card">
+        <div class="card-head">
+          <h2 id="board-title">Region &mdash; Division</h2>
+          <span class="sub" id="board-sub"></span>
+        </div>
+        <div class="ladder-head">
+          <span>#</span>
+          <span>School</span>
+          <span>Score</span>
+          <span>Pts</span>
+          <span>Trend</span>
+          <span>Behind</span>
+        </div>
+        <div class="ladder-body" id="ladder-body"></div>
+        <div class="card-foot">
+          <span id="card-foot-left">Ranked by season points</span>
+          <span id="card-foot-right"></span>
+        </div>
       </div>
-      <div class="ladder-head">
-        <span>#</span>
-        <span>School</span>
-        <span>Score</span>
-        <span>Pts</span>
-        <span>Trend</span>
-        <span>Behind</span>
-      </div>
-      <div class="ladder-body" id="ladder-body"></div>
-      <div class="card-foot">
-        <span id="card-foot-left">Ranked by season points</span>
-        <span id="card-foot-right"></span>
+    </div>
+
+    <div id="player-view" style="display:none">
+      <nav class="tabs divisions" id="grade-tabs"></nav>
+      <div class="card">
+        <div class="card-head">
+          <h2 id="player-board-title">Grade &mdash; Top 50</h2>
+          <span class="sub" id="player-board-sub"></span>
+        </div>
+        <div class="ladder-head plist-head">
+          <span>#</span>
+          <span>Player</span>
+          <span>Rating</span>
+          <span>Behind</span>
+        </div>
+        <div class="ladder-body" id="player-body"></div>
+        <div class="card-foot">
+          <span>Ranked by USCF rating</span>
+          <span>ICN top 50, Aug 2026</span>
+        </div>
       </div>
     </div>
   </section>
 
   <aside class="rail">
-    <div class="card">
+    <div class="card" id="leaders-teams-card">
       <div class="card-head"><h2>Division Leaders</h2></div>
       <div class="leaders" id="leaders"></div>
     </div>
 
+    <div class="card" id="leaders-players-card" style="display:none">
+      <div class="card-head"><h2>Grade Leaders</h2></div>
+      <div class="leaders" id="grade-leaders"></div>
+    </div>
+
     <div class="card structure-card">
-      <div class="card-head" style="border:none; padding-bottom:0;"><h2>How the Ladder Works</h2></div>
+      <div class="card-head" style="border:none; padding-bottom:0;"><h2>How It Works</h2></div>
       <ul class="structure-list">
         <li><b>Region</b> Overall (leaguewide) or a borough &mdash; Manhattan, Brooklyn.</li>
         <li><b>Division</b> A grade band: K&ndash;1, Primary, or Elementary.</li>
         <li><b>School</b> An ICN partner school competing as a team.</li>
         <li><b>Points</b> Cumulative season score for that school in that division.</li>
         <li><b>Trend</b> Change since last week's saved score.</li>
-        <li><b>Top 5</b> Click any school to see its top 5 players by USCF rating.</li>
+        <li><b>Top 5 / Top 50</b> Click a school for its top 5 players, or switch to Player Rankings for every grade's top 50 by USCF rating.</li>
       </ul>
     </div>
 
@@ -511,10 +640,20 @@
       <br><br>
       <strong>Weekly trend arrows:</strong> before pasting in new totals, set each school's <code>prevPoints</code> to its <em>current</em> <code>points</code> value, then update <code>points</code> to the new total &mdash; the arrow and delta appear automatically.
       <br><br>
-      <strong>Player drill-down:</strong> loaded from the ICN top-50-by-grade lists (K&ndash;5, Aug 2026). Only schools with a player in one of those lists have a roster &mdash; everyone else shows the example format until more players qualify or you paste in a fuller roster.
+      <strong>Player data:</strong> loaded from the ICN top-50-by-grade lists (K&ndash;5, Aug 2026) &mdash; both the school drill-down and the Player Rankings view. Only schools with a player in one of those lists have a roster.
     </div>
   </aside>
 </main>
+
+<section class="badge-section">
+  <div class="badge-section-inner">
+    <div class="badge-section-head">
+      <h2>Division Crests</h2>
+      <p>One crest per borough &times; grade division. The piece marks the division &mdash; pawn for K&ndash;1, knight for Primary, rook for Elementary, echoing how the pieces themselves get introduced &mdash; and the ring color marks the borough. Built as inline SVG, so they stay crisp at any size; matching PNGs are in <code>chess-league/badges/</code>.</p>
+    </div>
+    <div class="badge-grid" id="badge-grid"></div>
+  </div>
+</section>
 
 <footer>ICN Chess League &middot; a standings board for Impact Coaching Network&rsquo;s after-school chess programs.</footer>
 
@@ -621,49 +760,334 @@
   ];
 
   /* ============================================================
-     PLAYERS — every ICN top-50-by-grade player (Aug 2026 lists),
-     grouped by school name (the same names used in LEAGUE_DATA).
-     Only the top 5 by rating are shown per school; add new players
-     the same way: { name, rating, grade } pushed into that school's
-     array. Schools with no entry here show an empty state instead.
+     ALL_PLAYERS — every ICN top-50-by-grade player (Aug 2026 lists),
+     one flat array. PLAYERS_BY_SCHOOL and PLAYERS_BY_GRADE below are
+     both derived from this single list. Add a player by pushing
+     { name, rating, school, grade } onto ALL_PLAYERS; grade is one
+     of "K","1","2","3","4","5".
      ============================================================ */
-  const PLAYERS = {
-    "A-S": [{ name:"Sidney Gitomer", rating:1368, grade:"3" }, { name:"Owen Braun", rating:1126, grade:"3" }, { name:"Devin Swan", rating:766, grade:"1" }, { name:"Mohui Jiang", rating:685, grade:"K" }],
-    "BASIS-B": [{ name:"Milo Su", rating:1970, grade:"4" }, { name:"Thaiger DeRosa", rating:1360, grade:"5" }, { name:"Hazel Su", rating:813, grade:"K" }],
-    "BSI": [{ name:"Gabriel Weng", rating:1069, grade:"3" }, { name:"Dylan Guenther", rating:1058, grade:"3" }, { name:"Connie Ye", rating:1028, grade:"2" }],
-    "Brooklyn Prospect IES": [{ name:"Avery Van Arman", rating:1460, grade:"4" }, { name:"Christopher Maghi", rating:1240, grade:"4" }],
-    "Nest+M": [{ name:"Jack Boyer-Olson", rating:2101, grade:"5" }, { name:"Kirill McNaughton", rating:1647, grade:"4" }, { name:"Julian Cho", rating:1509, grade:"2" }, { name:"Emile Shah", rating:1423, grade:"4" }, { name:"Henry Gu", rating:1400, grade:"5" }, { name:"Michelle Kou", rating:1352, grade:"4" }, { name:"Charles Don", rating:1317, grade:"K" }, { name:"Tai Hong", rating:1290, grade:"4" }, { name:"Shanay Potti", rating:1288, grade:"3" }, { name:"Amerson Nicodemo", rating:1283, grade:"3" }, { name:"Russell Cinquegrana", rating:1268, grade:"5" }, { name:"Jacob Burkat", rating:1220, grade:"2" }, { name:"Guy Gourvitch", rating:1204, grade:"5" }, { name:"Eva Shang", rating:1133, grade:"3" }, { name:"Alex Kou", rating:1086, grade:"2" }, { name:"Dean Chiang", rating:1086, grade:"3" }, { name:"Lincoln Freeman", rating:1041, grade:"2" }, { name:"Theodore Cinquegrana", rating:926, grade:"2" }, { name:"Jacob Hoelscher", rating:844, grade:"1" }, { name:"Jason Ham", rating:810, grade:"1" }, { name:"Sebastian Mehtani", rating:786, grade:"1" }, { name:"Wesley Wang", rating:768, grade:"K" }, { name:"Rhea Zhao", rating:759, grade:"1" }, { name:"Lilianna Tenorio", rating:598, grade:"K" }],
-    "Norwood": [{ name:"Jiho Chae", rating:405, grade:"K" }],
-    "PS 10": [{ name:"George Japharidze", rating:1671, grade:"4" }, { name:"Alfred Cheung", rating:1454, grade:"4" }, { name:"Holden Sebold", rating:1338, grade:"5" }, { name:"Ioane Kilasonia", rating:1302, grade:"3" }, { name:"Jio Park", rating:1242, grade:"2" }, { name:"Miller Mayo", rating:1219, grade:"3" }, { name:"Ashwath Anand", rating:1211, grade:"4" }, { name:"Garvey Orane", rating:1150, grade:"4" }, { name:"George Cohen", rating:1071, grade:"3" }, { name:"Owen Chen", rating:666, grade:"K" }, { name:"Arco Vidiksis", rating:572, grade:"K" }, { name:"Fionnuala Verdi", rating:462, grade:"K" }, { name:"Milo Casey", rating:404, grade:"K" }],
-    "PS 11": [{ name:"Theodore Meng", rating:1340, grade:"4" }, { name:"Sloane Murphy", rating:1311, grade:"5" }, { name:"Andrew Li", rating:1300, grade:"3" }, { name:"Isha Varma", rating:1291, grade:"5" }, { name:"Rami Padukone-Mitter", rating:1281, grade:"3" }, { name:"Walter Gooch-Raushenbush", rating:1279, grade:"5" }, { name:"Theodore Lewis", rating:1272, grade:"3" }, { name:"Ethan Metzer", rating:1210, grade:"3" }, { name:"Chloe Yip", rating:1205, grade:"3" }, { name:"Wyatt Lawson", rating:1097, grade:"1" }, { name:"Glenn Gooch-Raushenbush", rating:1094, grade:"2" }, { name:"Brian Silverman", rating:1045, grade:"2" }, { name:"Adam Atwa", rating:999, grade:"1" }, { name:"Jaxson Vanderpoole", rating:936, grade:"2" }, { name:"Kai Tang", rating:680, grade:"K" }, { name:"Parker Downing", rating:626, grade:"K" }, { name:"Dylan Wu", rating:589, grade:"K" }, { name:"Yoomi Yoon-Winawer", rating:435, grade:"K" }],
-    "PS 111": [{ name:"Eilidh Donaghy", rating:1127, grade:"4" }, { name:"McKenzie Ocupa", rating:966, grade:"2" }],
-    "PS 116": [{ name:"Brandon Tsay", rating:1380, grade:"5" }, { name:"Micah Rifkin", rating:1069, grade:"2" }],
-    "PS 118": [{ name:"Maddox Kretschman", rating:1269, grade:"1" }, { name:"Sam Ramsey", rating:1210, grade:"2" }, { name:"Asher Weintraub", rating:1186, grade:"3" }, { name:"Milos Fisher", rating:708, grade:"1" }, { name:"Ansel Fair", rating:438, grade:"K" }],
-    "PS 124": [{ name:"Evan Lam", rating:1277, grade:"5" }, { name:"Oliver Zhang", rating:1217, grade:"1" }, { name:"Logan Chow", rating:1124, grade:"3" }, { name:"Marcus Lau", rating:932, grade:"2" }, { name:"Margot Trin", rating:422, grade:"K" }, { name:"Isabel Lau", rating:408, grade:"K" }],
-    "PS 130": [{ name:"Grayson Xiang", rating:2015, grade:"4" }, { name:"Adrian Sommerstein", rating:2009, grade:"5" }, { name:"Seamus Brady", rating:1790, grade:"5" }, { name:"Noah Kaye", rating:1757, grade:"5" }, { name:"August Noble", rating:1522, grade:"4" }, { name:"Jonah Finkelstein", rating:1520, grade:"5" }, { name:"Harrison Harsch", rating:1499, grade:"3" }, { name:"Alice Sirinides", rating:1458, grade:"5" }, { name:"Henry Mueller", rating:1332, grade:"3" }, { name:"Jacob King", rating:1299, grade:"3" }, { name:"Aiden Kuc", rating:1294, grade:"5" }, { name:"Nico Karp", rating:1279, grade:"4" }, { name:"Ishaan Sharma", rating:1198, grade:"3" }, { name:"Miroslav Toth", rating:1179, grade:"2" }, { name:"Athena Vitticore", rating:1150, grade:"2" }, { name:"Evelyn Jones", rating:1115, grade:"3" }, { name:"Rafael Mario Guevara-Ceja", rating:1110, grade:"2" }, { name:"Lue Lev-Talpaz", rating:1034, grade:"2" }, { name:"Isla Miner", rating:983, grade:"1" }, { name:"Julian Wilson", rating:930, grade:"2" }, { name:"Cary Boyle", rating:906, grade:"2" }],
-    "PS 130M": [{ name:"Isaac Noah Lui", rating:1966, grade:"5" }, { name:"Preston Liu", rating:1707, grade:"3" }, { name:"Leah Cai", rating:1654, grade:"5" }, { name:"Jackson Liu", rating:1560, grade:"3" }, { name:"Emma Leon", rating:1554, grade:"5" }, { name:"Jordan Nguyen-Huynh", rating:1299, grade:"3" }, { name:"Nia Zheng", rating:1287, grade:"5" }, { name:"Ayden Pan", rating:1279, grade:"5" }, { name:"Jayden Xu", rating:1268, grade:"3" }, { name:"Solaris Wang", rating:1169, grade:"3" }, { name:"Christopher Lam", rating:1155, grade:"4" }, { name:"Caleb Chen", rating:1142, grade:"3" }, { name:"Rohan Shukla", rating:936, grade:"2" }],
-    "PS 166": [{ name:"Joseph Daniel Totouom Tangho", rating:1772, grade:"4" }, { name:"Matias Falk", rating:1591, grade:"2" }, { name:"Phoebe Lasher", rating:1506, grade:"4" }, { name:"Kieran McCullough", rating:1479, grade:"2" }, { name:"Benjamin Frye", rating:1304, grade:"1" }, { name:"Kevin Purcell", rating:1232, grade:"5" }, { name:"Yuvan Choudhury", rating:1177, grade:"1" }, { name:"Lila Fugate", rating:1147, grade:"4" }, { name:"Jae Kromidas", rating:1143, grade:"2" }, { name:"Luca Falk", rating:1130, grade:"1" }, { name:"Lorenzo Ciccia", rating:1082, grade:"2" }, { name:"Luc Denis Totouom Tangho", rating:971, grade:"2" }, { name:"Edward Hong", rating:875, grade:"K" }, { name:"Olivia Nightingale", rating:776, grade:"1" }, { name:"Cooper Englund", rating:647, grade:"K" }, { name:"Logan Hong", rating:585, grade:"K" }, { name:"Cora Nightingale", rating:502, grade:"K" }, { name:"Remy Surman", rating:463, grade:"K" }, { name:"Lucas Chen", rating:452, grade:"K" }, { name:"Noam Sagi", rating:445, grade:"K" }],
-    "PS 184M": [{ name:"Lionel Bengtsen", rating:1151, grade:"3" }],
-    "PS 198": [{ name:"Max Mulholland", rating:1949, grade:"3" }, { name:"Lowell Begley", rating:1737, grade:"5" }, { name:"Niklas Kelletshofer", rating:1661, grade:"5" }, { name:"Sebastian Alanis", rating:1456, grade:"3" }, { name:"Lucas Rosenberg", rating:1411, grade:"3" }, { name:"Evan Desai", rating:1403, grade:"3" }, { name:"Hanna Sengupta", rating:1370, grade:"4" }, { name:"Ryland Larsen", rating:1366, grade:"5" }, { name:"Elena Sengupta", rating:1305, grade:"2" }, { name:"Devitt Begley", rating:1194, grade:"2" }, { name:"Fumikazu Abe", rating:1115, grade:"1" }, { name:"Ren Hirayama", rating:1111, grade:"1" }, { name:"Lucas Flores", rating:1074, grade:"1" }, { name:"Mia Vakhtangishvili", rating:984, grade:"1" }, { name:"Sienna Sartor", rating:967, grade:"2" }, { name:"Eva Vakhtangishvili", rating:931, grade:"1" }, { name:"Reika Konuma", rating:850, grade:"1" }, { name:"Rei Yamazaki", rating:832, grade:"1" }, { name:"Eloise Charbal", rating:603, grade:"K" }],
-    "PS 20": [{ name:"Jeremiah Dimoh", rating:1430, grade:"4" }, { name:"Nash del Rio", rating:1250, grade:"4" }, { name:"Mac Frantzis", rating:875, grade:"1" }, { name:"Kieran Melgar", rating:718, grade:"1" }, { name:"Proxima Reed Rader", rating:394, grade:"K" }],
-    "PS 230": [{ name:"David Azimov", rating:1482, grade:"4" }, { name:"Shirina Tolibova", rating:1327, grade:"4" }, { name:"Xavier Lazaro", rating:1256, grade:"5" }, { name:"Cyrus Christoff", rating:1224, grade:"5" }, { name:"Tristan Lazaro", rating:1120, grade:"2" }, { name:"Adrian Gutierrez", rating:1015, grade:"2" }, { name:"Maksim Kobrinsky", rating:727, grade:"K" }],
-    "PS 281": [{ name:"Brendan Seto", rating:1754, grade:"4" }, { name:"Lve Wang", rating:1731, grade:"5" }, { name:"Evan Lu", rating:1482, grade:"5" }, { name:"Nikolas Garces", rating:1425, grade:"5" }, { name:"Lucas Ciraldo", rating:1329, grade:"2" }, { name:"Krish Reddy", rating:1296, grade:"2" }, { name:"Maverick Wang", rating:1274, grade:"2" }, { name:"Logan Go", rating:1188, grade:"1" }, { name:"Ramon Omer", rating:1155, grade:"2" }, { name:"William Zhu", rating:1143, grade:"2" }, { name:"Ashton Roth", rating:1120, grade:"3" }, { name:"Kaito Kemuriyama", rating:1018, grade:"1" }, { name:"Alessio Hendricks", rating:945, grade:"1" }, { name:"Takashi iizumi", rating:878, grade:"1" }, { name:"Jeremy Hou", rating:754, grade:"1" }, { name:"Jordan Cetron", rating:614, grade:"K" }, { name:"Reima Haniu", rating:468, grade:"K" }, { name:"Henry Eber", rating:369, grade:"K" }],
-    "PS 282": [{ name:"Javier Carcamo", rating:1363, grade:"5" }, { name:"Levi Grossberg", rating:1274, grade:"1" }, { name:"Finley Chamberlain", rating:1231, grade:"5" }, { name:"Trey Harris", rating:1172, grade:"4" }, { name:"Kai Kessler", rating:852, grade:"1" }, { name:"Jacob Audett", rating:842, grade:"1" }, { name:"Isabelle Pomeranc", rating:652, grade:"K" }, { name:"Zohar Rudis", rating:457, grade:"K" }],
-    "PS 290": [{ name:"Hudson Pistorino", rating:1352, grade:"4" }, { name:"Victor Brunet", rating:1278, grade:"4" }, { name:"Jonathan Wang", rating:1218, grade:"3" }, { name:"Edward Song", rating:1095, grade:"2" }, { name:"Leonardo Chu", rating:954, grade:"1" }, { name:"Ethan Lao", rating:901, grade:"2" }, { name:"Massimo Vietri", rating:735, grade:"1" }, { name:"Ren Du-Liang", rating:716, grade:"K" }, { name:"Luca Fusco", rating:573, grade:"K" }, { name:"Amelia Ye", rating:456, grade:"K" }, { name:"Lucas Song", rating:387, grade:"K" }],
-    "PS 31": [{ name:"Maximus Chesbro", rating:1386, grade:"4" }, { name:"Zoe Thompson", rating:1229, grade:"5" }, { name:"Roni Bayram", rating:1050, grade:"3" }, { name:"Maxwell Steer", rating:973, grade:"2" }, { name:"Henry Wills", rating:956, grade:"2" }, { name:"Daniel Tuohy", rating:908, grade:"2" }, { name:"Som Temby", rating:772, grade:"1" }],
-    "PS 32": [{ name:"Kai Waters", rating:1803, grade:"5" }, { name:"Gabriel Young", rating:1452, grade:"4" }, { name:"Max Alvarez", rating:1383, grade:"4" }, { name:"Levi Micah Jean", rating:1008, grade:"2" }, { name:"Jamie McNamara", rating:813, grade:"1" }, { name:"Kenzo Waters", rating:470, grade:"K" }],
-    "PS 33": [{ name:"Rohan Iyengar", rating:1670, grade:"4" }, { name:"Maximus Phillips", rating:1626, grade:"3" }, { name:"Alexander Rosenberg", rating:1572, grade:"5" }, { name:"Sahil Gandhi", rating:1469, grade:"5" }, { name:"Ella Ho", rating:1394, grade:"5" }, { name:"Parsa Edalati", rating:1343, grade:"4" }, { name:"Roi Choi", rating:1305, grade:"2" }, { name:"Mason Ramachandran", rating:1243, grade:"4" }, { name:"Ellis Goh", rating:1188, grade:"4" }, { name:"Adam Ali", rating:920, grade:"2" }, { name:"Atlas Srivastava", rating:852, grade:"1" }, { name:"Parker Chen", rating:716, grade:"1" }, { name:"Calder Surtees", rating:538, grade:"K" }],
-    "PS 333": [{ name:"Benjamin Abramowitz", rating:1411, grade:"2" }],
-    "PS 34": [{ name:"Severin Dragovoja", rating:385, grade:"K" }],
-    "PS 39": [{ name:"Arman Alimbayev", rating:1568, grade:"4" }, { name:"Atsumu Nomura", rating:1511, grade:"5" }, { name:"Halo Nomura", rating:1477, grade:"3" }, { name:"Mahir Maturu", rating:1225, grade:"5" }, { name:"Boran Richter", rating:1216, grade:"5" }, { name:"Thomas Mischaikow", rating:1136, grade:"3" }, { name:"Lucas Crutchfield", rating:1116, grade:"3" }],
-    "PS 40": [{ name:"Yotam Hochstadt", rating:1326, grade:"4" }, { name:"Celeste Shin", rating:1160, grade:"3" }, { name:"Aviv Horev", rating:640, grade:"K" }],
-    "PS 527": [{ name:"Hiroki Winter", rating:1609, grade:"4" }, { name:"Noah Valderrama", rating:1452, grade:"4" }, { name:"Raenav Bajpai-Sharan", rating:1288, grade:"3" }, { name:"Emile JONQUIERES", rating:1094, grade:"3" }, { name:"Kristen Oh", rating:740, grade:"1" }],
-    "PS 59": [{ name:"Oscar Finkin", rating:1793, grade:"4" }, { name:"Harrison Moscona", rating:1766, grade:"3" }, { name:"Edison Chen", rating:1421, grade:"4" }, { name:"Austin Schnitzer", rating:1403, grade:"1" }, { name:"Jack Brodersen", rating:1225, grade:"3" }, { name:"Ethan Lau", rating:1203, grade:"4" }, { name:"Aris Hampton", rating:1169, grade:"5" }, { name:"Naomi Finkin", rating:1150, grade:"2" }, { name:"Simone Dukhon", rating:718, grade:"1" }, { name:"William Lin", rating:647, grade:"K" }, { name:"Eli Pildis", rating:511, grade:"K" }],
-    "PS 77": [{ name:"Ethan Kim", rating:1884, grade:"5" }, { name:"Sebastian Goodrich", rating:1845, grade:"3" }, { name:"Ekam Anand", rating:1733, grade:"5" }, { name:"Avery Goodrich", rating:1654, grade:"5" }, { name:"Reed Shlisky", rating:1641, grade:"5" }, { name:"Artemis Xie", rating:1564, grade:"5" }, { name:"Harry Lai", rating:1564, grade:"5" }, { name:"Aya Shapovalov", rating:1519, grade:"4" }, { name:"Basil Bouzalis", rating:1491, grade:"4" }, { name:"Weili Wen", rating:1484, grade:"4" }, { name:"Tyler Sun", rating:1430, grade:"4" }, { name:"Yicheng Zhang", rating:1428, grade:"2" }, { name:"Graham Shlisky", rating:1409, grade:"3" }, { name:"Aidan Lin", rating:1374, grade:"4" }, { name:"Chloe Zheng", rating:1368, grade:"4" }, { name:"Alexander Danford", rating:1362, grade:"5" }, { name:"Neel Dubey", rating:1285, grade:"2" }, { name:"Mariam Kuruvilla", rating:1216, grade:"5" }, { name:"Airi Mitobe", rating:1201, grade:"3" }, { name:"Luke Lederman", rating:1156, grade:"2" }, { name:"William Qian", rating:1088, grade:"1" }, { name:"Liyana Dar", rating:1069, grade:"1" }, { name:"Theo Shao", rating:1068, grade:"1" }, { name:"Yuica Nishioka", rating:995, grade:"1" }, { name:"Allison Lai", rating:937, grade:"2" }, { name:"Rohan Shetty", rating:891, grade:"1" }, { name:"Tal Donaghy", rating:854, grade:"1" }, { name:"Jamie Wang", rating:837, grade:"1" }, { name:"Ronen Bikoff", rating:815, grade:"1" }, { name:"Lynn Ashida", rating:708, grade:"1" }, { name:"Owen Luo", rating:552, grade:"K" }, { name:"Rachel Young", rating:537, grade:"K" }, { name:"Hunter Zhou", rating:438, grade:"K" }, { name:"Neil Goel", rating:376, grade:"K" }, { name:"Ellis Kim", rating:372, grade:"K" }, { name:"Henry Shen", rating:372, grade:"K" }],
-    "PS 889": [{ name:"Samuel Ricca", rating:1358, grade:"3" }, { name:"Geva Gilead", rating:426, grade:"K" }],
-    "Saddle River Day": [{ name:"Niam Parmar", rating:565, grade:"K" }],
-    "Town School": [{ name:"Rohan Dalal", rating:1511, grade:"4" }],
-  };
+  const ALL_PLAYERS = [
+    { name:"Charles Don", rating:1317, school:"Nest+M", grade:"K" },
+    { name:"Edward Hong", rating:875, school:"PS 166", grade:"K" },
+    { name:"Hazel Su", rating:813, school:"BASIS-B", grade:"K" },
+    { name:"Wesley Wang", rating:768, school:"Nest+M", grade:"K" },
+    { name:"Maksim Kobrinsky", rating:727, school:"PS 230", grade:"K" },
+    { name:"Ren Du-Liang", rating:716, school:"PS 290", grade:"K" },
+    { name:"Mohui Jiang", rating:685, school:"A-S", grade:"K" },
+    { name:"Kai Tang", rating:680, school:"PS 11", grade:"K" },
+    { name:"Owen Chen", rating:666, school:"PS 10", grade:"K" },
+    { name:"Isabelle Pomeranc", rating:652, school:"PS 282", grade:"K" },
+    { name:"William Lin", rating:647, school:"PS 59", grade:"K" },
+    { name:"Cooper Englund", rating:647, school:"PS 166", grade:"K" },
+    { name:"Aviv Horev", rating:640, school:"PS 40", grade:"K" },
+    { name:"Parker Downing", rating:626, school:"PS 11", grade:"K" },
+    { name:"Jordan Cetron", rating:614, school:"PS 281", grade:"K" },
+    { name:"Eloise Charbal", rating:603, school:"PS 198", grade:"K" },
+    { name:"Lilianna Tenorio", rating:598, school:"Nest+M", grade:"K" },
+    { name:"Dylan Wu", rating:589, school:"PS 11", grade:"K" },
+    { name:"Logan Hong", rating:585, school:"PS 166", grade:"K" },
+    { name:"Luca Fusco", rating:573, school:"PS 290", grade:"K" },
+    { name:"Arco Vidiksis", rating:572, school:"PS 10", grade:"K" },
+    { name:"Niam Parmar", rating:565, school:"Saddle River Day", grade:"K" },
+    { name:"Owen Luo", rating:552, school:"PS 77", grade:"K" },
+    { name:"Calder Surtees", rating:538, school:"PS 33", grade:"K" },
+    { name:"Rachel Young", rating:537, school:"PS 77", grade:"K" },
+    { name:"Eli Pildis", rating:511, school:"PS 59", grade:"K" },
+    { name:"Cora Nightingale", rating:502, school:"PS 166", grade:"K" },
+    { name:"Kenzo Waters", rating:470, school:"PS 32", grade:"K" },
+    { name:"Reima Haniu", rating:468, school:"PS 281", grade:"K" },
+    { name:"Remy Surman", rating:463, school:"PS 166", grade:"K" },
+    { name:"Fionnuala Verdi", rating:462, school:"PS 10", grade:"K" },
+    { name:"Zohar Rudis", rating:457, school:"PS 282", grade:"K" },
+    { name:"Amelia Ye", rating:456, school:"PS 290", grade:"K" },
+    { name:"Lucas Chen", rating:452, school:"PS 166", grade:"K" },
+    { name:"Noam Sagi", rating:445, school:"PS 166", grade:"K" },
+    { name:"Hunter Zhou", rating:438, school:"PS 77", grade:"K" },
+    { name:"Ansel Fair", rating:438, school:"PS 118", grade:"K" },
+    { name:"Yoomi Yoon-Winawer", rating:435, school:"PS 11", grade:"K" },
+    { name:"Geva Gilead", rating:426, school:"PS 889", grade:"K" },
+    { name:"Margot Trin", rating:422, school:"PS 124", grade:"K" },
+    { name:"Isabel Lau", rating:408, school:"PS 124", grade:"K" },
+    { name:"Jiho Chae", rating:405, school:"Norwood", grade:"K" },
+    { name:"Milo Casey", rating:404, school:"PS 10", grade:"K" },
+    { name:"Proxima Reed Rader", rating:394, school:"PS 20", grade:"K" },
+    { name:"Lucas Song", rating:387, school:"PS 290", grade:"K" },
+    { name:"Severin Dragovoja", rating:385, school:"PS 34", grade:"K" },
+    { name:"Neil Goel", rating:376, school:"PS 77", grade:"K" },
+    { name:"Ellis Kim", rating:372, school:"PS 77", grade:"K" },
+    { name:"Henry Shen", rating:372, school:"PS 77", grade:"K" },
+    { name:"Henry Eber", rating:369, school:"PS 281", grade:"K" },
+    { name:"Austin Schnitzer", rating:1403, school:"PS 59", grade:"1" },
+    { name:"Benjamin Frye", rating:1304, school:"PS 166", grade:"1" },
+    { name:"Levi Grossberg", rating:1274, school:"PS 282", grade:"1" },
+    { name:"Maddox Kretschman", rating:1269, school:"PS 118", grade:"1" },
+    { name:"Oliver Zhang", rating:1217, school:"PS 124", grade:"1" },
+    { name:"Logan Go", rating:1188, school:"PS 281", grade:"1" },
+    { name:"Yuvan Choudhury", rating:1177, school:"PS 166", grade:"1" },
+    { name:"Luca Falk", rating:1130, school:"PS 166", grade:"1" },
+    { name:"Fumikazu Abe", rating:1115, school:"PS 198", grade:"1" },
+    { name:"Ren Hirayama", rating:1111, school:"PS 198", grade:"1" },
+    { name:"Wyatt Lawson", rating:1097, school:"PS 11", grade:"1" },
+    { name:"William Qian", rating:1088, school:"PS 77", grade:"1" },
+    { name:"Lucas Flores", rating:1074, school:"PS 198", grade:"1" },
+    { name:"Liyana Dar", rating:1069, school:"PS 77", grade:"1" },
+    { name:"Theo Shao", rating:1068, school:"PS 77", grade:"1" },
+    { name:"Kaito Kemuriyama", rating:1018, school:"PS 281", grade:"1" },
+    { name:"Adam Atwa", rating:999, school:"PS 11", grade:"1" },
+    { name:"Yuica Nishioka", rating:995, school:"PS 77", grade:"1" },
+    { name:"Mia Vakhtangishvili", rating:984, school:"PS 198", grade:"1" },
+    { name:"Isla Miner", rating:983, school:"PS 130", grade:"1" },
+    { name:"Leonardo Chu", rating:954, school:"PS 290", grade:"1" },
+    { name:"Alessio Hendricks", rating:945, school:"PS 281", grade:"1" },
+    { name:"Eva Vakhtangishvili", rating:931, school:"PS 198", grade:"1" },
+    { name:"Rohan Shetty", rating:891, school:"PS 77", grade:"1" },
+    { name:"Takashi iizumi", rating:878, school:"PS 281", grade:"1" },
+    { name:"Mac Frantzis", rating:875, school:"PS 20", grade:"1" },
+    { name:"Tal Donaghy", rating:854, school:"PS 77", grade:"1" },
+    { name:"Atlas Srivastava", rating:852, school:"PS 33", grade:"1" },
+    { name:"Kai Kessler", rating:852, school:"PS 282", grade:"1" },
+    { name:"Reika Konuma", rating:850, school:"PS 198", grade:"1" },
+    { name:"Jacob Hoelscher", rating:844, school:"Nest+M", grade:"1" },
+    { name:"Jacob Audett", rating:842, school:"PS 282", grade:"1" },
+    { name:"Jamie Wang", rating:837, school:"PS 77", grade:"1" },
+    { name:"Rei Yamazaki", rating:832, school:"PS 198", grade:"1" },
+    { name:"Ronen Bikoff", rating:815, school:"PS 77", grade:"1" },
+    { name:"Jamie McNamara", rating:813, school:"PS 32", grade:"1" },
+    { name:"Jason Ham", rating:810, school:"Nest+M", grade:"1" },
+    { name:"Sebastian Mehtani", rating:786, school:"Nest+M", grade:"1" },
+    { name:"Olivia Nightingale", rating:776, school:"PS 166", grade:"1" },
+    { name:"Som Temby", rating:772, school:"PS 31", grade:"1" },
+    { name:"Devin Swan", rating:766, school:"A-S", grade:"1" },
+    { name:"Rhea Zhao", rating:759, school:"Nest+M", grade:"1" },
+    { name:"Jeremy Hou", rating:754, school:"PS 281", grade:"1" },
+    { name:"Kristen Oh", rating:740, school:"PS 527", grade:"1" },
+    { name:"Massimo Vietri", rating:735, school:"PS 290", grade:"1" },
+    { name:"Simone Dukhon", rating:718, school:"PS 59", grade:"1" },
+    { name:"Kieran Melgar", rating:718, school:"PS 20", grade:"1" },
+    { name:"Parker Chen", rating:716, school:"PS 33", grade:"1" },
+    { name:"Lynn Ashida", rating:708, school:"PS 77", grade:"1" },
+    { name:"Milos Fisher", rating:708, school:"PS 118", grade:"1" },
+    { name:"Matias Falk", rating:1591, school:"PS 166", grade:"2" },
+    { name:"Julian Cho", rating:1509, school:"Nest+M", grade:"2" },
+    { name:"Kieran McCullough", rating:1479, school:"PS 166", grade:"2" },
+    { name:"Yicheng Zhang", rating:1428, school:"PS 77", grade:"2" },
+    { name:"Benjamin Abramowitz", rating:1411, school:"PS 333", grade:"2" },
+    { name:"Lucas Ciraldo", rating:1329, school:"PS 281", grade:"2" },
+    { name:"Roi Choi", rating:1305, school:"PS 33", grade:"2" },
+    { name:"Elena Sengupta", rating:1305, school:"PS 198", grade:"2" },
+    { name:"Krish Reddy", rating:1296, school:"PS 281", grade:"2" },
+    { name:"Neel Dubey", rating:1285, school:"PS 77", grade:"2" },
+    { name:"Maverick Wang", rating:1274, school:"PS 281", grade:"2" },
+    { name:"Jio Park", rating:1242, school:"PS 10", grade:"2" },
+    { name:"Jacob Burkat", rating:1220, school:"Nest+M", grade:"2" },
+    { name:"Sam Ramsey", rating:1210, school:"PS 118", grade:"2" },
+    { name:"Devitt Begley", rating:1194, school:"PS 198", grade:"2" },
+    { name:"Miroslav Toth", rating:1179, school:"PS 130", grade:"2" },
+    { name:"Luke Lederman", rating:1156, school:"PS 77", grade:"2" },
+    { name:"Ramon Omer", rating:1155, school:"PS 281", grade:"2" },
+    { name:"Naomi Finkin", rating:1150, school:"PS 59", grade:"2" },
+    { name:"Athena Vitticore", rating:1150, school:"PS 130", grade:"2" },
+    { name:"William Zhu", rating:1143, school:"PS 281", grade:"2" },
+    { name:"Jae Kromidas", rating:1143, school:"PS 166", grade:"2" },
+    { name:"Tristan Lazaro", rating:1120, school:"PS 230", grade:"2" },
+    { name:"Rafael Mario Guevara-Ceja", rating:1110, school:"PS 130", grade:"2" },
+    { name:"Edward Song", rating:1095, school:"PS 290", grade:"2" },
+    { name:"Glenn Gooch-Raushenbush", rating:1094, school:"PS 11", grade:"2" },
+    { name:"Alex Kou", rating:1086, school:"Nest+M", grade:"2" },
+    { name:"Lorenzo Ciccia", rating:1082, school:"PS 166", grade:"2" },
+    { name:"Micah Rifkin", rating:1069, school:"PS 116", grade:"2" },
+    { name:"Brian Silverman", rating:1045, school:"PS 11", grade:"2" },
+    { name:"Lincoln Freeman", rating:1041, school:"Nest+M", grade:"2" },
+    { name:"Lue Lev-Talpaz", rating:1034, school:"PS 130", grade:"2" },
+    { name:"Connie Ye", rating:1028, school:"BSI", grade:"2" },
+    { name:"Adrian Gutierrez", rating:1015, school:"PS 230", grade:"2" },
+    { name:"Levi Micah Jean", rating:1008, school:"PS 32", grade:"2" },
+    { name:"Maxwell Steer", rating:973, school:"PS 31", grade:"2" },
+    { name:"Luc Denis Totouom Tangho", rating:971, school:"PS 166", grade:"2" },
+    { name:"Sienna Sartor", rating:967, school:"PS 198", grade:"2" },
+    { name:"McKenzie Ocupa", rating:966, school:"PS 111", grade:"2" },
+    { name:"Henry Wills", rating:956, school:"PS 31", grade:"2" },
+    { name:"Allison Lai", rating:937, school:"PS 77", grade:"2" },
+    { name:"Jaxson Vanderpoole", rating:936, school:"PS 11", grade:"2" },
+    { name:"Rohan Shukla", rating:936, school:"PS 130M", grade:"2" },
+    { name:"Marcus Lau", rating:932, school:"PS 124", grade:"2" },
+    { name:"Julian Wilson", rating:930, school:"PS 130", grade:"2" },
+    { name:"Theodore Cinquegrana", rating:926, school:"Nest+M", grade:"2" },
+    { name:"Adam Ali", rating:920, school:"PS 33", grade:"2" },
+    { name:"Daniel Tuohy", rating:908, school:"PS 31", grade:"2" },
+    { name:"Cary Boyle", rating:906, school:"PS 130", grade:"2" },
+    { name:"Ethan Lao", rating:901, school:"PS 290", grade:"2" },
+    { name:"Max Mulholland", rating:1949, school:"PS 198", grade:"3" },
+    { name:"Sebastian Goodrich", rating:1845, school:"PS 77", grade:"3" },
+    { name:"Harrison Moscona", rating:1766, school:"PS 59", grade:"3" },
+    { name:"Preston Liu", rating:1707, school:"PS 130M", grade:"3" },
+    { name:"Maximus Phillips", rating:1626, school:"PS 33", grade:"3" },
+    { name:"Jackson Liu", rating:1560, school:"PS 130M", grade:"3" },
+    { name:"Harrison Harsch", rating:1499, school:"PS 130", grade:"3" },
+    { name:"Halo Nomura", rating:1477, school:"PS 39", grade:"3" },
+    { name:"Sebastian Alanis", rating:1456, school:"PS 198", grade:"3" },
+    { name:"Lucas Rosenberg", rating:1411, school:"PS 198", grade:"3" },
+    { name:"Graham Shlisky", rating:1409, school:"PS 77", grade:"3" },
+    { name:"Evan Desai", rating:1403, school:"PS 198", grade:"3" },
+    { name:"Sidney Gitomer", rating:1368, school:"A-S", grade:"3" },
+    { name:"Samuel Ricca", rating:1358, school:"PS 889", grade:"3" },
+    { name:"Henry Mueller", rating:1332, school:"PS 130", grade:"3" },
+    { name:"Ioane Kilasonia", rating:1302, school:"PS 10", grade:"3" },
+    { name:"Andrew Li", rating:1300, school:"PS 11", grade:"3" },
+    { name:"Jacob King", rating:1299, school:"PS 130", grade:"3" },
+    { name:"Jordan Nguyen-Huynh", rating:1299, school:"PS 130M", grade:"3" },
+    { name:"Shanay Potti", rating:1288, school:"Nest+M", grade:"3" },
+    { name:"Raenav Bajpai-Sharan", rating:1288, school:"PS 527", grade:"3" },
+    { name:"Amerson Nicodemo", rating:1283, school:"Nest+M", grade:"3" },
+    { name:"Rami Padukone-Mitter", rating:1281, school:"PS 11", grade:"3" },
+    { name:"Theodore Lewis", rating:1272, school:"PS 11", grade:"3" },
+    { name:"Jayden Xu", rating:1268, school:"PS 130M", grade:"3" },
+    { name:"Jack Brodersen", rating:1225, school:"PS 59", grade:"3" },
+    { name:"Miller Mayo", rating:1219, school:"PS 10", grade:"3" },
+    { name:"Jonathan Wang", rating:1218, school:"PS 290", grade:"3" },
+    { name:"Ethan Metzer", rating:1210, school:"PS 11", grade:"3" },
+    { name:"Chloe Yip", rating:1205, school:"PS 11", grade:"3" },
+    { name:"Airi Mitobe", rating:1201, school:"PS 77", grade:"3" },
+    { name:"Ishaan Sharma", rating:1198, school:"PS 130", grade:"3" },
+    { name:"Asher Weintraub", rating:1186, school:"PS 118", grade:"3" },
+    { name:"Solaris Wang", rating:1169, school:"PS 130M", grade:"3" },
+    { name:"Celeste Shin", rating:1160, school:"PS 40", grade:"3" },
+    { name:"Lionel Bengtsen", rating:1151, school:"PS 184M", grade:"3" },
+    { name:"Caleb Chen", rating:1142, school:"PS 130M", grade:"3" },
+    { name:"Thomas Mischaikow", rating:1136, school:"PS 39", grade:"3" },
+    { name:"Eva Shang", rating:1133, school:"Nest+M", grade:"3" },
+    { name:"Owen Braun", rating:1126, school:"A-S", grade:"3" },
+    { name:"Logan Chow", rating:1124, school:"PS 124", grade:"3" },
+    { name:"Ashton Roth", rating:1120, school:"PS 281", grade:"3" },
+    { name:"Lucas Crutchfield", rating:1116, school:"PS 39", grade:"3" },
+    { name:"Evelyn Jones", rating:1115, school:"PS 130", grade:"3" },
+    { name:"Emile JONQUIERES", rating:1094, school:"PS 527", grade:"3" },
+    { name:"Dean Chiang", rating:1086, school:"Nest+M", grade:"3" },
+    { name:"George Cohen", rating:1071, school:"PS 10", grade:"3" },
+    { name:"Gabriel Weng", rating:1069, school:"BSI", grade:"3" },
+    { name:"Dylan Guenther", rating:1058, school:"BSI", grade:"3" },
+    { name:"Roni Bayram", rating:1050, school:"PS 31", grade:"3" },
+    { name:"Grayson Xiang", rating:2015, school:"PS 130", grade:"4" },
+    { name:"Milo Su", rating:1970, school:"BASIS-B", grade:"4" },
+    { name:"Oscar Finkin", rating:1793, school:"PS 59", grade:"4" },
+    { name:"Joseph Daniel Totouom Tangho", rating:1772, school:"PS 166", grade:"4" },
+    { name:"Brendan Seto", rating:1754, school:"PS 281", grade:"4" },
+    { name:"George Japharidze", rating:1671, school:"PS 10", grade:"4" },
+    { name:"Rohan Iyengar", rating:1670, school:"PS 33", grade:"4" },
+    { name:"Kirill McNaughton", rating:1647, school:"Nest+M", grade:"4" },
+    { name:"Hiroki Winter", rating:1609, school:"PS 527", grade:"4" },
+    { name:"Arman Alimbayev", rating:1568, school:"PS 39", grade:"4" },
+    { name:"August Noble", rating:1522, school:"PS 130", grade:"4" },
+    { name:"Aya Shapovalov", rating:1519, school:"PS 77", grade:"4" },
+    { name:"Rohan Dalal", rating:1511, school:"Town School", grade:"4" },
+    { name:"Phoebe Lasher", rating:1506, school:"PS 166", grade:"4" },
+    { name:"Basil Bouzalis", rating:1491, school:"PS 77", grade:"4" },
+    { name:"Weili Wen", rating:1484, school:"PS 77", grade:"4" },
+    { name:"David Azimov", rating:1482, school:"PS 230", grade:"4" },
+    { name:"Avery Van Arman", rating:1460, school:"Brooklyn Prospect IES", grade:"4" },
+    { name:"Alfred Cheung", rating:1454, school:"PS 10", grade:"4" },
+    { name:"Gabriel Young", rating:1452, school:"PS 32", grade:"4" },
+    { name:"Noah Valderrama", rating:1452, school:"PS 527", grade:"4" },
+    { name:"Tyler Sun", rating:1430, school:"PS 77", grade:"4" },
+    { name:"Jeremiah Dimoh", rating:1430, school:"PS 20", grade:"4" },
+    { name:"Emile Shah", rating:1423, school:"Nest+M", grade:"4" },
+    { name:"Edison Chen", rating:1421, school:"PS 59", grade:"4" },
+    { name:"Maximus Chesbro", rating:1386, school:"PS 31", grade:"4" },
+    { name:"Max Alvarez", rating:1383, school:"PS 32", grade:"4" },
+    { name:"Aidan Lin", rating:1374, school:"PS 77", grade:"4" },
+    { name:"Hanna Sengupta", rating:1370, school:"PS 198", grade:"4" },
+    { name:"Chloe Zheng", rating:1368, school:"PS 77", grade:"4" },
+    { name:"Michelle Kou", rating:1352, school:"Nest+M", grade:"4" },
+    { name:"Hudson Pistorino", rating:1352, school:"PS 290", grade:"4" },
+    { name:"Parsa Edalati", rating:1343, school:"PS 33", grade:"4" },
+    { name:"Theodore Meng", rating:1340, school:"PS 11", grade:"4" },
+    { name:"Shirina Tolibova", rating:1327, school:"PS 230", grade:"4" },
+    { name:"Yotam Hochstadt", rating:1326, school:"PS 40", grade:"4" },
+    { name:"Tai Hong", rating:1290, school:"Nest+M", grade:"4" },
+    { name:"Nico Karp", rating:1279, school:"PS 130", grade:"4" },
+    { name:"Victor Brunet", rating:1278, school:"PS 290", grade:"4" },
+    { name:"Nash del Rio", rating:1250, school:"PS 20", grade:"4" },
+    { name:"Mason Ramachandran", rating:1243, school:"PS 33", grade:"4" },
+    { name:"Christopher Maghi", rating:1240, school:"Brooklyn Prospect IES", grade:"4" },
+    { name:"Ashwath Anand", rating:1211, school:"PS 10", grade:"4" },
+    { name:"Ethan Lau", rating:1203, school:"PS 59", grade:"4" },
+    { name:"Ellis Goh", rating:1188, school:"PS 33", grade:"4" },
+    { name:"Trey Harris", rating:1172, school:"PS 282", grade:"4" },
+    { name:"Christopher Lam", rating:1155, school:"PS 130M", grade:"4" },
+    { name:"Garvey Orane", rating:1150, school:"PS 10", grade:"4" },
+    { name:"Lila Fugate", rating:1147, school:"PS 166", grade:"4" },
+    { name:"Eilidh Donaghy", rating:1127, school:"PS 111", grade:"4" },
+    { name:"Jack Boyer-Olson", rating:2101, school:"Nest+M", grade:"5" },
+    { name:"Adrian Sommerstein", rating:2009, school:"PS 130", grade:"5" },
+    { name:"Isaac Noah Lui", rating:1966, school:"PS 130M", grade:"5" },
+    { name:"Ethan Kim", rating:1884, school:"PS 77", grade:"5" },
+    { name:"Kai Waters", rating:1803, school:"PS 32", grade:"5" },
+    { name:"Seamus Brady", rating:1790, school:"PS 130", grade:"5" },
+    { name:"Noah Kaye", rating:1757, school:"PS 130", grade:"5" },
+    { name:"Lowell Begley", rating:1737, school:"PS 198", grade:"5" },
+    { name:"Ekam Anand", rating:1733, school:"PS 77", grade:"5" },
+    { name:"Lve Wang", rating:1731, school:"PS 281", grade:"5" },
+    { name:"Niklas Kelletshofer", rating:1661, school:"PS 198", grade:"5" },
+    { name:"Avery Goodrich", rating:1654, school:"PS 77", grade:"5" },
+    { name:"Leah Cai", rating:1654, school:"PS 130M", grade:"5" },
+    { name:"Reed Shlisky", rating:1641, school:"PS 77", grade:"5" },
+    { name:"Alexander Rosenberg", rating:1572, school:"PS 33", grade:"5" },
+    { name:"Artemis Xie", rating:1564, school:"PS 77", grade:"5" },
+    { name:"Harry Lai", rating:1564, school:"PS 77", grade:"5" },
+    { name:"Emma Leon", rating:1554, school:"PS 130M", grade:"5" },
+    { name:"Jonah Finkelstein", rating:1520, school:"PS 130", grade:"5" },
+    { name:"Atsumu Nomura", rating:1511, school:"PS 39", grade:"5" },
+    { name:"Evan Lu", rating:1482, school:"PS 281", grade:"5" },
+    { name:"Sahil Gandhi", rating:1469, school:"PS 33", grade:"5" },
+    { name:"Alice Sirinides", rating:1458, school:"PS 130", grade:"5" },
+    { name:"Nikolas Garces", rating:1425, school:"PS 281", grade:"5" },
+    { name:"Henry Gu", rating:1400, school:"Nest+M", grade:"5" },
+    { name:"Ella Ho", rating:1394, school:"PS 33", grade:"5" },
+    { name:"Brandon Tsay", rating:1380, school:"PS 116", grade:"5" },
+    { name:"Ryland Larsen", rating:1366, school:"PS 198", grade:"5" },
+    { name:"Javier Carcamo", rating:1363, school:"PS 282", grade:"5" },
+    { name:"Alexander Danford", rating:1362, school:"PS 77", grade:"5" },
+    { name:"Thaiger DeRosa", rating:1360, school:"BASIS-B", grade:"5" },
+    { name:"Holden Sebold", rating:1338, school:"PS 10", grade:"5" },
+    { name:"Sloane Murphy", rating:1311, school:"PS 11", grade:"5" },
+    { name:"Aiden Kuc", rating:1294, school:"PS 130", grade:"5" },
+    { name:"Isha Varma", rating:1291, school:"PS 11", grade:"5" },
+    { name:"Nia Zheng", rating:1287, school:"PS 130M", grade:"5" },
+    { name:"Walter Gooch-Raushenbush", rating:1279, school:"PS 11", grade:"5" },
+    { name:"Ayden Pan", rating:1279, school:"PS 130M", grade:"5" },
+    { name:"Evan Lam", rating:1277, school:"PS 124", grade:"5" },
+    { name:"Russell Cinquegrana", rating:1268, school:"Nest+M", grade:"5" },
+    { name:"Xavier Lazaro", rating:1256, school:"PS 230", grade:"5" },
+    { name:"Kevin Purcell", rating:1232, school:"PS 166", grade:"5" },
+    { name:"Finley Chamberlain", rating:1231, school:"PS 282", grade:"5" },
+    { name:"Zoe Thompson", rating:1229, school:"PS 31", grade:"5" },
+    { name:"Mahir Maturu", rating:1225, school:"PS 39", grade:"5" },
+    { name:"Cyrus Christoff", rating:1224, school:"PS 230", grade:"5" },
+    { name:"Mariam Kuruvilla", rating:1216, school:"PS 77", grade:"5" },
+    { name:"Boran Richter", rating:1216, school:"PS 39", grade:"5" },
+    { name:"Guy Gourvitch", rating:1204, school:"Nest+M", grade:"5" },
+    { name:"Aris Hampton", rating:1169, school:"PS 59", grade:"5" },
+  ];
+
+  const GRADES = [
+    { key: "K", label: "Kindergarten" },
+    { key: "1", label: "1st Grade" },
+    { key: "2", label: "2nd Grade" },
+    { key: "3", label: "3rd Grade" },
+    { key: "4", label: "4th Grade" },
+    { key: "5", label: "5th Grade" }
+  ];
+
+  const PLAYERS_BY_SCHOOL = ALL_PLAYERS.reduce((acc, p) => {
+    (acc[p.school] = acc[p.school] || []).push(p);
+    return acc;
+  }, {});
+
+  const PLAYERS_BY_GRADE = ALL_PLAYERS.reduce((acc, p) => {
+    (acc[p.grade] = acc[p.grade] || []).push(p);
+    return acc;
+  }, {});
+  Object.values(PLAYERS_BY_GRADE).forEach(list => list.sort((a, b) => b.rating - a.rating));
 
   const EXAMPLE_PLAYERS = [
     { name: "Example Player", rating: 950 },
@@ -673,9 +1097,12 @@
     { name: "Example Player", rating: 560 }
   ];
 
+  let currentView = "teams";
   let currentRegionIndex = 0;
   let currentDivisionKey = "k1";
+  let currentGrade = "K";
   let expandedSchool = null;
+  let playerFilterGrade = "all";
 
   function sortedSchools(list){
     return [...list].sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
@@ -686,9 +1113,10 @@
     return school.points - prev;
   }
 
-  function topPlayers(schoolName){
-    const roster = PLAYERS[schoolName];
+  function topPlayers(schoolName, gradeFilter){
+    let roster = PLAYERS_BY_SCHOOL[schoolName];
     if(!roster || !roster.length) return [];
+    if(gradeFilter && gradeFilter !== "all") roster = roster.filter(p => p.grade === gradeFilter);
     return [...roster].sort((a, b) => b.rating - a.rating).slice(0, 5);
   }
 
@@ -722,33 +1150,47 @@
     return `<span class="trend flat">&mdash;</span>`;
   }
 
+  function gradeChipLabel(g){ return g === "K" ? "K" : g; }
+
   function playerPanelHtml(schoolName){
-    const players = topPlayers(schoolName);
-    if(players.length){
-      const rows = players.map((p, i) => `
+    const fullRoster = PLAYERS_BY_SCHOOL[schoolName];
+
+    if(!fullRoster || !fullRoster.length){
+      const exampleRows = EXAMPLE_PLAYERS.map((p, i) => `
         <div class="player-row">
           <span class="player-rank num">${i + 1}</span>
           <span class="player-name">${p.name}</span>
-          <span class="player-grade">${p.grade === "K" ? "K" : "Gr " + p.grade}</span>
           <span class="player-rating">${p.rating}</span>
         </div>
       `).join("");
       return `
-        <div class="player-panel-head">Top ${players.length} by USCF rating</div>
-        ${rows}
+        <div class="player-empty">No USCF roster loaded yet for ${schoolName}. Add it to <code>PLAYERS_BY_SCHOOL</code> (via <code>ALL_PLAYERS</code>) once more data is in.</div>
+        <div class="player-panel-head">Example format</div>
+        <div class="player-example">${exampleRows}</div>
       `;
     }
-    const exampleRows = EXAMPLE_PLAYERS.map((p, i) => `
+
+    const availableGrades = GRADES.filter(g => fullRoster.some(p => p.grade === g.key));
+    const chips = ["all", ...availableGrades.map(g => g.key)].map(g => `
+      <button type="button" class="filter-chip${playerFilterGrade === g ? " active" : ""}" data-grade="${g}">
+        ${g === "all" ? "All grades" : gradeChipLabel(g)}
+      </button>
+    `).join("");
+
+    const players = topPlayers(schoolName, playerFilterGrade);
+    const rows = players.length ? players.map((p, i) => `
       <div class="player-row">
         <span class="player-rank num">${i + 1}</span>
         <span class="player-name">${p.name}</span>
+        <span class="player-grade">${p.grade === "K" ? "K" : "Gr " + p.grade}</span>
         <span class="player-rating">${p.rating}</span>
       </div>
-    `).join("");
+    `).join("") : `<div class="player-empty">No players from this school in that grade&rsquo;s top 50.</div>`;
+
     return `
-      <div class="player-empty">No USCF roster loaded yet for ${schoolName}. Add it to <code>PLAYERS["${schoolName}"]</code> once the icntop50 data is in.</div>
-      <div class="player-panel-head">Example format</div>
-      <div class="player-example">${exampleRows}</div>
+      <div class="filter-chips">${chips}</div>
+      <div class="player-panel-head">Top ${players.length} by USCF rating${playerFilterGrade !== "all" ? " &middot; " + GRADES.find(g => g.key === playerFilterGrade).label : ""}</div>
+      ${rows}
     `;
   }
 
@@ -779,7 +1221,11 @@
       ${trendHtml(deltaFor(school))}
       ${behindHtml}
     `;
-    const toggle = () => { expandedSchool = isExpanded ? null : school.name; renderBoard(); };
+    const toggle = () => {
+      expandedSchool = isExpanded ? null : school.name;
+      playerFilterGrade = "all";
+      renderBoard();
+    };
     row.addEventListener("click", toggle);
     row.addEventListener("keydown", e => {
       if(e.key === "Enter" || e.key === " "){ e.preventDefault(); toggle(); }
@@ -807,6 +1253,12 @@
         const panel = document.createElement("div");
         panel.className = "player-panel";
         panel.innerHTML = playerPanelHtml(school.name);
+        panel.querySelectorAll(".filter-chip").forEach(chip => {
+          chip.addEventListener("click", () => {
+            playerFilterGrade = chip.dataset.grade;
+            renderBoard();
+          });
+        });
         body.appendChild(panel);
       }
       if(rankIndex === 10 && schools.length > 10){
@@ -837,14 +1289,163 @@
     });
   }
 
+  function renderViewToggle(){
+    document.querySelectorAll("#view-toggle button").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.view === currentView);
+    });
+    document.getElementById("team-view").style.display = currentView === "teams" ? "" : "none";
+    document.getElementById("player-view").style.display = currentView === "players" ? "" : "none";
+    document.getElementById("leaders-teams-card").style.display = currentView === "teams" ? "" : "none";
+    document.getElementById("leaders-players-card").style.display = currentView === "players" ? "" : "none";
+  }
+
+  function renderGradeTabs(){
+    const el = document.getElementById("grade-tabs");
+    el.innerHTML = "";
+    GRADES.forEach(g => {
+      const btn = document.createElement("button");
+      btn.className = "tab small" + (g.key === currentGrade ? " active" : "");
+      btn.textContent = g.label;
+      btn.addEventListener("click", () => { currentGrade = g.key; render(); });
+      el.appendChild(btn);
+    });
+  }
+
+  function playerRowHtml(rankIndex, player, leaderRating){
+    const medal = rankIndex === 1 ? "g" : rankIndex === 2 ? "s" : rankIndex === 3 ? "b" : null;
+    const rankHtml = medal
+      ? `<span class="medal ${medal}">${rankIndex}</span>`
+      : `<span class="rank-plain">${rankIndex}</span>`;
+    const behindHtml = rankIndex === 1
+      ? `<span class="behind is-leader">Leader</span>`
+      : `<span class="behind">&minus;${leaderRating - player.rating}</span>`;
+
+    const row = document.createElement("div");
+    row.className = "ladder-row plist-row" + (rankIndex === 1 ? " leader" : "");
+    row.innerHTML = `
+      <span class="rank-cell">${rankHtml}</span>
+      <span class="player-cell">
+        <span class="school-name">${player.name}</span>
+        <span class="school-sub">${player.school}</span>
+      </span>
+      <span class="val num">${player.rating}</span>
+      ${behindHtml}
+    `;
+    return row;
+  }
+
+  function renderPlayerBoard(){
+    const gradeLabel = GRADES.find(g => g.key === currentGrade).label;
+    const players = PLAYERS_BY_GRADE[currentGrade] || [];
+    const leaderRating = players.length ? players[0].rating : 0;
+
+    document.getElementById("player-board-title").textContent = `${gradeLabel} — Top 50`;
+    document.getElementById("player-board-sub").textContent = `${players.length} players`;
+
+    const body = document.getElementById("player-body");
+    body.innerHTML = "";
+    players.forEach((p, i) => body.appendChild(playerRowHtml(i + 1, p, leaderRating)));
+  }
+
+  function renderGradeLeaders(){
+    const el = document.getElementById("grade-leaders");
+    el.innerHTML = "";
+    GRADES.forEach(g => {
+      const players = PLAYERS_BY_GRADE[g.key] || [];
+      if(!players.length) return;
+      const leader = players[0];
+      const row = document.createElement("div");
+      row.className = "leader-row";
+      row.innerHTML = `
+        <span class="division-tag">${g.key === "K" ? "K" : "Gr " + g.key}</span>
+        <span class="lb-name">${leader.name}<span class="lb-sub">${leader.school}</span></span>
+        <span class="lb-pts">${leader.rating}</span>
+      `;
+      el.appendChild(row);
+    });
+  }
+
+  document.querySelectorAll("#view-toggle button").forEach(btn => {
+    btn.addEventListener("click", () => { currentView = btn.dataset.view; render(); });
+  });
+
+  /* ============================================================
+     Division crests — one per borough x grade division. Piece marks
+     the division (pawn/knight/rook), ring color marks the borough.
+     Fixed hex colors (not theme tokens): the crest plate is always
+     cream, on-brand in both light and dark page themes.
+     ============================================================ */
+  const CREST_BOROUGHS = [
+    { key: "manhattan", label: "Manhattan", accent: "#9c6f22" },
+    { key: "brooklyn", label: "Brooklyn", accent: "#2b6f74" }
+  ];
+  const CREST_DIVISIONS = [
+    { key: "k1", label: "K–1", piece: "♟" },
+    { key: "primary", label: "Primary", piece: "♞" },
+    { key: "elementary", label: "Elementary", piece: "♜" }
+  ];
+
+  function buildCrestSVG(borough, division){
+    const uid = `${borough.key}-${division.key}`;
+    const cx = 120, cy = 120, rOuter = 106, rArc = 90;
+    const topId = `arcTop-${uid}`, bottomId = `arcBottom-${uid}`, gradId = `plate-${uid}`;
+    return `
+      <svg viewBox="0 0 240 240" role="img" aria-label="${borough.label} ${division.label} crest">
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fbf8f0"/>
+            <stop offset="100%" stop-color="#f0ead9"/>
+          </linearGradient>
+          <path id="${topId}" d="M ${cx - rArc} ${cy} A ${rArc} ${rArc} 0 1 1 ${cx + rArc} ${cy}" fill="none"/>
+          <path id="${bottomId}" d="M ${cx - rArc} ${cy} A ${rArc} ${rArc} 0 1 0 ${cx + rArc} ${cy}" fill="none"/>
+        </defs>
+        <circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="url(#${gradId})" stroke="${borough.accent}" stroke-width="3"/>
+        <circle cx="${cx}" cy="${cy}" r="${rOuter - 8}" fill="none" stroke="#1c1c22" stroke-opacity="0.12" stroke-width="1"/>
+        <text font-family="Fraunces, Georgia, serif" font-size="108" text-anchor="middle" fill="#1c1c22">
+          <tspan x="${cx}" y="${cy + 36}">${division.piece}</tspan>
+        </text>
+        <text font-family="Libre Franklin, sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="${borough.accent}">
+          <textPath href="#${topId}" startOffset="50%" text-anchor="middle">${borough.label.toUpperCase()}</textPath>
+        </text>
+        <text font-family="Libre Franklin, sans-serif" font-size="12.5" font-weight="700" letter-spacing="2.5" fill="${borough.accent}">
+          <textPath href="#${bottomId}" startOffset="50%" text-anchor="middle">${division.label.toUpperCase()}</textPath>
+        </text>
+      </svg>`;
+  }
+
+  function renderBadges(){
+    const grid = document.getElementById("badge-grid");
+    if(!grid) return;
+    grid.innerHTML = "";
+    CREST_BOROUGHS.forEach(borough => {
+      CREST_DIVISIONS.forEach(division => {
+        const card = document.createElement("div");
+        card.className = "badge-card";
+        card.innerHTML = `
+          ${buildCrestSVG(borough, division)}
+          <div class="badge-caption">
+            <span class="badge-borough">${borough.label}</span>
+            <span class="badge-division">${division.label}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    });
+  }
+
   function render(){
+    renderViewToggle();
     renderRegionTabs();
     renderDivisionTabs();
     renderBoard();
     renderLeaders();
+    renderGradeTabs();
+    renderPlayerBoard();
+    renderGradeLeaders();
   }
 
   render();
+  renderBadges();
 </script>
 </body>
 </html>
