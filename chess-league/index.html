@@ -24,6 +24,8 @@
     --shadow: 0 1px 2px rgba(28,20,10,0.06), 0 8px 24px -12px rgba(28,20,10,0.18);
     --silver: #7c7e86;
     --bronze: #9a5f34;
+    --pos: #2c7a4b;
+    --neg: #a1442b;
     color-scheme: light;
   }
 
@@ -44,6 +46,8 @@
       --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6);
       --silver: #a7abb5;
       --bronze: #c98a55;
+      --pos: #5cb27e;
+      --neg: #d3735a;
       color-scheme: dark;
     }
   }
@@ -64,6 +68,8 @@
     --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6);
     --silver: #a7abb5;
     --bronze: #c98a55;
+    --pos: #5cb27e;
+    --neg: #d3735a;
     color-scheme: dark;
   }
 
@@ -247,7 +253,7 @@
 
   .ladder-head, .ladder-row{
     display: grid;
-    grid-template-columns: 40px 1fr minmax(110px, 260px) 76px 84px;
+    grid-template-columns: 40px 1fr minmax(110px, 220px) 76px 64px 84px;
     align-items: center;
     gap: 14px;
     padding: 0 20px;
@@ -265,6 +271,8 @@
   .ladder-head span:nth-child(4),
   .ladder-row .val{ text-align: right; }
   .ladder-head span:nth-child(5),
+  .ladder-row .trend{ text-align: right; }
+  .ladder-head span:nth-child(6),
   .ladder-row .behind{ text-align: right; }
 
   .ladder-body .ladder-row{
@@ -275,6 +283,9 @@
   .ladder-body .ladder-row:last-child{ border-bottom: none; }
   .ladder-body .ladder-row:hover{ background: var(--surface-2); }
   .ladder-body .ladder-row.leader{ box-shadow: inset 3px 0 0 var(--gold); }
+  .ladder-body .ladder-row{ cursor: pointer; }
+  .ladder-body .ladder-row:focus-visible{ outline: 2px solid var(--gold); outline-offset: -2px; }
+  .ladder-body .ladder-row.expanded{ background: var(--surface-2); }
 
   .rank-cell{ font-family:"Spline Sans Mono", monospace; }
   .medal{
@@ -289,7 +300,49 @@
   .medal.b{ background: var(--bronze); color:#3a1f0c; }
   .rank-plain{ color: var(--ink-faint); }
 
-  .school-name{ font-weight: 600; font-size: 14.5px; }
+  .school-cell{ display:flex; align-items:center; gap:9px; min-width:0; }
+  .chevron{
+    flex: none;
+    width: 14px; text-align:center;
+    font-size: 10px;
+    color: var(--ink-faint);
+    transition: transform .15s ease;
+  }
+  .ladder-row.expanded .chevron{ transform: rotate(90deg); color: var(--gold-ink); }
+  :root[data-theme="dark"] .ladder-row.expanded .chevron{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .ladder-row.expanded .chevron{ color: var(--gold); } }
+  .school-name{ font-weight: 600; font-size: 14.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  .trend{ font-family:"Spline Sans Mono", monospace; font-size: 12px; font-weight:600; white-space:nowrap; }
+  .trend.up{ color: var(--pos); }
+  .trend.down{ color: var(--neg); }
+  .trend.flat{ color: var(--ink-faint); }
+
+  .player-panel{
+    padding: 4px 20px 18px 74px;
+    border-bottom: 1px solid var(--line-soft);
+    background: var(--surface-2);
+  }
+  .player-panel-head{
+    font-size: 10.5px; letter-spacing:0.08em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700;
+    padding: 10px 0 8px;
+  }
+  .player-row{
+    display:flex; align-items:center; gap: 12px;
+    padding: 6px 0;
+    border-top: 1px solid var(--line-soft);
+    font-size: 13px;
+  }
+  .player-row:first-of-type{ border-top: none; }
+  .player-rank{ width: 16px; color: var(--ink-faint); font-family:"Spline Sans Mono", monospace; font-size:12px; flex:none; }
+  .player-name{ flex:1; font-weight: 600; }
+  .player-rating{ font-family:"Spline Sans Mono", monospace; font-weight:700; color: var(--gold-ink); font-size: 13px; }
+  :root[data-theme="dark"] .player-rating{ color: var(--gold); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .player-rating{ color: var(--gold); } }
+  .player-empty{ font-size: 12.5px; color: var(--ink-dim); padding: 4px 0 12px; line-height:1.5; }
+  .player-example{ opacity: 0.55; }
+  .player-example .player-row{ border-top-style: dashed; }
 
   .bar-track{
     height: 8px; border-radius: 5px;
@@ -332,7 +385,9 @@
   @media (max-width: 560px){
     .ladder-head, .ladder-row{ grid-template-columns: 30px 1fr 64px; }
     .ladder-head span:nth-child(3), .ladder-row .bar-track{ display:none; }
-    .ladder-head span:nth-child(5), .ladder-row .behind{ display:none; }
+    .ladder-head span:nth-child(5), .ladder-row .trend{ display:none; }
+    .ladder-head span:nth-child(6), .ladder-row .behind{ display:none; }
+    .player-panel{ padding-left: 20px; }
   }
 
   /* ---------- Sidebar ---------- */
@@ -399,6 +454,9 @@
     <div class="intro-legend">
       <span><span class="legend-dot" style="background:var(--gold)"></span>Division leader</span>
       <span><span class="legend-line"></span>Top 10 cutoff</span>
+      <span style="color:var(--pos)">&#9650; Up this week</span>
+      <span style="color:var(--neg)">&#9660; Down this week</span>
+      <span>Click a school for its top 5 players</span>
     </div>
   </div>
 </header>
@@ -417,6 +475,7 @@
         <span>School</span>
         <span>Score</span>
         <span>Pts</span>
+        <span>Trend</span>
         <span>Behind</span>
       </div>
       <div class="ladder-body" id="ladder-body"></div>
@@ -440,11 +499,17 @@
         <li><b>Division</b> A grade band: K&ndash;1, Primary, or Elementary.</li>
         <li><b>School</b> An ICN partner school competing as a team.</li>
         <li><b>Points</b> Cumulative season score for that school in that division.</li>
+        <li><b>Trend</b> Change since last week's saved score.</li>
+        <li><b>Top 5</b> Click any school to see its top 5 players by USCF rating.</li>
       </ul>
     </div>
 
     <div class="card note-card">
-      <strong>This board is running on the standings you shared.</strong> Manhattan and Brooklyn are loaded; add Queens, the Bronx, Staten Island, or weekly deltas by editing the <code>LEAGUE_DATA</code> object near the top of the <code>&lt;script&gt;</code> in <code>chess-league/index.html</code>.
+      <strong>This board is running on the standings you shared.</strong> Manhattan and Brooklyn are loaded; add Queens, the Bronx, Staten Island, or new schools by editing the <code>LEAGUE_DATA</code> object near the top of the <code>&lt;script&gt;</code> in <code>chess-league/index.html</code>.
+      <br><br>
+      <strong>Weekly trend arrows:</strong> before pasting in new totals, set each school's <code>prevPoints</code> to its <em>current</em> <code>points</code> value, then update <code>points</code> to the new total &mdash; the arrow and delta appear automatically.
+      <br><br>
+      <strong>Player drill-down:</strong> the icntop50 player list wasn't reachable from this session (same network block as before). Paste the player names, USCF ratings, and schools from that page and I'll wire them into <code>PLAYERS</code> so every school's top 5 shows for real.
     </div>
   </aside>
 </main>
@@ -553,11 +618,42 @@
     { key: "elementary", label: "Elementary" }
   ];
 
+  /* ============================================================
+     PLAYERS — top individual players by USCF rating, keyed by school
+     name (the same names used in LEAGUE_DATA). Once the icntop50
+     roster is available, add entries like:
+       PLAYERS["PS 166"] = [
+         { name: "Jane Doe", rating: 987 },
+         { name: "John Smith", rating: 872 }
+       ];
+     Only the top 5 by rating are shown per school; order doesn't matter.
+     Schools with no entry here show an empty state instead.
+     ============================================================ */
+  const PLAYERS = {};
+
+  const EXAMPLE_PLAYERS = [
+    { name: "Example Player", rating: 950 },
+    { name: "Example Player", rating: 820 },
+    { name: "Example Player", rating: 705 }
+  ];
+
   let currentRegionIndex = 0;
   let currentDivisionKey = "k1";
+  let expandedSchool = null;
 
   function sortedSchools(list){
     return [...list].sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
+  }
+
+  function deltaFor(school){
+    const prev = school.prevPoints !== undefined ? school.prevPoints : school.points;
+    return school.points - prev;
+  }
+
+  function topPlayers(schoolName){
+    const roster = PLAYERS[schoolName];
+    if(!roster || !roster.length) return [];
+    return [...roster].sort((a, b) => b.rating - a.rating).slice(0, 5);
   }
 
   function renderRegionTabs(){
@@ -567,7 +663,7 @@
       const btn = document.createElement("button");
       btn.className = "tab" + (i === currentRegionIndex ? " active" : "");
       btn.textContent = region.label;
-      btn.addEventListener("click", () => { currentRegionIndex = i; render(); });
+      btn.addEventListener("click", () => { currentRegionIndex = i; expandedSchool = null; render(); });
       el.appendChild(btn);
     });
   }
@@ -579,9 +675,44 @@
       const btn = document.createElement("button");
       btn.className = "tab small" + (div.key === currentDivisionKey ? " active" : "");
       btn.textContent = div.label;
-      btn.addEventListener("click", () => { currentDivisionKey = div.key; render(); });
+      btn.addEventListener("click", () => { currentDivisionKey = div.key; expandedSchool = null; render(); });
       el.appendChild(btn);
     });
+  }
+
+  function trendHtml(delta){
+    if(delta > 0) return `<span class="trend up">&#9650; +${delta}</span>`;
+    if(delta < 0) return `<span class="trend down">&#9660; &minus;${Math.abs(delta)}</span>`;
+    return `<span class="trend flat">&mdash;</span>`;
+  }
+
+  function playerPanelHtml(schoolName){
+    const players = topPlayers(schoolName);
+    if(players.length){
+      const rows = players.map((p, i) => `
+        <div class="player-row">
+          <span class="player-rank num">${i + 1}</span>
+          <span class="player-name">${p.name}</span>
+          <span class="player-rating">${p.rating}</span>
+        </div>
+      `).join("");
+      return `
+        <div class="player-panel-head">Top ${players.length} by USCF rating</div>
+        ${rows}
+      `;
+    }
+    const exampleRows = EXAMPLE_PLAYERS.map((p, i) => `
+      <div class="player-row">
+        <span class="player-rank num">${i + 1}</span>
+        <span class="player-name">${p.name}</span>
+        <span class="player-rating">${p.rating}</span>
+      </div>
+    `).join("");
+    return `
+      <div class="player-empty">No USCF roster loaded yet for ${schoolName}. Add it to <code>PLAYERS["${schoolName}"]</code> once the icntop50 data is in.</div>
+      <div class="player-panel-head">Example format</div>
+      <div class="player-example">${exampleRows}</div>
+    `;
   }
 
   function rankRowHtml(rankIndex, school, leaderPoints){
@@ -593,16 +724,29 @@
     const behindHtml = rankIndex === 1
       ? `<span class="behind is-leader">Leader</span>`
       : `<span class="behind">&minus;${leaderPoints - school.points}</span>`;
+    const isExpanded = expandedSchool === school.name;
 
     const row = document.createElement("div");
-    row.className = "ladder-row" + (rankIndex === 1 ? " leader" : "");
+    row.className = "ladder-row" + (rankIndex === 1 ? " leader" : "") + (isExpanded ? " expanded" : "");
+    row.setAttribute("role", "button");
+    row.setAttribute("tabindex", "0");
+    row.setAttribute("aria-expanded", String(isExpanded));
     row.innerHTML = `
       <span class="rank-cell">${rankHtml}</span>
-      <span class="school-name">${school.name}</span>
+      <span class="school-cell">
+        <span class="chevron">&#9656;</span>
+        <span class="school-name">${school.name}</span>
+      </span>
       <span class="bar-track"><span class="bar-fill" style="width:${pct}%"></span></span>
       <span class="val num">${school.points.toLocaleString()}</span>
+      ${trendHtml(deltaFor(school))}
       ${behindHtml}
     `;
+    const toggle = () => { expandedSchool = isExpanded ? null : school.name; renderBoard(); };
+    row.addEventListener("click", toggle);
+    row.addEventListener("keydown", e => {
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); toggle(); }
+    });
     return row;
   }
 
@@ -622,6 +766,12 @@
     schools.forEach((school, i) => {
       const rankIndex = i + 1;
       body.appendChild(rankRowHtml(rankIndex, school, leaderPoints));
+      if(expandedSchool === school.name){
+        const panel = document.createElement("div");
+        panel.className = "player-panel";
+        panel.innerHTML = playerPanelHtml(school.name);
+        body.appendChild(panel);
+      }
       if(rankIndex === 10 && schools.length > 10){
         const div = document.createElement("div");
         div.className = "cutoff";
