@@ -272,13 +272,16 @@
     overflow: hidden;
   }
   .card-head{
-    display:flex; align-items:baseline; justify-content:space-between;
+    display:flex; align-items:center; justify-content:space-between;
     gap: 12px;
-    padding: 18px 20px 14px;
+    padding: 14px 16px 14px 20px;
     border-bottom: 1px solid var(--line-soft);
   }
   .card-head h2{ font-size: 20px; font-weight: 600; }
   .card-head .sub{ font-size: 12.5px; color: var(--ink-faint); white-space:nowrap; }
+  .card-head-right{ display:flex; align-items:center; gap:10px; flex:none; }
+  .board-crest{ display:flex; flex:none; }
+  .board-crest svg{ display:block; width:38px; height:38px; }
 
   .ladder-head, .ladder-row{
     display: grid;
@@ -572,7 +575,10 @@
       <div class="card">
         <div class="card-head">
           <h2 id="board-title">Region &mdash; Division</h2>
-          <span class="sub" id="board-sub"></span>
+          <div class="card-head-right">
+            <span class="sub" id="board-sub"></span>
+            <span class="board-crest" id="board-crest"></span>
+          </div>
         </div>
         <div class="ladder-head">
           <span>#</span>
@@ -649,7 +655,7 @@
   <div class="badge-section-inner">
     <div class="badge-section-head">
       <h2>Division Crests</h2>
-      <p>One crest per borough &times; grade division. The piece marks the division &mdash; pawn for K&ndash;1, knight for Primary, rook for Elementary, echoing how the pieces themselves get introduced &mdash; and the ring color marks the borough. Built as inline SVG, so they stay crisp at any size; matching PNGs are in <code>chess-league/badges/</code>.</p>
+      <p>One crest per borough &times; grade division. Manhattan and Brooklyn step through pawn (K&ndash;1), knight (Primary), and rook (Elementary), echoing how the pieces themselves get introduced; the leaguewide Overall crest steps up to bishop, queen, and king &mdash; together the full set. Ring color marks the borough, or a neutral tone for Overall. Built as inline SVG, so they stay crisp at any size; matching PNGs are in <code>chess-league/badges/</code>.</p>
     </div>
     <div class="badge-grid" id="badge-grid"></div>
   </div>
@@ -1241,6 +1247,11 @@
 
     document.getElementById("board-title").textContent = `${region.label} — ${divLabel}`;
     document.getElementById("board-sub").textContent = `${schools.length} school${schools.length === 1 ? "" : "s"}`;
+
+    const crestBorough = CREST_BOROUGHS.find(b => b.key === region.key);
+    const crestDivision = CREST_DIVISIONS.find(d => d.key === currentDivisionKey);
+    document.getElementById("board-crest").innerHTML =
+      (crestBorough && crestDivision) ? buildCrestSVG(crestBorough, crestDivision) : "";
     document.getElementById("card-foot-right").textContent =
       region.key === "overall" ? "Boroughs shown separately as regions" : "Top 10 shown for this borough";
 
@@ -1375,14 +1386,18 @@
      Fixed hex colors (not theme tokens): the crest plate is always
      cream, on-brand in both light and dark page themes.
      ============================================================ */
+  const BOROUGH_PIECES = { k1: "♟", primary: "♞", elementary: "♜" };
+  const OVERALL_PIECES = { k1: "♝", primary: "♛", elementary: "♚" };
+
   const CREST_BOROUGHS = [
-    { key: "manhattan", label: "Manhattan", accent: "#9c6f22" },
-    { key: "brooklyn", label: "Brooklyn", accent: "#2b6f74" }
+    { key: "overall", label: "Overall", accent: "#5b5346", pieces: OVERALL_PIECES },
+    { key: "manhattan", label: "Manhattan", accent: "#9c6f22", pieces: BOROUGH_PIECES },
+    { key: "brooklyn", label: "Brooklyn", accent: "#2b6f74", pieces: BOROUGH_PIECES }
   ];
   const CREST_DIVISIONS = [
-    { key: "k1", label: "K–1", piece: "♟" },
-    { key: "primary", label: "Primary", piece: "♞" },
-    { key: "elementary", label: "Elementary", piece: "♜" }
+    { key: "k1", label: "K–1" },
+    { key: "primary", label: "Primary" },
+    { key: "elementary", label: "Elementary" }
   ];
 
   function buildCrestSVG(borough, division){
@@ -1402,7 +1417,7 @@
         <circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="url(#${gradId})" stroke="${borough.accent}" stroke-width="3"/>
         <circle cx="${cx}" cy="${cy}" r="${rOuter - 8}" fill="none" stroke="#1c1c22" stroke-opacity="0.12" stroke-width="1"/>
         <text font-family="Fraunces, Georgia, serif" font-size="108" text-anchor="middle" fill="#1c1c22">
-          <tspan x="${cx}" y="${cy + 36}">${division.piece}</tspan>
+          <tspan x="${cx}" y="${cy + 36}">${borough.pieces[division.key]}</tspan>
         </text>
         <text font-family="Libre Franklin, sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="${borough.accent}">
           <textPath href="#${topId}" startOffset="50%" text-anchor="middle">${borough.label.toUpperCase()}</textPath>
