@@ -10,6 +10,10 @@
    correspondence: circle=blue, triangle=yellow, square=red.
    Every state is encoded twice - colour AND shape - so the
    sheet survives greyscale printing and colour-blind readers.
+
+   The page has two modes. Default is the finished poster, which
+   is also what prints. "Present" walks the same bands through a
+   10-step reveal for reading aloud with a class.
    ============================================================ */
 
 /* ---------- tokens: light (bare :root = complete palette) ---------- */
@@ -163,15 +167,45 @@ h1 .q{color:var(--red)}
 .legend-row b{display:block;font-weight:700;font-size:.97rem;line-height:1.15;text-transform:lowercase}
 .legend-row i{font-style:normal;font-size:.84rem;color:var(--text-soft)}
 
+/* ---------- buttons ---------- */
+.btn{
+  font-family:inherit;
+  font-weight:700;
+  font-size:.95rem;
+  line-height:1;
+  padding:12px 20px;
+  border:var(--rule) solid var(--line);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  text-transform:lowercase;
+  letter-spacing:.01em;
+}
+.btn:hover{background:var(--line);color:var(--ground)}
+.btn:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+.btn--primary{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
+.btn--primary:hover{background:var(--line);border-color:var(--line);color:var(--ground)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn[disabled]:hover{background:transparent;color:var(--text)}
+
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px 18px;
+  padding:16px 0;
+}
+.toolbar-hint{margin:0;font-size:.92rem;color:var(--text-soft)}
+
 /* ---------- the grid of states ---------- */
 .states{
   border:var(--rule) solid var(--line);
-  border-top:0;
   background:var(--panel);
 }
 .state{
   display:grid;
   grid-template-columns:268px minmax(0,1fr) 296px;
+  transition:opacity .3s ease;
 }
 .state + .state{border-top:var(--rule) solid var(--line)}
 
@@ -244,9 +278,10 @@ h1 .q{color:var(--red)}
   color:var(--on-accent);
   display:flex;
   flex-direction:column;
-  gap:9px;
   justify-content:center;
+  transition:background-color .38s ease;
 }
+.vbody{display:flex;flex-direction:column;gap:9px;transition:opacity .3s ease,transform .3s ease}
 .vmark{display:block;width:38px;height:38px}
 .vname{
   margin:0;
@@ -266,6 +301,8 @@ h1 .q{color:var(--red)}
   align-items:center;
   gap:14px 22px;
   padding:18px 20px;
+  border:var(--rule) solid var(--line);
+  border-top:0;
   background:var(--line);
   color:var(--ground);
 }
@@ -278,18 +315,86 @@ h1 .q{color:var(--red)}
   border:2px solid var(--ground);
 }
 
+/* ============================================================
+   PRESENT MODE
+   ============================================================ */
+
+/* poster mode: everything is simply visible */
+[data-reveal]{opacity:1;visibility:visible}
+
+.presenting [data-reveal]{
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .32s ease,visibility .32s ease;
+}
+.presenting [data-reveal].shown{opacity:1;visibility:visible}
+
+/* the verdict block stays neutral until its step, then flips to colour */
+.presenting .cell--verdict{background:var(--panel)}
+.presenting .cell--verdict.lit{background:var(--accent)}
+.presenting .vbody{transform:translateY(12px)}
+.presenting .vbody.shown{transform:none}
+
+/* focus the band being taught; bands not yet reached are not shown at all,
+   so the class never stares at an empty box waiting for content */
+.presenting .state:not(.is-active){opacity:.38}
+.presenting .state.pending{display:none}
+.presenting .toolbar{display:none}
+
+/* unit marks pop in one at a time, so the class can count along */
+.presenting .crow.shown .unit{animation:pop .28s var(--pop-delay,0s) backwards}
+@keyframes pop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:none}}
+
+.presentbar{
+  position:fixed;
+  left:0;right:0;bottom:0;
+  z-index:50;
+  background:var(--line);
+  color:var(--ground);
+  border-top:6px solid var(--blue);
+}
+.presentbar[hidden]{display:none}
+.pb-inner{
+  max-width:1020px;
+  margin:0 auto;
+  padding:14px 22px 16px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px 22px;
+}
+.pb-caption{
+  flex:1 1 340px;
+  min-width:0;
+  margin:0;
+  font-size:clamp(1.05rem,2.1vw,1.45rem);
+  font-weight:600;
+  line-height:1.25;
+}
+.pb-controls{display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap}
+.presentbar .btn{border-color:var(--ground);color:var(--ground)}
+.presentbar .btn:hover{background:var(--ground);color:var(--line)}
+.presentbar .btn--primary{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
+.presentbar .btn--primary:hover{background:var(--ground);border-color:var(--ground);color:var(--line)}
+.presentbar .btn[disabled]:hover{background:transparent;color:var(--ground)}
+
+.pb-dots{display:flex;gap:5px;margin-right:6px}
+.pb-dot{width:11px;height:11px;border:2px solid var(--ground);background:transparent}
+.pb-dot.on{background:var(--ground)}
+
+.visually-hidden{
+  position:absolute;width:1px;height:1px;
+  padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+body.presenting{padding-bottom:160px}
+
 /* ---------- responsive ---------- */
 @media (max-width:940px){
   .state{grid-template-columns:212px minmax(0,1fr)}
-  .cell--verdict{
-    grid-column:1 / -1;
-    border-left:0;
-    border-top:var(--rule) solid var(--line);
-    flex-direction:row;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:8px 18px;
-  }
+  .cell--verdict{grid-column:1 / -1;border-left:0;border-top:var(--rule) solid var(--line)}
+  .vbody{flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 18px}
   .vmark{width:32px;height:32px}
   .vname{flex:0 0 auto}
   .vrule{flex:1 1 200px}
@@ -305,21 +410,30 @@ h1 .q{color:var(--red)}
   .unit .pc{font-size:22px}
   .tally{font-size:2.3rem}
   .steps{margin-left:0}
+  .pb-inner{padding:12px 13px 14px}
+  .pb-controls{margin-left:0;width:100%}
+  .pb-dots{display:none}
+  body.presenting{padding-bottom:200px}
 }
 
 /* ---------- motion ---------- */
-.overlay .arrow{
-  stroke-dasharray:var(--len);
-  stroke-dashoffset:var(--len);
-  animation:draw .45s ease-out forwards;
-  animation-delay:var(--delay);
-}
+.arrow{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+.arrowhead{opacity:0}
+body:not(.presenting) .arrow,
+.presenting .rg.shown .arrow{animation:draw .45s ease-out var(--delay,0s) forwards}
+body:not(.presenting) .arrowhead,
+.presenting .rg.shown .arrowhead{animation:headIn .18s var(--delay,0s) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
+@keyframes headIn{to{opacity:1}}
+
 @media (prefers-reduced-motion:reduce){
-  .overlay .arrow{animation:none;stroke-dashoffset:0}
+  .arrow{stroke-dashoffset:0}
+  .arrowhead{opacity:1}
+  .arrow,.arrowhead,.unit{animation:none !important}
+  [data-reveal],.cell--verdict,.vbody,.state{transition:none !important}
 }
 
-/* ---------- print: one Letter sheet, always light ---------- */
+/* ---------- print: one Letter sheet, always light, always complete ---------- */
 @media print{
   :root{
     --ground:#FFFFFF;--panel:#FFFFFF;--line:#000000;--text:#000000;
@@ -331,7 +445,19 @@ h1 .q{color:var(--red)}
     --rule:2px;
   }
   @page{size:letter portrait;margin:.4in}
-  body{background:#fff;font-size:11.5px}
+  body,body.presenting{background:#fff;font-size:11.5px;padding-bottom:0}
+
+  /* a half-revealed lesson must never be what comes out of the printer */
+  [data-reveal]{opacity:1 !important;visibility:visible !important}
+  .vbody{transform:none !important}
+  .cell--verdict{background:var(--accent) !important;color:var(--on-accent) !important}
+  .state{opacity:1 !important}
+  .state.pending{display:grid !important}
+  .arrow{stroke-dashoffset:0;animation:none !important}
+  .arrowhead{opacity:1;animation:none !important}
+  .unit{animation:none !important}
+  .toolbar,.presentbar{display:none !important}
+
   .sheet{max-width:none;padding:0}
   .checkstrip{height:10px}
   .masthead{padding:8px 0 9px;border-bottom-width:4px}
@@ -340,7 +466,8 @@ h1 .q{color:var(--red)}
   .legend-row{padding:7px 11px;gap:9px}
   .state{grid-template-columns:206px minmax(0,1fr) 214px}
   .cell{padding:14px}
-  .cell--verdict{grid-column:auto;border-left:var(--rule) solid var(--line);border-top:0;flex-direction:column;flex-wrap:nowrap;gap:5px}
+  .cell--verdict{grid-column:auto;border-left:var(--rule) solid var(--line);border-top:0;flex-direction:column}
+  .vbody{flex-direction:column;flex-wrap:nowrap;gap:5px}
   .vmark,.vname,.vrule,.vdo{flex:0 0 auto}
   .board-wrap{max-width:none;margin:0}
   .board .pc{font-size:34px}
@@ -357,7 +484,6 @@ h1 .q{color:var(--red)}
   .footer{padding:10px 14px}
   .steps{margin-left:auto}
   .state,.footer{break-inside:avoid;page-break-inside:avoid}
-  .overlay .arrow{animation:none;stroke-dashoffset:0}
 }
 </style>
 
@@ -384,6 +510,11 @@ h1 .q{color:var(--red)}
     </div>
   </header>
 
+  <div class="toolbar">
+    <button type="button" class="btn btn--primary" id="startPresent">Present this lesson</button>
+    <p class="toolbar-hint">Reveals one step at a time, so the class can count out loud before the answer appears.</p>
+  </div>
+
   <main class="states" id="states"></main>
 
   <footer class="footer">
@@ -400,6 +531,20 @@ h1 .q{color:var(--red)}
 
 </div>
 
+<div class="presentbar" id="presentbar" hidden>
+  <div class="pb-inner">
+    <p class="pb-caption" id="caption" aria-live="polite"></p>
+    <p class="visually-hidden" id="stepStatus" aria-live="polite"></p>
+    <div class="pb-controls">
+      <div class="pb-dots" id="dots" aria-hidden="true"></div>
+      <button type="button" class="btn" id="btnPrev">Back</button>
+      <button type="button" class="btn btn--primary" id="btnNext">Next</button>
+      <button type="button" class="btn" id="btnAll">Show all</button>
+      <button type="button" class="btn" id="btnExit">Exit</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
   var SVGNS = 'http://www.w3.org/2000/svg';
@@ -407,6 +552,9 @@ h1 .q{color:var(--red)}
   var RANKS = [7,6,5,4,3];
   var GLYPH = {p:'♟', r:'♜', n:'♞', b:'♝', q:'♛', k:'♚'};
   var NAME  = {p:'pawn', r:'rook', n:'knight', b:'bishop', q:'queen', k:'king'};
+
+  var reduced = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function sq(s){
     var c = FILES.indexOf(s.charAt(0));
@@ -423,8 +571,31 @@ h1 .q{color:var(--red)}
   var ATTACK = [{sq:'d6', p:'p'}, {sq:'d7', p:'n'}];
   var DEFEND = [{sq:'d4', p:'p'}, {sq:'e3', p:'r'}, {sq:'g3', p:'b'}];
 
+  /* The reveal plan. Band 0 introduces the position on its own step;
+     bands 1 and 2 bring the board and the (unchanged) attackers in
+     together, because only the defenders are the news by then. */
+  var PLAN = [
+    {board:0, att:1, def:2, verdict:3},
+    {board:4, att:4, def:5, verdict:6},
+    {board:7, att:7, def:8, verdict:9}
+  ];
+  var TOTAL = 10;
+
+  var CAPTIONS = [
+    'This is your knight. Is it safe?',
+    'Black attacks it. Count the red arrows … 1, 2.',
+    'White defends it. Count the blue arrows … 1, 2, 3.',
+    '3 is more than 2. Your knight is DEFENDED — it can stay.',
+    'Same knight, same 2 attackers. Now we take one defender away.',
+    'Only 2 defenders left. Count them … 1, 2.',
+    '2 and 2 are the same. This knight is LOOSE — be careful.',
+    'Take away one more defender.',
+    'Only 1 defender is left.',
+    '2 is more than 1. This knight is HANGING — move it!'
+  ];
+
   /* Kandinsky's correspondence, used as a redundant (colour-free) encoding.
-     R is the circumradius used for the marker drawn around the target. */
+     R is the circumradius of the marker drawn around the target. */
   function markerShape(kind, cx, cy, R, attrs){
     if (kind === 'circle') return el('circle', Object.assign({cx:cx, cy:cy, r:R}, attrs));
     if (kind === 'square') {
@@ -442,7 +613,7 @@ h1 .q{color:var(--red)}
   var STATES = [
     {
       key:'blue', shape:'circle', defenders:3,
-      name:'defended', 
+      name:'defended',
       rule:'More defenders than attackers.',
       compare:'3 defenders beat 2 attackers.',
       dothis:'Your knight is guarded. It can stay right there.'
@@ -463,21 +634,23 @@ h1 .q{color:var(--red)}
     }
   ];
 
-  function pieceSpan(code, side){
+  function pieceSpan(code, side, step){
     var s = document.createElement('span');
     s.className = 'pc ' + side;
     s.textContent = GLYPH[code];
+    if (step !== undefined) s.setAttribute('data-reveal', step);
     return s;
   }
 
-  function buildBoard(st, defs){
+  function buildBoard(st, defs, plan){
     var wrap = document.createElement('div');
     wrap.className = 'board-wrap';
+    wrap.setAttribute('data-reveal', plan.board);
 
     var occupied = {};
-    occupied[TARGET.sq] = {p:TARGET.p, side:'w'};
-    ATTACK.forEach(function(a){ occupied[a.sq] = {p:a.p, side:'b'}; });
-    defs.forEach(function(d){ occupied[d.sq] = {p:d.p, side:'w'}; });
+    occupied[TARGET.sq] = {p:TARGET.p, side:'w', step:plan.board};
+    ATTACK.forEach(function(a){ occupied[a.sq] = {p:a.p, side:'b', step:plan.att}; });
+    defs.forEach(function(d){ occupied[d.sq] = {p:d.p, side:'w', step:plan.def}; });
 
     var board = document.createElement('div');
     board.className = 'board';
@@ -488,7 +661,7 @@ h1 .q{color:var(--red)}
         var nm = FILES[c] + RANKS[r];
         if (occupied[nm]){
           var o = occupied[nm];
-          cell.appendChild(pieceSpan(o.p, o.side));
+          cell.appendChild(pieceSpan(o.p, o.side, o.step));
         }
         board.appendChild(cell);
       }
@@ -498,47 +671,56 @@ h1 .q{color:var(--red)}
     var t = sq(TARGET.sq);
     var svg = el('svg', {viewBox:'0 0 500 500', 'class':'overlay'});
 
+    var gAtt = el('g', {'class':'rg', 'data-reveal':plan.att});
+    var gDef = el('g', {'class':'rg', 'data-reveal':plan.def});
+    var gMark = el('g', {'class':'rg', 'data-reveal':plan.verdict});
+
     /* State marker around the target. Drawn twice: an ink keyline under a
        colour stroke, so yellow stays visible on a light square. */
-    svg.appendChild(markerShape(st.shape, t.x, t.y, 54, {
+    gMark.appendChild(markerShape(st.shape, t.x, t.y, 54, {
       fill:'none', stroke:'var(--line)', 'stroke-width':15
     }));
-    svg.appendChild(markerShape(st.shape, t.x, t.y, 54, {
+    gMark.appendChild(markerShape(st.shape, t.x, t.y, 54, {
       fill:'none', stroke:'var(--accent)', 'stroke-width':9
     }));
 
-    var i = 0;
-    function arrow(from, colour){
+    function arrow(group, from, colour, i){
       var f = sq(from);
       var dx = t.x - f.x, dy = t.y - f.y;
       var d = Math.sqrt(dx*dx + dy*dy) || 1;
       var ux = dx/d, uy = dy/d;
       var x1 = f.x + ux*40, y1 = f.y + uy*40;
-      var hx = t.x - ux*72, hy = t.y - uy*72;   /* arrow tip, just outside the marker */
+      var hx = t.x - ux*72, hy = t.y - uy*72;   /* arrow tip, outside the marker */
       var bx = hx - ux*17, by = hy - uy*17;     /* base of the head */
       var len = Math.sqrt(Math.pow(bx-x1,2) + Math.pow(by-y1,2));
+      var delay = 0.1 * i;
 
       var line = el('path', {
         d:'M' + x1.toFixed(1) + ' ' + y1.toFixed(1) + ' L' + bx.toFixed(1) + ' ' + by.toFixed(1),
         stroke:colour, 'stroke-width':11, fill:'none', 'class':'arrow'
       });
       line.style.setProperty('--len', len.toFixed(1));
-      line.style.setProperty('--delay', (0.1 * i++) + 's');
-      svg.appendChild(line);
+      line.style.setProperty('--delay', delay + 's');
+      group.appendChild(line);
 
       /* solid triangular head - hard geometry, no marker element */
       var px = -uy, py = ux, w = 11;
-      svg.appendChild(el('polygon', {
+      var head = el('polygon', {
         points: hx.toFixed(1) + ',' + hy.toFixed(1) + ' ' +
                 (bx + px*w).toFixed(1) + ',' + (by + py*w).toFixed(1) + ' ' +
                 (bx - px*w).toFixed(1) + ',' + (by - py*w).toFixed(1),
-        fill: colour
-      }));
+        fill: colour, 'class':'arrowhead'
+      });
+      head.style.setProperty('--delay', (delay + 0.32) + 's');
+      group.appendChild(head);
     }
 
-    ATTACK.forEach(function(a){ arrow(a.sq, 'var(--red)'); });
-    defs.forEach(function(d){ arrow(d.sq, 'var(--blue)'); });
+    ATTACK.forEach(function(a, i){ arrow(gAtt, a.sq, 'var(--red)', i); });
+    defs.forEach(function(d, i){ arrow(gDef, d.sq, 'var(--blue)', i); });
 
+    svg.appendChild(gMark);
+    svg.appendChild(gAtt);
+    svg.appendChild(gDef);
     wrap.appendChild(svg);
 
     var names = defs.map(function(d){ return NAME[d.p]; }).join(', ');
@@ -550,9 +732,10 @@ h1 .q{color:var(--red)}
     return wrap;
   }
 
-  function buildCountRow(kind, label, list, side){
+  function buildCountRow(kind, label, list, side, step){
     var row = document.createElement('div');
     row.className = 'crow crow--' + kind;
+    row.setAttribute('data-reveal', step);
 
     var lab = document.createElement('span');
     lab.className = 'crow-label';
@@ -560,9 +743,10 @@ h1 .q{color:var(--red)}
 
     var units = document.createElement('div');
     units.className = 'units';
-    list.forEach(function(item){
+    list.forEach(function(item, i){
       var u = document.createElement('span');
       u.className = 'unit';
+      u.style.setProperty('--pop-delay', (i * 0.16) + 's');
       u.appendChild(pieceSpan(item.p, side));
       units.appendChild(u);
     });
@@ -570,44 +754,55 @@ h1 .q{color:var(--red)}
     var n = document.createElement('span');
     n.className = 'tally';
     n.textContent = list.length;
+    n.setAttribute('data-count', list.length);
 
     row.appendChild(lab); row.appendChild(units); row.appendChild(n);
     row.setAttribute('aria-label', label + ': ' + list.length);
     return row;
   }
 
+  /* ---------------- build the three bands ---------------- */
   var host = document.getElementById('states');
+  var bands = [];
 
-  STATES.forEach(function(st){
+  STATES.forEach(function(st, bi){
+    var plan = PLAN[bi];
     var defs = DEFEND.slice(0, st.defenders);
 
     var sec = document.createElement('section');
     sec.className = 'state state--' + st.key;
+    sec.setAttribute('data-band', plan.board);
 
     var boardCell = document.createElement('div');
     boardCell.className = 'cell cell--board';
-    boardCell.appendChild(buildBoard(st, defs));
+    boardCell.appendChild(buildBoard(st, defs, plan));
     sec.appendChild(boardCell);
 
     var countCell = document.createElement('div');
     countCell.className = 'cell cell--count';
     var count = document.createElement('div');
     count.className = 'count';
-    count.appendChild(buildCountRow('att','Attackers', ATTACK, 'b'));
-    count.appendChild(buildCountRow('def','Defenders', defs, 'w'));
+    count.appendChild(buildCountRow('att','Attackers', ATTACK, 'b', plan.att));
+    count.appendChild(buildCountRow('def','Defenders', defs, 'w', plan.def));
     var cmp = document.createElement('p');
     cmp.className = 'compare';
     cmp.textContent = st.compare;
+    cmp.setAttribute('data-reveal', plan.verdict);
     count.appendChild(cmp);
     countCell.appendChild(count);
     sec.appendChild(countCell);
 
     var v = document.createElement('div');
     v.className = 'cell cell--verdict';
+    v.setAttribute('data-lit', plan.verdict);
+
+    var vbody = document.createElement('div');
+    vbody.className = 'vbody';
+    vbody.setAttribute('data-reveal', plan.verdict);
 
     var badge = el('svg', {viewBox:'0 0 48 48', 'class':'vmark', 'aria-hidden':'true'});
     badge.appendChild(markerShape(st.shape, 24, 24, 23, {fill:'var(--on-accent)'}));
-    v.appendChild(badge);
+    vbody.appendChild(badge);
 
     var h = document.createElement('h2');
     h.className = 'vname';
@@ -618,10 +813,150 @@ h1 .q{color:var(--red)}
     var dd = document.createElement('p');
     dd.className = 'vdo';
     dd.textContent = st.dothis;
-    v.appendChild(h); v.appendChild(r); v.appendChild(dd);
+    vbody.appendChild(h); vbody.appendChild(r); vbody.appendChild(dd);
+    v.appendChild(vbody);
     sec.appendChild(v);
 
     host.appendChild(sec);
+    bands.push(sec);
   });
+
+  /* ---------------- present mode ---------------- */
+  var revealables = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  var verdictCells = Array.prototype.slice.call(document.querySelectorAll('[data-lit]'));
+  var bar = document.getElementById('presentbar');
+  var caption = document.getElementById('caption');
+  var stepStatus = document.getElementById('stepStatus');
+  var dots = document.getElementById('dots');
+  var btnNext = document.getElementById('btnNext');
+  var btnPrev = document.getElementById('btnPrev');
+  var btnAll = document.getElementById('btnAll');
+  var btnExit = document.getElementById('btnExit');
+  var btnStart = document.getElementById('startPresent');
+
+  var presenting = false;
+  var step = 0;
+  var lastBand = -1;
+
+  for (var d = 0; d < TOTAL; d++){
+    var dot = document.createElement('span');
+    dot.className = 'pb-dot';
+    dots.appendChild(dot);
+  }
+  var dotEls = Array.prototype.slice.call(dots.children);
+
+  function bandOf(n){
+    for (var i = PLAN.length - 1; i >= 0; i--){
+      if (n >= PLAN[i].board) return i;
+    }
+    return 0;
+  }
+
+  function countUp(node, target){
+    var dur = target * 170 + 90;
+    var start = null;
+    node.textContent = '0';
+    function tick(ts){
+      if (start === null) start = ts;
+      var k = Math.min(1, (ts - start) / dur);
+      node.textContent = Math.round(k * target);
+      if (k < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function applyStep(n, animate){
+    step = Math.max(0, Math.min(TOTAL - 1, n));
+
+    revealables.forEach(function(node){
+      var s = +node.getAttribute('data-reveal');
+      var on = s <= step;
+      var was = node.classList.contains('shown');
+      node.classList.toggle('shown', on);
+
+      if (on && !was && node.classList.contains('crow')){
+        var tally = node.querySelector('.tally');
+        var target = +tally.getAttribute('data-count');
+        if (animate && !reduced) countUp(tally, target);
+        else tally.textContent = target;
+      }
+    });
+
+    verdictCells.forEach(function(cell){
+      cell.classList.toggle('lit', +cell.getAttribute('data-lit') <= step);
+    });
+
+    var b = bandOf(step);
+    bands.forEach(function(sec, i){
+      sec.classList.toggle('is-active', i === b);
+      sec.classList.toggle('pending', +sec.getAttribute('data-band') > step);
+    });
+
+    caption.textContent = CAPTIONS[step];
+    stepStatus.textContent = 'Step ' + (step + 1) + ' of ' + TOTAL;
+    dotEls.forEach(function(dot, i){ dot.classList.toggle('on', i <= step); });
+
+    btnPrev.disabled = step === 0;
+    btnNext.disabled = step === TOTAL - 1;
+
+    if (b !== lastBand){
+      lastBand = b;
+      bands[b].scrollIntoView({block:'center', behavior: reduced ? 'auto' : 'smooth'});
+    }
+  }
+
+  function enter(){
+    presenting = true;
+    document.body.classList.add('presenting');
+    bar.hidden = false;
+    lastBand = -1;
+    applyStep(0, false);
+    btnNext.focus();
+  }
+
+  function exit(){
+    presenting = false;
+    document.body.classList.remove('presenting');
+    bar.hidden = true;
+    revealables.forEach(function(node){ node.classList.remove('shown'); });
+    verdictCells.forEach(function(cell){ cell.classList.remove('lit'); });
+    bands.forEach(function(sec){ sec.classList.remove('is-active', 'pending'); });
+    document.querySelectorAll('.tally').forEach(function(t){
+      t.textContent = t.getAttribute('data-count');
+    });
+    btnStart.focus();
+  }
+
+  btnStart.addEventListener('click', enter);
+  btnExit.addEventListener('click', exit);
+  btnNext.addEventListener('click', function(){ applyStep(step + 1, true); });
+  btnPrev.addEventListener('click', function(){ applyStep(step - 1, false); });
+  btnAll.addEventListener('click', function(){ applyStep(TOTAL - 1, false); });
+
+  document.addEventListener('keydown', function(e){
+    if (!presenting) return;
+    var tag = e.target && e.target.tagName;
+    /* let a focused button handle its own activation keys */
+    if (tag === 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) return;
+
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){
+      e.preventDefault(); applyStep(step + 1, true);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){
+      e.preventDefault(); applyStep(step - 1, false);
+    } else if (e.key === 'Escape'){
+      e.preventDefault(); exit();
+    } else if (e.key === 'Home'){
+      e.preventDefault(); applyStep(0, false);
+    } else if (e.key === 'End'){
+      e.preventDefault(); applyStep(TOTAL - 1, false);
+    }
+  });
+
+  /* never let a half-revealed lesson reach the printer */
+  if (window.matchMedia){
+    var pm = window.matchMedia('print');
+    if (pm.addEventListener) pm.addEventListener('change', function(m){ if (m.matches && presenting) exit(); });
+  }
+  window.addEventListener('beforeprint', function(){ if (presenting) exit(); });
 })();
 </script>
