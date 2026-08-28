@@ -1,0 +1,624 @@
+<title>Defended, Loose, Hanging</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@600;700;800&family=Noto+Sans+Symbols+2&display=swap">
+
+<style>
+/* ---------- tokens: light (bare :root = complete palette) ---------- */
+:root{
+  --paper:#FBF6EC;
+  --surface:#FFFFFF;
+  --text:#17232A;
+  --text-soft:#54646C;
+  --hair:#E0D5C1;
+  --rule:#C9BBA2;
+
+  --board-light:#F0E1C3;
+  --board-dark:#A9764B;
+  --board-edge:#7C5231;
+  --piece-black:#17232A;
+  --piece-white:#FFFCF3;
+  --chip-bg:#F6EBD4;
+
+  --safe:#1C7A4E;
+  --safe-tint:#EAF3EE;
+  --careful:#B0770A;
+  --careful-tint:#FAF1DC;
+  --danger:#C0362C;
+  --danger-tint:#FAEAE7;
+  --on-semantic:#FFFFFF;
+
+  --shadow:0 1px 2px rgba(23,35,42,.06), 0 6px 18px rgba(23,35,42,.06);
+}
+/* ---------- tokens: dark via system (un-stamped document) ---------- */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#101820;
+    --surface:#18232A;
+    --text:#EBE4D6;
+    --text-soft:#A2B0B7;
+    --hair:#2B3941;
+    --rule:#3A4A53;
+
+    --board-light:#E4D2B0;
+    --board-dark:#9A6A43;
+    --board-edge:#5E3E26;
+    --chip-bg:#E9DCBF;
+
+    --safe:#5FC490;
+    --safe-tint:rgba(95,196,144,.11);
+    --careful:#E9B54C;
+    --careful-tint:rgba(233,181,76,.11);
+    --danger:#F2796B;
+    --danger-tint:rgba(242,121,107,.11);
+    --on-semantic:#0F181E;
+
+    --shadow:0 1px 2px rgba(0,0,0,.30), 0 8px 22px rgba(0,0,0,.28);
+  }
+}
+/* ---------- tokens: dark via explicit toggle ---------- */
+:root[data-theme="dark"]{
+  --paper:#101820;
+  --surface:#18232A;
+  --text:#EBE4D6;
+  --text-soft:#A2B0B7;
+  --hair:#2B3941;
+  --rule:#3A4A53;
+
+  --board-light:#E4D2B0;
+  --board-dark:#9A6A43;
+  --board-edge:#5E3E26;
+  --chip-bg:#E9DCBF;
+
+  --safe:#5FC490;
+  --safe-tint:rgba(95,196,144,.11);
+  --careful:#E9B54C;
+  --careful-tint:rgba(233,181,76,.11);
+  --danger:#F2796B;
+  --danger-tint:rgba(242,121,107,.11);
+  --on-semantic:#0F181E;
+
+  --shadow:0 1px 2px rgba(0,0,0,.30), 0 8px 22px rgba(0,0,0,.28);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--text);
+  font-family:"Andika","Trebuchet MS",Verdana,sans-serif;
+  font-size:16px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+.poster{
+  max-width:1010px;
+  margin:0 auto;
+  padding:0 22px 44px;
+}
+
+/* ---------- masthead ---------- */
+.checkstrip{
+  height:12px;
+  background:
+    repeating-linear-gradient(90deg,
+      var(--board-dark) 0 24px,
+      var(--board-light) 24px 48px);
+  border-bottom:1px solid var(--board-edge);
+}
+
+.masthead{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:18px 32px;
+  padding:26px 0 20px;
+  border-bottom:2px solid var(--rule);
+}
+.masthead-main{flex:1 1 420px}
+
+.eyebrow{
+  margin:0 0 6px;
+  font-weight:700;
+  font-size:.76rem;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--text-soft);
+}
+h1{
+  margin:0;
+  font-family:"Baloo 2","Trebuchet MS",sans-serif;
+  font-weight:800;
+  font-size:clamp(2.15rem,5.4vw,3.3rem);
+  line-height:1.04;
+  letter-spacing:-.015em;
+  text-wrap:balance;
+}
+h1 .q{color:var(--text-soft)}
+.deck{
+  margin:12px 0 0;
+  max-width:46ch;
+  font-size:1.06rem;
+  color:var(--text-soft);
+}
+.deck b{color:var(--text);font-weight:700}
+
+/* arrow key */
+.key{
+  flex:0 1 auto;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:14px 16px;
+  background:var(--surface);
+  border:1px solid var(--hair);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+}
+.key-row{display:flex;align-items:center;gap:11px;font-size:.92rem;white-space:nowrap;line-height:1.28}
+.key-row i{font-style:normal;color:var(--text-soft);font-size:.85rem}
+.key-row svg{flex:none}
+.key-row b{font-weight:700}
+
+/* ---------- state bands ---------- */
+.states{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  margin-top:26px;
+}
+
+.state{
+  display:grid;
+  grid-template-columns:236px minmax(0,1fr) 262px;
+  gap:26px;
+  align-items:center;
+  padding:20px 22px;
+  border:1px solid var(--hair);
+  border-radius:20px;
+  background:var(--tint);
+}
+.state--safe{--accent:var(--safe);--tint:var(--safe-tint)}
+.state--careful{--accent:var(--careful);--tint:var(--careful-tint)}
+.state--danger{--accent:var(--danger);--tint:var(--danger-tint)}
+
+/* board */
+.board-wrap{position:relative;width:100%;aspect-ratio:1;border-radius:12px;overflow:hidden;border:3px solid var(--board-edge);box-shadow:var(--shadow)}
+.board{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr)}
+.sq{display:flex;align-items:center;justify-content:center}
+.sq.light{background:var(--board-light)}
+.sq.dark{background:var(--board-dark)}
+.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+.pc{
+  font-family:"Noto Sans Symbols 2","Segoe UI Symbol","Apple Symbols","DejaVu Sans",sans-serif;
+  line-height:1;
+  font-size:clamp(26px,3.1vw,34px);
+}
+.board .pc{font-size:min(9.4vw,40px)}
+.pc.b{color:var(--piece-black)}
+.pc.w{
+  color:var(--piece-white);
+  -webkit-text-stroke:1.6px var(--piece-black);
+  text-shadow:0 1px 1px rgba(23,35,42,.35);
+}
+.pc.target{position:relative;z-index:2}
+.target-ring{
+  position:absolute;
+  width:19%;height:19%;
+  border:3px dashed var(--accent);
+  border-radius:50%;
+  left:40.5%;top:40.5%;
+  z-index:1;
+}
+
+/* counting rows */
+.count{display:flex;flex-direction:column;gap:10px;min-width:0}
+.crow{
+  display:grid;
+  grid-template-columns:104px minmax(0,1fr) 58px;
+  align-items:center;
+  gap:12px;
+  padding:8px 12px;
+  background:var(--surface);
+  border:1px solid var(--hair);
+  border-radius:14px;
+}
+.crow-label{
+  font-weight:700;
+  font-size:.73rem;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--crowcolor);
+}
+.crow--att{--crowcolor:var(--danger)}
+.crow--def{--crowcolor:var(--safe)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{
+  width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--crowcolor);
+  border-radius:11px;
+  background:var(--chip-bg);
+}
+.chip .pc{font-size:26px}
+.tally{
+  font-family:"Baloo 2","Trebuchet MS",sans-serif;
+  font-weight:800;
+  font-size:2.5rem;
+  line-height:1;
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+  color:var(--crowcolor);
+}
+.compare{
+  margin:2px 0 0;
+  font-size:.99rem;
+  font-weight:700;
+  color:var(--text);
+}
+
+/* verdict */
+.verdict{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
+.badge{
+  font-family:"Baloo 2","Trebuchet MS",sans-serif;
+  font-weight:700;
+  font-size:.84rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--on-semantic);
+  background:var(--accent);
+  padding:4px 13px;
+  border-radius:999px;
+}
+.vname{
+  margin:0;
+  font-family:"Baloo 2","Trebuchet MS",sans-serif;
+  font-weight:800;
+  font-size:clamp(1.6rem,3.4vw,2.15rem);
+  line-height:1.02;
+  color:var(--accent);
+  letter-spacing:-.01em;
+}
+.vrule{margin:0;font-weight:700;font-size:1.02rem}
+.vdo{margin:0;font-size:.97rem;color:var(--text-soft)}
+
+/* ---------- footer ---------- */
+.reminder{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px 18px;
+  margin-top:24px;
+  padding:18px 22px;
+  border-radius:18px;
+  border:2px solid var(--rule);
+  background:var(--surface);
+}
+.reminder h2{
+  margin:0;
+  font-family:"Baloo 2","Trebuchet MS",sans-serif;
+  font-weight:800;
+  font-size:1.22rem;
+}
+.reminder p{margin:0;color:var(--text-soft);font-size:1rem}
+.reminder .steps{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.step{
+  font-weight:700;font-size:.9rem;
+  padding:6px 13px;border-radius:999px;
+  background:var(--paper);border:1px solid var(--hair);
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .state{grid-template-columns:200px minmax(0,1fr);gap:20px}
+  .verdict{grid-column:1 / -1}
+}
+@media (max-width:600px){
+  .poster{padding:0 14px 34px}
+  .state{grid-template-columns:minmax(0,1fr);justify-items:stretch}
+  .board-wrap{max-width:280px;margin:0 auto}
+  .verdict{grid-column:auto}
+  .crow{grid-template-columns:88px minmax(0,1fr) 46px;gap:8px}
+  .chip{width:36px;height:36px}
+  .chip .pc{font-size:22px}
+  .tally{font-size:2rem}
+  .reminder .steps{margin-left:0}
+}
+
+/* ---------- motion ---------- */
+.arrows > path{
+  stroke-dasharray:var(--len);
+  stroke-dashoffset:var(--len);
+  animation:draw .5s ease-out forwards;
+  animation-delay:var(--delay);
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){
+  .arrows > path{animation:none;stroke-dashoffset:0}
+}
+
+/* ---------- print: one sheet, always light ---------- */
+@media print{
+  :root{
+    --paper:#FFFFFF;--surface:#FFFFFF;--text:#000000;--text-soft:#333333;
+    --hair:#BBBBBB;--rule:#888888;
+    --board-light:#F0E1C3;--board-dark:#A9764B;--board-edge:#6E4626;
+    --piece-black:#000000;--piece-white:#FFFFFF;--chip-bg:#F6EBD4;
+    --safe:#14663F;--safe-tint:#FFFFFF;
+    --careful:#8A5D06;--careful-tint:#FFFFFF;
+    --danger:#A62A21;--danger-tint:#FFFFFF;
+    --on-semantic:#FFFFFF;--shadow:none;
+  }
+  @page{size:letter portrait;margin:.4in}
+  body{background:#fff;font-size:11.5px}
+  .poster{max-width:none;padding:0}
+  .masthead{padding:10px 0 12px}
+  h1{font-size:2rem}
+  .deck{font-size:.95rem;margin-top:7px}
+  .states{gap:9px;margin-top:12px}
+  .state{padding:11px 13px;gap:16px;grid-template-columns:168px minmax(0,1fr) 214px;break-inside:avoid;page-break-inside:avoid}
+  .verdict{grid-column:auto;gap:6px}
+  .board-wrap{max-width:none;margin:0}
+  .count{gap:7px}
+  .compare{font-size:.92rem}
+  .vrule{font-size:.95rem}
+  .vdo{font-size:.88rem}
+  .key{padding:9px 12px;gap:6px}
+  .reminder .steps{margin-left:auto}
+  .board .pc{font-size:29px}
+  .chip{width:32px;height:32px}
+  .chip .pc{font-size:20px}
+  .tally{font-size:1.8rem}
+  .crow{padding:5px 9px;grid-template-columns:92px minmax(0,1fr) 44px}
+  .vname{font-size:1.5rem}
+  .reminder{margin-top:12px;padding:11px 14px}
+  .arrows > path{animation:none;stroke-dashoffset:0}
+}
+</style>
+
+<div class="checkstrip"></div>
+
+<div class="poster">
+
+  <header class="masthead">
+    <div class="masthead-main">
+      <p class="eyebrow">Chess &middot; Grades K&ndash;1</p>
+      <h1>Defended, Loose, or Hanging<span class="q">?</span></h1>
+      <p class="deck">Before you move, look at one piece. Count the <b>attackers</b>. Count the <b>defenders</b>. Whichever side has <b>more</b> tells you what to do.</p>
+    </div>
+
+    <div class="key" aria-hidden="true">
+      <div class="key-row">
+        <svg width="46" height="14" viewBox="0 0 46 14"><path d="M3 7H34" stroke="var(--danger)" stroke-width="4" stroke-linecap="round"/><path d="M33 2l9 5-9 5z" fill="var(--danger)"/></svg>
+        <span><b>Attacker</b><br><i>can capture your piece</i></span>
+      </div>
+      <div class="key-row">
+        <svg width="46" height="14" viewBox="0 0 46 14"><path d="M3 7H34" stroke="var(--safe)" stroke-width="4" stroke-linecap="round"/><path d="M33 2l9 5-9 5z" fill="var(--safe)"/></svg>
+        <span><b>Defender</b><br><i>can take back for you</i></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="states" id="states"></main>
+
+  <footer class="reminder">
+    <div>
+      <h2>Same board, every time.</h2>
+      <p>Only the number of defenders changed &mdash; and that changed everything.</p>
+    </div>
+    <div class="steps">
+      <span class="step">1. Pick a piece</span>
+      <span class="step">2. Count both sides</span>
+      <span class="step">3. Which is more?</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var FILES = ['c','d','e','f','g'];
+  var RANKS = [7,6,5,4,3];
+  var GLYPH = {p:'♟', r:'♜', n:'♞', b:'♝', q:'♛', k:'♚'};
+  var NAME  = {p:'pawn', r:'rook', n:'knight', b:'bishop', q:'queen', k:'king'};
+
+  function sq(s){
+    var c = FILES.indexOf(s.charAt(0));
+    var r = RANKS.indexOf(parseInt(s.charAt(1),10));
+    return {c:c, r:r, x:c*100+50, y:r*100+50};
+  }
+
+  var TARGET   = {sq:'e5', p:'n'};
+  var ATTACK   = [{sq:'d6', p:'p'}, {sq:'d7', p:'n'}];
+  var DEFEND   = [{sq:'d4', p:'p'}, {sq:'e3', p:'r'}, {sq:'g3', p:'b'}];
+
+  var STATES = [
+    {
+      key:'safe', defenders:3,
+      name:'Defended', badge:'Safe',
+      rule:'More defenders than attackers.',
+      compare:'3 defenders beat 2 attackers.',
+      dothis:'Your knight is guarded. It can stay right there.'
+    },
+    {
+      key:'careful', defenders:2,
+      name:'Loose', badge:'Careful',
+      rule:'The same number on both sides.',
+      compare:'2 defenders tie 2 attackers.',
+      dothis:'Even for now. If Black brings one more attacker, you lose it.'
+    },
+    {
+      key:'danger', defenders:1,
+      name:'Hanging', badge:'Danger',
+      rule:'More attackers than defenders.',
+      compare:'2 attackers beat 1 defender.',
+      dothis:'Black can win your knight! Move it, or add a defender.'
+    }
+  ];
+
+  function pieceSpan(code, side, extra){
+    var s = document.createElement('span');
+    s.className = 'pc ' + side + (extra ? ' ' + extra : '');
+    s.textContent = GLYPH[code];
+    return s;
+  }
+
+  function buildBoard(defs){
+    var wrap = document.createElement('div');
+    wrap.className = 'board-wrap';
+
+    var occupied = {};
+    occupied[TARGET.sq] = {p:TARGET.p, side:'w', target:true};
+    ATTACK.forEach(function(a){ occupied[a.sq] = {p:a.p, side:'b'}; });
+    defs.forEach(function(d){ occupied[d.sq] = {p:d.p, side:'w'}; });
+
+    var board = document.createElement('div');
+    board.className = 'board';
+    for (var r = 0; r < 5; r++){
+      for (var c = 0; c < 5; c++){
+        var cell = document.createElement('div');
+        cell.className = 'sq ' + (((c + r) % 2 === 0) ? 'dark' : 'light');
+        var nm = FILES[c] + RANKS[r];
+        if (occupied[nm]){
+          var o = occupied[nm];
+          cell.appendChild(pieceSpan(o.p, o.side, o.target ? 'target' : ''));
+        }
+        board.appendChild(cell);
+      }
+    }
+    wrap.appendChild(board);
+
+    var ring = document.createElement('div');
+    ring.className = 'target-ring';
+    wrap.appendChild(ring);
+
+    // arrows
+    var t = sq(TARGET.sq);
+    var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 500 500');
+    svg.setAttribute('class','arrows');
+
+    var defsEl = document.createElementNS('http://www.w3.org/2000/svg','defs');
+    [['ah-att','var(--danger)'],['ah-def','var(--safe)']].forEach(function(m){
+      var mk = document.createElementNS('http://www.w3.org/2000/svg','marker');
+      mk.setAttribute('id', m[0]);
+      mk.setAttribute('viewBox','0 0 10 10');
+      mk.setAttribute('refX','7'); mk.setAttribute('refY','5');
+      mk.setAttribute('markerWidth','4.2'); mk.setAttribute('markerHeight','4.2');
+      mk.setAttribute('orient','auto-start-reverse');
+      mk.setAttribute('markerUnits','strokeWidth');
+      var pth = document.createElementNS('http://www.w3.org/2000/svg','path');
+      pth.setAttribute('d','M0 0.6 L9 5 L0 9.4 Z');
+      pth.setAttribute('fill', m[1]);
+      mk.appendChild(pth);
+      defsEl.appendChild(mk);
+    });
+    svg.appendChild(defsEl);
+
+    var i = 0;
+    function arrow(from, color, marker){
+      var f = sq(from);
+      var dx = t.x - f.x, dy = t.y - f.y;
+      var d = Math.sqrt(dx*dx + dy*dy) || 1;
+      var ux = dx/d, uy = dy/d;
+      var x1 = f.x + ux*40, y1 = f.y + uy*40;
+      var x2 = t.x - ux*44, y2 = t.y - uy*44;
+      var len = Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
+      var p = document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('d','M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2);
+      p.setAttribute('stroke', color);
+      p.setAttribute('stroke-width','11');
+      p.setAttribute('stroke-linecap','round');
+      p.setAttribute('fill','none');
+      p.setAttribute('marker-end','url(#' + marker + ')');
+      p.style.setProperty('--len', len + 20);
+      p.style.setProperty('--delay', (0.12 * i++) + 's');
+      svg.appendChild(p);
+    }
+
+    ATTACK.forEach(function(a){ arrow(a.sq, 'var(--danger)', 'ah-att'); });
+    defs.forEach(function(d){ arrow(d.sq, 'var(--safe)', 'ah-def'); });
+
+    wrap.appendChild(svg);
+
+    var names = defs.map(function(d){ return NAME[d.p]; }).join(', ');
+    wrap.setAttribute('role','img');
+    wrap.setAttribute('aria-label',
+      'Chess diagram: a white knight on e5 is attacked by ' + ATTACK.length +
+      ' black pieces and defended by ' + defs.length + ' white pieces (' + names + ').');
+
+    return wrap;
+  }
+
+  function buildCountRow(kind, label, list, side){
+    var row = document.createElement('div');
+    row.className = 'crow crow--' + kind;
+
+    var lab = document.createElement('span');
+    lab.className = 'crow-label';
+    lab.textContent = label;
+
+    var chips = document.createElement('div');
+    chips.className = 'chips';
+    list.forEach(function(item){
+      var chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.appendChild(pieceSpan(item.p, side));
+      chips.appendChild(chip);
+    });
+
+    var n = document.createElement('span');
+    n.className = 'tally';
+    n.textContent = list.length;
+
+    row.appendChild(lab);
+    row.appendChild(chips);
+    row.appendChild(n);
+    row.setAttribute('aria-label', label + ': ' + list.length);
+    return row;
+  }
+
+  var host = document.getElementById('states');
+
+  STATES.forEach(function(st){
+    var defs = DEFEND.slice(0, st.defenders);
+
+    var sec = document.createElement('section');
+    sec.className = 'state state--' + st.key;
+
+    sec.appendChild(buildBoard(defs));
+
+    var count = document.createElement('div');
+    count.className = 'count';
+    count.appendChild(buildCountRow('att','Attackers', ATTACK, 'b'));
+    count.appendChild(buildCountRow('def','Defenders', defs, 'w'));
+    var cmp = document.createElement('p');
+    cmp.className = 'compare';
+    cmp.textContent = st.compare;
+    count.appendChild(cmp);
+    sec.appendChild(count);
+
+    var v = document.createElement('div');
+    v.className = 'verdict';
+    var b = document.createElement('span');
+    b.className = 'badge';
+    b.textContent = st.badge;
+    var h = document.createElement('h2');
+    h.className = 'vname';
+    h.textContent = st.name;
+    var r = document.createElement('p');
+    r.className = 'vrule';
+    r.textContent = st.rule;
+    var dd = document.createElement('p');
+    dd.className = 'vdo';
+    dd.textContent = st.dothis;
+    v.appendChild(b); v.appendChild(h); v.appendChild(r); v.appendChild(dd);
+    sec.appendChild(v);
+
+    host.appendChild(sec);
+  });
+})();
+</script>
