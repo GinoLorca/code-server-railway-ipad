@@ -1,410 +1,392 @@
 <title>Defended, Loose, Hanging</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@600;700;800&family=Noto+Sans+Symbols+2&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800;900&family=Noto+Sans+Symbols+2&display=swap">
 
 <style>
+/* ============================================================
+   Bauhaus infographic. One geometric family (Jost, a Futura
+   revival), the primary triad, and Kandinsky's shape-to-colour
+   correspondence: circle=blue, triangle=yellow, square=red.
+   Every state is encoded twice - colour AND shape - so the
+   sheet survives greyscale printing and colour-blind readers.
+   ============================================================ */
+
 /* ---------- tokens: light (bare :root = complete palette) ---------- */
 :root{
-  --paper:#FBF6EC;
-  --surface:#FFFFFF;
-  --text:#17232A;
-  --text-soft:#54646C;
-  --hair:#E0D5C1;
-  --rule:#C9BBA2;
+  --ground:#F5F4EF;
+  --panel:#FFFFFF;
+  --line:#16161A;
+  --text:#16161A;
+  --text-soft:#5C5C63;
+  --knock:#F7F6F1;
 
-  --board-light:#F0E1C3;
-  --board-dark:#A9764B;
-  --board-edge:#7C5231;
-  --piece-black:#17232A;
-  --piece-white:#FFFCF3;
-  --chip-bg:#F6EBD4;
+  --blue:#1F4E9C;
+  --yellow:#F5C400;
+  --red:#D8261C;
 
-  --safe:#1C7A4E;
-  --safe-tint:#EAF3EE;
-  --careful:#B0770A;
-  --careful-tint:#FAF1DC;
-  --danger:#C0362C;
-  --danger-tint:#FAEAE7;
-  --on-semantic:#FFFFFF;
+  --on-blue:#FFFFFF;
+  --on-yellow:#16161A;
+  --on-red:#FFFFFF;
 
-  --shadow:0 1px 2px rgba(23,35,42,.06), 0 6px 18px rgba(23,35,42,.06);
+  --board-light:#EDE8DB;
+  --board-dark:#9C9B95;
+  --board-edge:#16161A;
+  --piece-black:#16161A;
+  --piece-white:#FFFDF7;
+
+  --rule:3px;
 }
 /* ---------- tokens: dark via system (un-stamped document) ---------- */
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#101820;
-    --surface:#18232A;
-    --text:#EBE4D6;
-    --text-soft:#A2B0B7;
-    --hair:#2B3941;
-    --rule:#3A4A53;
+    --ground:#121215;
+    --panel:#1B1B20;
+    --line:#EFEDE6;
+    --text:#EFEDE6;
+    --text-soft:#A3A29B;
+    --knock:#121215;
 
-    --board-light:#E4D2B0;
-    --board-dark:#9A6A43;
-    --board-edge:#5E3E26;
-    --chip-bg:#E9DCBF;
+    --blue:#4E86E8;
+    --yellow:#F7CE2E;
+    --red:#F2503F;
 
-    --safe:#5FC490;
-    --safe-tint:rgba(95,196,144,.11);
-    --careful:#E9B54C;
-    --careful-tint:rgba(233,181,76,.11);
-    --danger:#F2796B;
-    --danger-tint:rgba(242,121,107,.11);
-    --on-semantic:#0F181E;
+    --on-blue:#101014;
+    --on-yellow:#16161A;
+    --on-red:#151013;
 
-    --shadow:0 1px 2px rgba(0,0,0,.30), 0 8px 22px rgba(0,0,0,.28);
+    --board-light:#E3DDCE;
+    --board-dark:#918F89;
+    --board-edge:#EFEDE6;
   }
 }
 /* ---------- tokens: dark via explicit toggle ---------- */
 :root[data-theme="dark"]{
-  --paper:#101820;
-  --surface:#18232A;
-  --text:#EBE4D6;
-  --text-soft:#A2B0B7;
-  --hair:#2B3941;
-  --rule:#3A4A53;
+  --ground:#121215;
+  --panel:#1B1B20;
+  --line:#EFEDE6;
+  --text:#EFEDE6;
+  --text-soft:#A3A29B;
+  --knock:#121215;
 
-  --board-light:#E4D2B0;
-  --board-dark:#9A6A43;
-  --board-edge:#5E3E26;
-  --chip-bg:#E9DCBF;
+  --blue:#4E86E8;
+  --yellow:#F7CE2E;
+  --red:#F2503F;
 
-  --safe:#5FC490;
-  --safe-tint:rgba(95,196,144,.11);
-  --careful:#E9B54C;
-  --careful-tint:rgba(233,181,76,.11);
-  --danger:#F2796B;
-  --danger-tint:rgba(242,121,107,.11);
-  --on-semantic:#0F181E;
+  --on-blue:#101014;
+  --on-yellow:#16161A;
+  --on-red:#151013;
 
-  --shadow:0 1px 2px rgba(0,0,0,.30), 0 8px 22px rgba(0,0,0,.28);
+  --board-light:#E3DDCE;
+  --board-dark:#918F89;
+  --board-edge:#EFEDE6;
 }
 
 *{box-sizing:border-box}
 
 body{
   margin:0;
-  background:var(--paper);
+  background:var(--ground);
   color:var(--text);
-  font-family:"Andika","Trebuchet MS",Verdana,sans-serif;
+  font-family:"Jost","Century Gothic","Futura",Avenir,sans-serif;
   font-size:16px;
-  line-height:1.5;
+  line-height:1.45;
   -webkit-font-smoothing:antialiased;
 }
 
-.poster{
-  max-width:1010px;
+.sheet{
+  max-width:1020px;
   margin:0 auto;
-  padding:0 22px 44px;
+  padding:0 22px 46px;
 }
 
 /* ---------- masthead ---------- */
 .checkstrip{
-  height:12px;
-  background:
-    repeating-linear-gradient(90deg,
-      var(--board-dark) 0 24px,
-      var(--board-light) 24px 48px);
-  border-bottom:1px solid var(--board-edge);
+  height:14px;
+  background:repeating-linear-gradient(90deg,
+    var(--line) 0 28px, var(--ground) 28px 56px);
 }
 
 .masthead{
   display:flex;
   flex-wrap:wrap;
   align-items:flex-end;
-  gap:18px 32px;
-  padding:26px 0 20px;
-  border-bottom:2px solid var(--rule);
+  justify-content:space-between;
+  gap:20px 34px;
+  padding:26px 0 18px;
+  border-bottom:6px solid var(--line);
 }
-.masthead-main{flex:1 1 420px}
+.masthead-main{flex:1 1 430px;min-width:0}
 
 .eyebrow{
-  margin:0 0 6px;
-  font-weight:700;
-  font-size:.76rem;
-  letter-spacing:.15em;
+  margin:0 0 8px;
+  font-weight:600;
+  font-size:.74rem;
+  letter-spacing:.26em;
   text-transform:uppercase;
   color:var(--text-soft);
 }
 h1{
   margin:0;
-  font-family:"Baloo 2","Trebuchet MS",sans-serif;
   font-weight:800;
-  font-size:clamp(2.15rem,5.4vw,3.3rem);
-  line-height:1.04;
-  letter-spacing:-.015em;
+  font-size:clamp(2.3rem,6vw,3.75rem);
+  line-height:.94;
+  letter-spacing:-.022em;
+  text-transform:lowercase;
   text-wrap:balance;
 }
-h1 .q{color:var(--text-soft)}
+h1 .q{color:var(--red)}
 .deck{
-  margin:12px 0 0;
-  max-width:46ch;
+  margin:14px 0 0;
+  max-width:44ch;
   font-size:1.06rem;
+  font-weight:400;
   color:var(--text-soft);
 }
-.deck b{color:var(--text);font-weight:700}
+.deck b{color:var(--text);font-weight:600}
 
-/* arrow key */
-.key{
+/* legend: what the two arrow colours mean */
+.legend{
   flex:0 1 auto;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  padding:14px 16px;
-  background:var(--surface);
-  border:1px solid var(--hair);
-  border-radius:14px;
-  box-shadow:var(--shadow);
+  border:var(--rule) solid var(--line);
+  background:var(--panel);
 }
-.key-row{display:flex;align-items:center;gap:11px;font-size:.92rem;white-space:nowrap;line-height:1.28}
-.key-row i{font-style:normal;color:var(--text-soft);font-size:.85rem}
-.key-row svg{flex:none}
-.key-row b{font-weight:700}
+.legend-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:11px 15px;
+  white-space:nowrap;
+}
+.legend-row + .legend-row{border-top:var(--rule) solid var(--line)}
+.legend-row svg{flex:none}
+.legend-row b{display:block;font-weight:700;font-size:.97rem;line-height:1.15;text-transform:lowercase}
+.legend-row i{font-style:normal;font-size:.84rem;color:var(--text-soft)}
 
-/* ---------- state bands ---------- */
+/* ---------- the grid of states ---------- */
 .states{
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  margin-top:26px;
+  border:var(--rule) solid var(--line);
+  border-top:0;
+  background:var(--panel);
 }
-
 .state{
   display:grid;
-  grid-template-columns:236px minmax(0,1fr) 262px;
-  gap:26px;
-  align-items:center;
-  padding:20px 22px;
-  border:1px solid var(--hair);
-  border-radius:20px;
-  background:var(--tint);
+  grid-template-columns:268px minmax(0,1fr) 296px;
 }
-.state--safe{--accent:var(--safe);--tint:var(--safe-tint)}
-.state--careful{--accent:var(--careful);--tint:var(--careful-tint)}
-.state--danger{--accent:var(--danger);--tint:var(--danger-tint)}
+.state + .state{border-top:var(--rule) solid var(--line)}
+
+.state--blue{--accent:var(--blue);--on-accent:var(--on-blue)}
+.state--yellow{--accent:var(--yellow);--on-accent:var(--on-yellow)}
+.state--red{--accent:var(--red);--on-accent:var(--on-red)}
+
+.cell{padding:18px;min-width:0}
+.cell--count,.cell--verdict{border-left:var(--rule) solid var(--line)}
 
 /* board */
-.board-wrap{position:relative;width:100%;aspect-ratio:1;border-radius:12px;overflow:hidden;border:3px solid var(--board-edge);box-shadow:var(--shadow)}
+.board-wrap{position:relative;width:100%;aspect-ratio:1;border:var(--rule) solid var(--board-edge)}
 .board{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr)}
 .sq{display:flex;align-items:center;justify-content:center}
 .sq.light{background:var(--board-light)}
 .sq.dark{background:var(--board-dark)}
-.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 
 .pc{
   font-family:"Noto Sans Symbols 2","Segoe UI Symbol","Apple Symbols","DejaVu Sans",sans-serif;
   line-height:1;
-  font-size:clamp(26px,3.1vw,34px);
 }
-.board .pc{font-size:min(9.4vw,40px)}
+.board .pc{font-size:min(9vw,38px);position:relative;z-index:2}
 .pc.b{color:var(--piece-black)}
-.pc.w{
-  color:var(--piece-white);
-  -webkit-text-stroke:1.6px var(--piece-black);
-  text-shadow:0 1px 1px rgba(23,35,42,.35);
-}
-.pc.target{position:relative;z-index:2}
-.target-ring{
-  position:absolute;
-  width:19%;height:19%;
-  border:3px dashed var(--accent);
-  border-radius:50%;
-  left:40.5%;top:40.5%;
-  z-index:1;
-}
+.pc.w{color:var(--piece-white);-webkit-text-stroke:1.7px var(--piece-black)}
 
-/* counting rows */
-.count{display:flex;flex-direction:column;gap:10px;min-width:0}
+/* counting rows - Isotype unit marks */
+.count{display:flex;flex-direction:column;gap:14px;height:100%;justify-content:center}
 .crow{
   display:grid;
-  grid-template-columns:104px minmax(0,1fr) 58px;
+  grid-template-columns:104px minmax(0,1fr) 62px;
   align-items:center;
-  gap:12px;
-  padding:8px 12px;
-  background:var(--surface);
-  border:1px solid var(--hair);
-  border-radius:14px;
+  gap:14px;
 }
+.crow--att{--unit:var(--red)}
+.crow--def{--unit:var(--blue)}
 .crow-label{
-  font-weight:700;
-  font-size:.73rem;
-  letter-spacing:.11em;
+  font-weight:600;
+  font-size:.72rem;
+  letter-spacing:.2em;
   text-transform:uppercase;
-  color:var(--crowcolor);
+  color:var(--text-soft);
 }
-.crow--att{--crowcolor:var(--danger)}
-.crow--def{--crowcolor:var(--safe)}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{
-  width:42px;height:42px;
+.units{display:flex;gap:8px;flex-wrap:wrap}
+.unit{
+  width:50px;height:50px;
   display:flex;align-items:center;justify-content:center;
-  border:2px solid var(--crowcolor);
-  border-radius:11px;
-  background:var(--chip-bg);
+  background:var(--unit);
 }
-.chip .pc{font-size:26px}
+.unit .pc{font-size:29px;color:var(--knock)}
 .tally{
-  font-family:"Baloo 2","Trebuchet MS",sans-serif;
-  font-weight:800;
-  font-size:2.5rem;
-  line-height:1;
+  font-weight:900;
+  font-size:3rem;
+  line-height:.82;
   text-align:right;
   font-variant-numeric:tabular-nums;
-  color:var(--crowcolor);
+  color:var(--unit);
 }
 .compare{
-  margin:2px 0 0;
-  font-size:.99rem;
-  font-weight:700;
-  color:var(--text);
+  margin:0;
+  padding-top:12px;
+  border-top:var(--rule) solid var(--line);
+  font-size:1.04rem;
+  font-weight:600;
 }
 
-/* verdict */
-.verdict{display:flex;flex-direction:column;gap:9px;align-items:flex-start}
-.badge{
-  font-family:"Baloo 2","Trebuchet MS",sans-serif;
-  font-weight:700;
-  font-size:.84rem;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--on-semantic);
+/* verdict: a solid block of the state's colour */
+.cell--verdict{
   background:var(--accent);
-  padding:4px 13px;
-  border-radius:999px;
+  color:var(--on-accent);
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  justify-content:center;
 }
+.vmark{display:block;width:38px;height:38px}
 .vname{
   margin:0;
-  font-family:"Baloo 2","Trebuchet MS",sans-serif;
   font-weight:800;
-  font-size:clamp(1.6rem,3.4vw,2.15rem);
-  line-height:1.02;
-  color:var(--accent);
-  letter-spacing:-.01em;
+  font-size:clamp(1.8rem,3.8vw,2.5rem);
+  line-height:.92;
+  letter-spacing:-.02em;
+  text-transform:lowercase;
 }
-.vrule{margin:0;font-weight:700;font-size:1.02rem}
-.vdo{margin:0;font-size:.97rem;color:var(--text-soft)}
+.vrule{margin:0;font-weight:600;font-size:1.02rem;line-height:1.3}
+.vdo{margin:0;font-size:.95rem;font-weight:400;opacity:.93;line-height:1.35}
 
 /* ---------- footer ---------- */
-.reminder{
+.footer{
   display:flex;
   flex-wrap:wrap;
   align-items:center;
-  gap:10px 18px;
-  margin-top:24px;
-  padding:18px 22px;
-  border-radius:18px;
-  border:2px solid var(--rule);
-  background:var(--surface);
+  gap:14px 22px;
+  padding:18px 20px;
+  background:var(--line);
+  color:var(--ground);
 }
-.reminder h2{
-  margin:0;
-  font-family:"Baloo 2","Trebuchet MS",sans-serif;
-  font-weight:800;
-  font-size:1.22rem;
-}
-.reminder p{margin:0;color:var(--text-soft);font-size:1rem}
-.reminder .steps{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.footer h2{margin:0;font-weight:800;font-size:1.24rem;text-transform:lowercase;letter-spacing:-.01em}
+.footer p{margin:2px 0 0;font-size:.98rem;font-weight:300;opacity:.82}
+.steps{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
 .step{
-  font-weight:700;font-size:.9rem;
-  padding:6px 13px;border-radius:999px;
-  background:var(--paper);border:1px solid var(--hair);
+  font-weight:600;font-size:.88rem;
+  padding:7px 14px;
+  border:2px solid var(--ground);
 }
 
 /* ---------- responsive ---------- */
-@media (max-width:900px){
-  .state{grid-template-columns:200px minmax(0,1fr);gap:20px}
-  .verdict{grid-column:1 / -1}
+@media (max-width:940px){
+  .state{grid-template-columns:212px minmax(0,1fr)}
+  .cell--verdict{
+    grid-column:1 / -1;
+    border-left:0;
+    border-top:var(--rule) solid var(--line);
+    flex-direction:row;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px 18px;
+  }
+  .vmark{width:32px;height:32px}
+  .vname{flex:0 0 auto}
+  .vrule{flex:1 1 200px}
+  .vdo{flex:1 1 100%}
 }
-@media (max-width:600px){
-  .poster{padding:0 14px 34px}
-  .state{grid-template-columns:minmax(0,1fr);justify-items:stretch}
-  .board-wrap{max-width:280px;margin:0 auto}
-  .verdict{grid-column:auto}
-  .crow{grid-template-columns:88px minmax(0,1fr) 46px;gap:8px}
-  .chip{width:36px;height:36px}
-  .chip .pc{font-size:22px}
-  .tally{font-size:2rem}
-  .reminder .steps{margin-left:0}
+@media (max-width:620px){
+  .sheet{padding:0 13px 34px}
+  .state{grid-template-columns:minmax(0,1fr)}
+  .cell--count{border-left:0;border-top:var(--rule) solid var(--line)}
+  .board-wrap{max-width:290px;margin:0 auto}
+  .crow{grid-template-columns:92px minmax(0,1fr) 50px;gap:9px}
+  .unit{width:38px;height:38px}
+  .unit .pc{font-size:22px}
+  .tally{font-size:2.3rem}
+  .steps{margin-left:0}
 }
 
 /* ---------- motion ---------- */
-.arrows > path{
+.overlay .arrow{
   stroke-dasharray:var(--len);
   stroke-dashoffset:var(--len);
-  animation:draw .5s ease-out forwards;
+  animation:draw .45s ease-out forwards;
   animation-delay:var(--delay);
 }
 @keyframes draw{to{stroke-dashoffset:0}}
 @media (prefers-reduced-motion:reduce){
-  .arrows > path{animation:none;stroke-dashoffset:0}
+  .overlay .arrow{animation:none;stroke-dashoffset:0}
 }
 
-/* ---------- print: one sheet, always light ---------- */
+/* ---------- print: one Letter sheet, always light ---------- */
 @media print{
   :root{
-    --paper:#FFFFFF;--surface:#FFFFFF;--text:#000000;--text-soft:#333333;
-    --hair:#BBBBBB;--rule:#888888;
-    --board-light:#F0E1C3;--board-dark:#A9764B;--board-edge:#6E4626;
-    --piece-black:#000000;--piece-white:#FFFFFF;--chip-bg:#F6EBD4;
-    --safe:#14663F;--safe-tint:#FFFFFF;
-    --careful:#8A5D06;--careful-tint:#FFFFFF;
-    --danger:#A62A21;--danger-tint:#FFFFFF;
-    --on-semantic:#FFFFFF;--shadow:none;
+    --ground:#FFFFFF;--panel:#FFFFFF;--line:#000000;--text:#000000;
+    --text-soft:#3A3A3A;--knock:#FFFFFF;
+    --blue:#12448F;--yellow:#F0BE00;--red:#C81E14;
+    --on-blue:#FFFFFF;--on-yellow:#000000;--on-red:#FFFFFF;
+    --board-light:#EDE8DB;--board-dark:#9C9B95;--board-edge:#000000;
+    --piece-black:#000000;--piece-white:#FFFFFF;
+    --rule:2px;
   }
   @page{size:letter portrait;margin:.4in}
   body{background:#fff;font-size:11.5px}
-  .poster{max-width:none;padding:0}
-  .masthead{padding:10px 0 12px}
-  h1{font-size:2rem}
-  .deck{font-size:.95rem;margin-top:7px}
-  .states{gap:9px;margin-top:12px}
-  .state{padding:11px 13px;gap:16px;grid-template-columns:168px minmax(0,1fr) 214px;break-inside:avoid;page-break-inside:avoid}
-  .verdict{grid-column:auto;gap:6px}
+  .sheet{max-width:none;padding:0}
+  .checkstrip{height:10px}
+  .masthead{padding:8px 0 9px;border-bottom-width:4px}
+  h1{font-size:2.25rem}
+  .deck{font-size:.92rem;margin-top:7px}
+  .legend-row{padding:7px 11px;gap:9px}
+  .state{grid-template-columns:206px minmax(0,1fr) 214px}
+  .cell{padding:14px}
+  .cell--verdict{grid-column:auto;border-left:var(--rule) solid var(--line);border-top:0;flex-direction:column;flex-wrap:nowrap;gap:5px}
+  .vmark,.vname,.vrule,.vdo{flex:0 0 auto}
   .board-wrap{max-width:none;margin:0}
-  .count{gap:7px}
-  .compare{font-size:.92rem}
-  .vrule{font-size:.95rem}
-  .vdo{font-size:.88rem}
-  .key{padding:9px 12px;gap:6px}
-  .reminder .steps{margin-left:auto}
-  .board .pc{font-size:29px}
-  .chip{width:32px;height:32px}
-  .chip .pc{font-size:20px}
-  .tally{font-size:1.8rem}
-  .crow{padding:5px 9px;grid-template-columns:92px minmax(0,1fr) 44px}
-  .vname{font-size:1.5rem}
-  .reminder{margin-top:12px;padding:11px 14px}
-  .arrows > path{animation:none;stroke-dashoffset:0}
+  .board .pc{font-size:34px}
+  .count{gap:9px}
+  .crow{grid-template-columns:80px minmax(0,1fr) 46px;gap:9px}
+  .unit{width:38px;height:38px}
+  .unit .pc{font-size:23px}
+  .tally{font-size:2.5rem}
+  .compare{font-size:.93rem;padding-top:8px}
+  .vmark{width:32px;height:32px}
+  .vname{font-size:1.95rem}
+  .vrule{font-size:.94rem}
+  .vdo{font-size:.86rem}
+  .footer{padding:10px 14px}
+  .steps{margin-left:auto}
+  .state,.footer{break-inside:avoid;page-break-inside:avoid}
+  .overlay .arrow{animation:none;stroke-dashoffset:0}
 }
 </style>
 
 <div class="checkstrip"></div>
 
-<div class="poster">
+<div class="sheet">
 
   <header class="masthead">
     <div class="masthead-main">
       <p class="eyebrow">Chess &middot; Grades K&ndash;1</p>
       <h1>Defended, Loose, or Hanging<span class="q">?</span></h1>
-      <p class="deck">Before you move, look at one piece. Count the <b>attackers</b>. Count the <b>defenders</b>. Whichever side has <b>more</b> tells you what to do.</p>
+      <p class="deck">Before you move, pick one piece. Count the <b>attackers</b>. Count the <b>defenders</b>. Whichever side has <b>more</b> tells you what to do.</p>
     </div>
 
-    <div class="key" aria-hidden="true">
-      <div class="key-row">
-        <svg width="46" height="14" viewBox="0 0 46 14"><path d="M3 7H34" stroke="var(--danger)" stroke-width="4" stroke-linecap="round"/><path d="M33 2l9 5-9 5z" fill="var(--danger)"/></svg>
-        <span><b>Attacker</b><br><i>can capture your piece</i></span>
+    <div class="legend">
+      <div class="legend-row">
+        <svg width="52" height="16" viewBox="0 0 52 16" aria-hidden="true"><path d="M2 8H36" stroke="var(--red)" stroke-width="5"/><path d="M34 1l14 7-14 7z" fill="var(--red)"/></svg>
+        <span><b>Attacker</b><i>can capture your piece</i></span>
       </div>
-      <div class="key-row">
-        <svg width="46" height="14" viewBox="0 0 46 14"><path d="M3 7H34" stroke="var(--safe)" stroke-width="4" stroke-linecap="round"/><path d="M33 2l9 5-9 5z" fill="var(--safe)"/></svg>
-        <span><b>Defender</b><br><i>can take back for you</i></span>
+      <div class="legend-row">
+        <svg width="52" height="16" viewBox="0 0 52 16" aria-hidden="true"><path d="M2 8H36" stroke="var(--blue)" stroke-width="5"/><path d="M34 1l14 7-14 7z" fill="var(--blue)"/></svg>
+        <span><b>Defender</b><i>can take back for you</i></span>
       </div>
     </div>
   </header>
 
   <main class="states" id="states"></main>
 
-  <footer class="reminder">
+  <footer class="footer">
     <div>
       <h2>Same board, every time.</h2>
       <p>Only the number of defenders changed &mdash; and that changed everything.</p>
@@ -420,6 +402,7 @@ h1 .q{color:var(--text-soft)}
 
 <script>
 (function(){
+  var SVGNS = 'http://www.w3.org/2000/svg';
   var FILES = ['c','d','e','f','g'];
   var RANKS = [7,6,5,4,3];
   var GLYPH = {p:'♟', r:'♜', n:'♞', b:'♝', q:'♛', k:'♚'};
@@ -430,48 +413,69 @@ h1 .q{color:var(--text-soft)}
     var r = RANKS.indexOf(parseInt(s.charAt(1),10));
     return {c:c, r:r, x:c*100+50, y:r*100+50};
   }
+  function el(name, attrs){
+    var n = document.createElementNS(SVGNS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
 
-  var TARGET   = {sq:'e5', p:'n'};
-  var ATTACK   = [{sq:'d6', p:'p'}, {sq:'d7', p:'n'}];
-  var DEFEND   = [{sq:'d4', p:'p'}, {sq:'e3', p:'r'}, {sq:'g3', p:'b'}];
+  var TARGET = {sq:'e5', p:'n'};
+  var ATTACK = [{sq:'d6', p:'p'}, {sq:'d7', p:'n'}];
+  var DEFEND = [{sq:'d4', p:'p'}, {sq:'e3', p:'r'}, {sq:'g3', p:'b'}];
+
+  /* Kandinsky's correspondence, used as a redundant (colour-free) encoding.
+     R is the circumradius used for the marker drawn around the target. */
+  function markerShape(kind, cx, cy, R, attrs){
+    if (kind === 'circle') return el('circle', Object.assign({cx:cx, cy:cy, r:R}, attrs));
+    if (kind === 'square') {
+      var s = R * 1.62;
+      return el('rect', Object.assign({x:cx-s/2, y:cy-s/2, width:s, height:s}, attrs));
+    }
+    var pts = [];
+    for (var i = 0; i < 3; i++){
+      var a = (-90 + i * 120) * Math.PI / 180;
+      pts.push((cx + R * Math.cos(a)).toFixed(1) + ',' + (cy + R * Math.sin(a) + R * 0.14).toFixed(1));
+    }
+    return el('polygon', Object.assign({points: pts.join(' ')}, attrs));
+  }
 
   var STATES = [
     {
-      key:'safe', defenders:3,
-      name:'Defended', badge:'Safe',
+      key:'blue', shape:'circle', defenders:3,
+      name:'defended', 
       rule:'More defenders than attackers.',
       compare:'3 defenders beat 2 attackers.',
       dothis:'Your knight is guarded. It can stay right there.'
     },
     {
-      key:'careful', defenders:2,
-      name:'Loose', badge:'Careful',
+      key:'yellow', shape:'triangle', defenders:2,
+      name:'loose',
       rule:'The same number on both sides.',
       compare:'2 defenders tie 2 attackers.',
       dothis:'Even for now. If Black brings one more attacker, you lose it.'
     },
     {
-      key:'danger', defenders:1,
-      name:'Hanging', badge:'Danger',
+      key:'red', shape:'square', defenders:1,
+      name:'hanging',
       rule:'More attackers than defenders.',
       compare:'2 attackers beat 1 defender.',
       dothis:'Black can win your knight! Move it, or add a defender.'
     }
   ];
 
-  function pieceSpan(code, side, extra){
+  function pieceSpan(code, side){
     var s = document.createElement('span');
-    s.className = 'pc ' + side + (extra ? ' ' + extra : '');
+    s.className = 'pc ' + side;
     s.textContent = GLYPH[code];
     return s;
   }
 
-  function buildBoard(defs){
+  function buildBoard(st, defs){
     var wrap = document.createElement('div');
     wrap.className = 'board-wrap';
 
     var occupied = {};
-    occupied[TARGET.sq] = {p:TARGET.p, side:'w', target:true};
+    occupied[TARGET.sq] = {p:TARGET.p, side:'w'};
     ATTACK.forEach(function(a){ occupied[a.sq] = {p:a.p, side:'b'}; });
     defs.forEach(function(d){ occupied[d.sq] = {p:d.p, side:'w'}; });
 
@@ -484,72 +488,65 @@ h1 .q{color:var(--text-soft)}
         var nm = FILES[c] + RANKS[r];
         if (occupied[nm]){
           var o = occupied[nm];
-          cell.appendChild(pieceSpan(o.p, o.side, o.target ? 'target' : ''));
+          cell.appendChild(pieceSpan(o.p, o.side));
         }
         board.appendChild(cell);
       }
     }
     wrap.appendChild(board);
 
-    var ring = document.createElement('div');
-    ring.className = 'target-ring';
-    wrap.appendChild(ring);
-
-    // arrows
     var t = sq(TARGET.sq);
-    var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('viewBox','0 0 500 500');
-    svg.setAttribute('class','arrows');
+    var svg = el('svg', {viewBox:'0 0 500 500', 'class':'overlay'});
 
-    var defsEl = document.createElementNS('http://www.w3.org/2000/svg','defs');
-    [['ah-att','var(--danger)'],['ah-def','var(--safe)']].forEach(function(m){
-      var mk = document.createElementNS('http://www.w3.org/2000/svg','marker');
-      mk.setAttribute('id', m[0]);
-      mk.setAttribute('viewBox','0 0 10 10');
-      mk.setAttribute('refX','7'); mk.setAttribute('refY','5');
-      mk.setAttribute('markerWidth','4.2'); mk.setAttribute('markerHeight','4.2');
-      mk.setAttribute('orient','auto-start-reverse');
-      mk.setAttribute('markerUnits','strokeWidth');
-      var pth = document.createElementNS('http://www.w3.org/2000/svg','path');
-      pth.setAttribute('d','M0 0.6 L9 5 L0 9.4 Z');
-      pth.setAttribute('fill', m[1]);
-      mk.appendChild(pth);
-      defsEl.appendChild(mk);
-    });
-    svg.appendChild(defsEl);
+    /* State marker around the target. Drawn twice: an ink keyline under a
+       colour stroke, so yellow stays visible on a light square. */
+    svg.appendChild(markerShape(st.shape, t.x, t.y, 54, {
+      fill:'none', stroke:'var(--line)', 'stroke-width':15
+    }));
+    svg.appendChild(markerShape(st.shape, t.x, t.y, 54, {
+      fill:'none', stroke:'var(--accent)', 'stroke-width':9
+    }));
 
     var i = 0;
-    function arrow(from, color, marker){
+    function arrow(from, colour){
       var f = sq(from);
       var dx = t.x - f.x, dy = t.y - f.y;
       var d = Math.sqrt(dx*dx + dy*dy) || 1;
       var ux = dx/d, uy = dy/d;
       var x1 = f.x + ux*40, y1 = f.y + uy*40;
-      var x2 = t.x - ux*44, y2 = t.y - uy*44;
-      var len = Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
-      var p = document.createElementNS('http://www.w3.org/2000/svg','path');
-      p.setAttribute('d','M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2);
-      p.setAttribute('stroke', color);
-      p.setAttribute('stroke-width','11');
-      p.setAttribute('stroke-linecap','round');
-      p.setAttribute('fill','none');
-      p.setAttribute('marker-end','url(#' + marker + ')');
-      p.style.setProperty('--len', len + 20);
-      p.style.setProperty('--delay', (0.12 * i++) + 's');
-      svg.appendChild(p);
+      var hx = t.x - ux*72, hy = t.y - uy*72;   /* arrow tip, just outside the marker */
+      var bx = hx - ux*17, by = hy - uy*17;     /* base of the head */
+      var len = Math.sqrt(Math.pow(bx-x1,2) + Math.pow(by-y1,2));
+
+      var line = el('path', {
+        d:'M' + x1.toFixed(1) + ' ' + y1.toFixed(1) + ' L' + bx.toFixed(1) + ' ' + by.toFixed(1),
+        stroke:colour, 'stroke-width':11, fill:'none', 'class':'arrow'
+      });
+      line.style.setProperty('--len', len.toFixed(1));
+      line.style.setProperty('--delay', (0.1 * i++) + 's');
+      svg.appendChild(line);
+
+      /* solid triangular head - hard geometry, no marker element */
+      var px = -uy, py = ux, w = 11;
+      svg.appendChild(el('polygon', {
+        points: hx.toFixed(1) + ',' + hy.toFixed(1) + ' ' +
+                (bx + px*w).toFixed(1) + ',' + (by + py*w).toFixed(1) + ' ' +
+                (bx - px*w).toFixed(1) + ',' + (by - py*w).toFixed(1),
+        fill: colour
+      }));
     }
 
-    ATTACK.forEach(function(a){ arrow(a.sq, 'var(--danger)', 'ah-att'); });
-    defs.forEach(function(d){ arrow(d.sq, 'var(--safe)', 'ah-def'); });
+    ATTACK.forEach(function(a){ arrow(a.sq, 'var(--red)'); });
+    defs.forEach(function(d){ arrow(d.sq, 'var(--blue)'); });
 
     wrap.appendChild(svg);
 
     var names = defs.map(function(d){ return NAME[d.p]; }).join(', ');
     wrap.setAttribute('role','img');
     wrap.setAttribute('aria-label',
-      'Chess diagram: a white knight on e5 is attacked by ' + ATTACK.length +
-      ' black pieces and defended by ' + defs.length + ' white pieces (' + names + ').');
-
+      'Chess diagram: a white knight on e5, marked with a ' + st.shape + ', is attacked by ' +
+      ATTACK.length + ' black pieces and defended by ' + defs.length +
+      ' white pieces (' + names + ').');
     return wrap;
   }
 
@@ -561,22 +558,20 @@ h1 .q{color:var(--text-soft)}
     lab.className = 'crow-label';
     lab.textContent = label;
 
-    var chips = document.createElement('div');
-    chips.className = 'chips';
+    var units = document.createElement('div');
+    units.className = 'units';
     list.forEach(function(item){
-      var chip = document.createElement('span');
-      chip.className = 'chip';
-      chip.appendChild(pieceSpan(item.p, side));
-      chips.appendChild(chip);
+      var u = document.createElement('span');
+      u.className = 'unit';
+      u.appendChild(pieceSpan(item.p, side));
+      units.appendChild(u);
     });
 
     var n = document.createElement('span');
     n.className = 'tally';
     n.textContent = list.length;
 
-    row.appendChild(lab);
-    row.appendChild(chips);
-    row.appendChild(n);
+    row.appendChild(lab); row.appendChild(units); row.appendChild(n);
     row.setAttribute('aria-label', label + ': ' + list.length);
     return row;
   }
@@ -589,8 +584,13 @@ h1 .q{color:var(--text-soft)}
     var sec = document.createElement('section');
     sec.className = 'state state--' + st.key;
 
-    sec.appendChild(buildBoard(defs));
+    var boardCell = document.createElement('div');
+    boardCell.className = 'cell cell--board';
+    boardCell.appendChild(buildBoard(st, defs));
+    sec.appendChild(boardCell);
 
+    var countCell = document.createElement('div');
+    countCell.className = 'cell cell--count';
     var count = document.createElement('div');
     count.className = 'count';
     count.appendChild(buildCountRow('att','Attackers', ATTACK, 'b'));
@@ -599,13 +599,16 @@ h1 .q{color:var(--text-soft)}
     cmp.className = 'compare';
     cmp.textContent = st.compare;
     count.appendChild(cmp);
-    sec.appendChild(count);
+    countCell.appendChild(count);
+    sec.appendChild(countCell);
 
     var v = document.createElement('div');
-    v.className = 'verdict';
-    var b = document.createElement('span');
-    b.className = 'badge';
-    b.textContent = st.badge;
+    v.className = 'cell cell--verdict';
+
+    var badge = el('svg', {viewBox:'0 0 48 48', 'class':'vmark', 'aria-hidden':'true'});
+    badge.appendChild(markerShape(st.shape, 24, 24, 23, {fill:'var(--on-accent)'}));
+    v.appendChild(badge);
+
     var h = document.createElement('h2');
     h.className = 'vname';
     h.textContent = st.name;
@@ -615,7 +618,7 @@ h1 .q{color:var(--text-soft)}
     var dd = document.createElement('p');
     dd.className = 'vdo';
     dd.textContent = st.dothis;
-    v.appendChild(b); v.appendChild(h); v.appendChild(r); v.appendChild(dd);
+    v.appendChild(h); v.appendChild(r); v.appendChild(dd);
     sec.appendChild(v);
 
     host.appendChild(sec);
