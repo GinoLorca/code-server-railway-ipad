@@ -334,9 +334,15 @@
     width: 55%; height: 140%;
     background: linear-gradient(115deg, transparent, rgba(255,255,255,0.9), transparent);
     transform: skewX(-20deg);
-    transition: left 0.55s ease;
   }
-  .medal:hover::after{ left: 140%; }
+  @keyframes medalShine{
+    from{ left: -140%; }
+    to{ left: 140%; }
+  }
+  .medal:hover::after,
+  .medal.shine::after{
+    animation: medalShine 0.55s ease;
+  }
   .rank-plain{ color: var(--ink-faint); }
 
   .school-cell{ display:flex; align-items:center; gap:9px; min-width:0; }
@@ -1141,6 +1147,7 @@
   let currentGrade = "K";
   let expandedSchool = null;
   let playerFilterGrade = "all";
+  let shineSchool = null;
 
   function sortedSchools(list){
     return [...list].sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
@@ -1234,8 +1241,9 @@
 
   function rankRowHtml(rankIndex, school, leaderPoints){
     const medal = rankIndex === 1 ? "g" : rankIndex === 2 ? "s" : rankIndex === 3 ? "b" : null;
+    const shineClass = (medal && shineSchool === school.name) ? " shine" : "";
     const rankHtml = medal
-      ? `<span class="medal ${medal}">${rankIndex}</span>`
+      ? `<span class="medal ${medal}${shineClass}">${rankIndex}</span>`
       : `<span class="rank-plain">${rankIndex}</span>`;
     const pct = leaderPoints ? Math.round((school.points / leaderPoints) * 100) : 0;
     const behindHtml = rankIndex === 1
@@ -1270,7 +1278,9 @@
     const toggle = () => {
       expandedSchool = isExpanded ? null : school.name;
       playerFilterGrade = "all";
+      shineSchool = school.name;
       renderBoard();
+      shineSchool = null;
     };
     row.addEventListener("click", toggle);
     row.addEventListener("keydown", e => {
