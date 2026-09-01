@@ -115,22 +115,22 @@
     position: relative;
     max-width: 1180px;
     margin: 0 auto;
-    padding: 30px 28px 26px;
+    padding: 26px 28px 26px;
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
   }
   .brand{ display:flex; align-items:center; gap:16px; }
   .brand-mark{
-    width: 102px; height: 102px;
+    width: 190px; height: 190px;
     display:flex; align-items:center; justify-content:center;
     flex: none;
   }
   .brand-mark img{ width:100%; height:100%; object-fit: contain; display:block; }
   .brand-text .eyebrow{
-    font-size: 11px;
+    font-size: 15px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-dim);
@@ -144,13 +144,13 @@
   }
   .season-chip{
     display:flex; flex-direction:column; align-items:flex-end; gap:6px;
-    font-size: 12.5px;
+    font-size: 17px;
     color: var(--ink-dim);
     text-align: right;
   }
   .season-chip .season-label{
     font-family: "EB Garamond", Georgia, serif;
-    font-size: 11.5px;
+    font-size: 15.5px;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -172,13 +172,13 @@
     margin:0;
     max-width: 62ch;
     color: var(--ink-dim);
-    font-size: 15px;
+    font-size: 20px;
     line-height: 1.6;
   }
   .intro-legend{
     display:flex; flex-wrap:wrap; gap: 10px 18px;
     align-items:center;
-    font-size: 12.5px;
+    font-size: 17px;
     color: var(--ink-faint);
   }
   .intro-legend span{ display:inline-flex; align-items:center; gap:6px; }
@@ -212,7 +212,7 @@
     background: transparent;
     color: var(--ink);
     padding: 10px 20px;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -240,7 +240,7 @@
     background: var(--surface);
     color: var(--ink);
     padding: 9px 18px;
-    font-size: 12.5px;
+    font-size: 17px;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -256,7 +256,7 @@
   .tab.active:hover{ background: var(--ink); }
   .tab.small{
     padding: 6px 14px;
-    font-size: 11.5px;
+    font-size: 15.5px;
   }
 
   /* ---------- Standings card ---------- */
@@ -271,22 +271,22 @@
     padding: 14px 16px 14px 20px;
     border-bottom: 1px solid var(--line-soft);
   }
-  .card-head h2{ font-size: 20px; font-weight: 600; }
-  .card-head .sub{ font-size: 12.5px; color: var(--ink-faint); white-space:nowrap; }
+  .card-head h2{ font-size: 27px; font-weight: 600; }
+  .card-head .sub{ font-size: 17px; color: var(--ink-faint); white-space:nowrap; }
   .card-head-right{ display:flex; align-items:center; gap:10px; flex:none; }
   .board-crest{ display:flex; flex:none; }
   .board-crest svg{ display:block; width:38px; height:38px; }
 
   .ladder-head, .ladder-row{
     display: grid;
-    grid-template-columns: 40px minmax(150px,1fr) minmax(90px, 150px) 76px 64px 84px;
+    grid-template-columns: 54px minmax(150px,1fr) minmax(90px, 150px) 92px 84px 112px;
     align-items: center;
     gap: 14px;
     padding: 0 20px;
   }
   .ladder-head{
     padding-top: 10px; padding-bottom: 10px;
-    font-size: 11px;
+    font-size: 15px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-faint);
@@ -317,10 +317,10 @@
   .medal{
     position: relative;
     overflow: hidden;
-    width: 24px; height: 24px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     display:inline-flex; align-items:center; justify-content:center;
-    font-size: 11.5px; font-weight: 700;
+    font-size: 15.5px; font-weight: 700;
     font-family: "EB Garamond", Georgia, serif;
     box-shadow: inset 0 0 0 1px rgba(20,20,20,0.25);
   }
@@ -347,24 +347,24 @@
 
   .school-cell{ display:flex; align-items:center; gap:9px; min-width:0; }
   .team-swatch{
-    width: 16px; height: 12px;
+    width: 22px; height: 16px;
     border: 1px solid var(--ink);
     flex: none;
     display:inline-block;
   }
   .chevron{
     flex: none;
-    width: 14px; text-align:center;
-    font-size: 10px;
+    width: 19px; text-align:center;
+    font-size: 13.5px;
     color: var(--ink-faint);
     transition: transform .15s ease;
   }
   .ladder-row.expanded .chevron{ transform: rotate(90deg); color: var(--gold-ink); }
   :root[data-theme="dark"] .ladder-row.expanded .chevron{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .ladder-row.expanded .chevron{ color: var(--gold); } }
-  .school-name{ font-weight: 600; font-size: 14.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .school-name{ font-weight: 600; font-size: 19.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-  .trend{ font-family:"EB Garamond", Georgia, serif; font-size: 12px; font-weight:600; white-space:nowrap; }
+  .trend{ font-family:"EB Garamond", Georgia, serif; font-size: 16px; font-weight:600; white-space:nowrap; }
   .trend.up{ color: var(--pos); }
   .trend.down{ color: var(--neg); }
   .trend.flat{ color: var(--ink-faint); }
@@ -375,7 +375,7 @@
     background: var(--surface-2);
   }
   .player-panel-head{
-    font-size: 10.5px; letter-spacing:0.08em; text-transform: uppercase;
+    font-size: 14px; letter-spacing:0.08em; text-transform: uppercase;
     color: var(--ink-faint); font-weight: 700;
     padding: 10px 0 8px;
   }
@@ -383,18 +383,18 @@
     display:flex; align-items:center; gap: 12px;
     padding: 6px 0;
     border-top: 1px solid var(--line-soft);
-    font-size: 13px;
+    font-size: 17.5px;
   }
   .player-row:first-of-type{ border-top: none; }
-  .player-rank{ width: 16px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; font-size:12px; flex:none; }
+  .player-rank{ width: 16px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; font-size:16px; flex:none; }
   .player-name{ flex:1; font-weight: 600; }
-  .player-grade{ font-size: 10.5px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; flex:none; }
-  .player-rating{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 13px; width: 44px; text-align:right; }
+  .player-grade{ font-size: 14px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; flex:none; }
+  .player-rating{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 17.5px; width: 44px; text-align:right; }
   :root[data-theme="dark"] .player-rating{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .player-rating{ color: var(--gold); } }
   :root[data-theme="dark"] .player-rating{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .player-rating{ color: var(--gold); } }
-  .player-empty{ font-size: 12.5px; color: var(--ink-dim); padding: 4px 0 12px; line-height:1.5; }
+  .player-empty{ font-size: 17px; color: var(--ink-dim); padding: 4px 0 12px; line-height:1.5; }
   .player-example{ opacity: 0.55; }
   .player-example .player-row{ border-top-style: dashed; }
 
@@ -405,12 +405,12 @@
   }
   .bar-fill{ display:block; height:100%; background: var(--ink); }
 
-  .val{ font-weight: 700; font-family:"EB Garamond", Georgia, serif; color: var(--gold-ink); font-size: 14px; }
+  .val{ font-weight: 700; font-family:"EB Garamond", Georgia, serif; color: var(--gold-ink); font-size: 19px; }
   :root[data-theme="dark"] .val{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .val{ color: var(--gold); } }
 
-  .behind{ font-family:"EB Garamond", Georgia, serif; font-size: 12px; color: var(--ink-faint); }
-  .behind.is-leader{ color: var(--gold-ink); font-weight: 700; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.06em; }
+  .behind{ font-family:"EB Garamond", Georgia, serif; font-size: 16px; color: var(--ink-faint); }
+  .behind.is-leader{ color: var(--gold-ink); font-weight: 700; text-transform: uppercase; font-size: 14px; letter-spacing: 0.06em; }
   :root[data-theme="dark"] .behind.is-leader{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .behind.is-leader{ color: var(--gold); } }
 
@@ -423,7 +423,7 @@
     position: absolute; left: 0; top: -8px;
     background: var(--surface);
     padding: 0 8px 0 0;
-    font-size: 10px; letter-spacing:0.08em; text-transform: uppercase;
+    font-size: 13.5px; letter-spacing:0.08em; text-transform: uppercase;
     color: var(--gold-ink); font-weight: 700;
   }
   :root[data-theme="dark"] .cutoff span{ color: var(--gold); }
@@ -431,29 +431,29 @@
 
   .card-foot{
     padding: 12px 20px 16px;
-    font-size: 11.5px;
+    font-size: 15.5px;
     color: var(--ink-faint);
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
   }
 
   @media (max-width: 560px){
-    .ladder-head, .ladder-row{ grid-template-columns: 30px 1fr 64px; }
+    .ladder-head, .ladder-row{ grid-template-columns: 40px 1fr 86px; }
     .ladder-head span:nth-child(3), .ladder-row .bar-track{ display:none; }
     .ladder-head span:nth-child(5), .ladder-row .trend{ display:none; }
     .ladder-head span:nth-child(6), .ladder-row .behind{ display:none; }
-    .player-panel{ padding-left: 20px; }
+    .player-panel{ padding-left: 26px; }
   }
 
   /* ---------- Player rankings (plist) ---------- */
   .ladder-head.plist-head, .ladder-row.plist-row{
-    grid-template-columns: 40px 1fr 90px 90px;
+    grid-template-columns: 54px 1fr 105px 112px;
   }
   .ladder-head.plist-head span:nth-child(3){ text-align:right; }
   .ladder-row.plist-row .val{ text-align:right; }
   .player-cell{ display:flex; flex-direction:column; gap:1px; min-width:0; }
-  .player-cell .school-sub{ font-size: 11.5px; color: var(--ink-faint); font-weight: 400; }
+  .player-cell .school-sub{ font-size: 15.5px; color: var(--ink-faint); font-weight: 400; }
   @media (max-width: 560px){
-    .ladder-head.plist-head, .ladder-row.plist-row{ grid-template-columns: 30px 1fr 64px; }
+    .ladder-head.plist-head, .ladder-row.plist-row{ grid-template-columns: 40px 1fr 86px; }
     .ladder-head.plist-head span:nth-child(4), .ladder-row.plist-row .behind{ display:none; }
   }
 
@@ -464,7 +464,7 @@
     background: var(--surface);
     color: var(--ink);
     font-family: "EB Garamond", Georgia, serif;
-    font-size: 11.5px;
+    font-size: 15.5px;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -477,55 +477,55 @@
 
   /* ---------- Sidebar ---------- */
   .rail{ display:flex; flex-direction:column; gap: 18px; position: sticky; top: 18px; }
-  .rail .card-head h2{ font-size: 16px; }
+  .rail .card-head h2{ font-size: 21.5px; }
 
   .leaders{ padding: 6px 8px 14px; display:flex; flex-direction:column; gap:2px; }
   .leader-row{
-    display:grid; grid-template-columns: 74px 1fr auto; align-items:center; gap:10px;
+    display:grid; grid-template-columns: 92px 1fr auto; align-items:center; gap:10px;
     padding: 10px 12px;
   }
   .leader-row:hover{ background: var(--surface-2); }
   .leader-row .division-tag{
-    font-size: 9.5px; letter-spacing: 0.04em; text-transform: uppercase;
+    font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase;
     color: var(--ink-faint); font-weight: 700;
     white-space: nowrap;
   }
-  .leader-row .lb-name{ flex:1; font-size: 13.5px; font-weight: 600; min-width:0; }
-  .leader-row .lb-name .lb-sub{ display:block; font-weight:400; font-size: 11px; color: var(--ink-faint); }
-  .leader-row .lb-pts{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 13px; }
+  .leader-row .lb-name{ flex:1; font-size: 18px; font-weight: 600; min-width:0; }
+  .leader-row .lb-name .lb-sub{ display:block; font-weight:400; font-size: 15px; color: var(--ink-faint); }
+  .leader-row .lb-pts{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 17.5px; }
   :root[data-theme="dark"] .leader-row .lb-pts{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .leader-row .lb-pts{ color: var(--gold); } }
 
-  .note-card{ padding: 16px 18px; font-size: 12.5px; color: var(--ink-dim); line-height:1.55; }
+  .note-card{ padding: 16px 18px; font-size: 17px; color: var(--ink-dim); line-height:1.55; }
   .note-card strong{ color: var(--ink); }
   .note-card code{
     font-family:"EB Garamond", Georgia, serif;
     background: var(--surface-2);
     border: 1px solid var(--line);
     padding: 1px 5px;
-    font-size: 11.5px;
+    font-size: 15.5px;
   }
 
   .structure-card{ padding: 16px 18px 18px; }
   .structure-list{ list-style:none; margin: 10px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
-  .structure-list li{ font-size: 12.5px; color: var(--ink-dim); display:flex; gap:10px; }
+  .structure-list li{ font-size: 17px; color: var(--ink-dim); display:flex; gap:10px; }
   .structure-list b{ color: var(--ink); font-weight:700; min-width: 78px; flex:none; }
 
   footer{
     max-width: 1180px; margin: 0 auto; padding: 0 28px 50px;
-    color: var(--ink-faint); font-size: 11.5px;
+    color: var(--ink-faint); font-size: 15.5px;
   }
 
   /* ---------- Division crests ---------- */
   .badge-section{ border-top: 1px solid var(--ink); background: var(--surface-2); }
   .badge-section-inner{ max-width: 1180px; margin: 0 auto; padding: 40px 28px 50px; }
   .badge-section-head{ max-width: 62ch; margin-bottom: 26px; }
-  .badge-section-head h2{ font-size: 22px; font-weight: 400; margin-bottom: 8px; }
-  .badge-section-head p{ margin:0; color: var(--ink-dim); font-size: 14px; line-height: 1.6; }
+  .badge-section-head h2{ font-size: 29.5px; font-weight: 400; margin-bottom: 8px; }
+  .badge-section-head p{ margin:0; color: var(--ink-dim); font-size: 19px; line-height: 1.6; }
   .badge-section-head code{
     font-family:"EB Garamond", Georgia, serif;
     background: var(--surface); border: 1px solid var(--line);
-    padding: 1px 5px; font-size: 12.5px;
+    padding: 1px 5px; font-size: 17px;
   }
   .badge-grid{
     display: grid;
@@ -541,11 +541,11 @@
   .badge-card svg{ width: 100%; height: auto; max-width: 200px; }
   .badge-caption{ text-align:center; }
   .badge-caption .badge-borough{
-    display:block; font-size: 10.5px; letter-spacing:0.08em; text-transform:uppercase;
+    display:block; font-size: 14px; letter-spacing:0.08em; text-transform:uppercase;
     font-weight:700; color: var(--ink-faint);
   }
   .badge-caption .badge-division{
-    display:block; font-family:"Libre Caslon Display", Georgia, serif; font-size: 16px; font-weight:600; color: var(--ink);
+    display:block; font-family:"Libre Caslon Display", Georgia, serif; font-size: 21.5px; font-weight:600; color: var(--ink);
   }
 </style>
 </head>
