@@ -6,76 +6,76 @@
 <title>ICN Chess League Standings</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #f4efe2;
-    --bg-inset: #ece3cf;
+    --bg: #ffffff;
+    --bg-inset: #ffffff;
     --surface: #ffffff;
-    --surface-2: #f7f2e6;
-    --ink: #1c1c22;
-    --ink-dim: #5b5a58;
-    --ink-faint: #8a8578;
-    --line: rgba(28,28,34,0.12);
-    --line-soft: rgba(28,28,34,0.07);
-    --gold: #9c6f22;
-    --gold-bright: #b9852b;
-    --gold-ink: #6f4f18;
-    --shadow: 0 1px 2px rgba(28,20,10,0.06), 0 8px 24px -12px rgba(28,20,10,0.18);
-    --silver: #7c7e86;
-    --bronze: #9a5f34;
-    --pos: #2c7a4b;
-    --neg: #a1442b;
-    --accent-2: #2b6f74;
-    --accent-2-bright: #3a8b91;
+    --surface-2: #f4f3f0;
+    --ink: #161513;
+    --ink-dim: #57554e;
+    --ink-faint: #8c897f;
+    --line: rgba(22,21,19,0.2);
+    --line-soft: rgba(22,21,19,0.1);
+    --gold: #161513;
+    --gold-bright: #3a382f;
+    --gold-ink: #161513;
+    --shadow: 0 1px 2px rgba(20,20,20,0.05);
+    --silver: #8c897f;
+    --bronze: #c3c0b5;
+    --pos: #161513;
+    --neg: #6b6a63;
+    --accent-2: #161513;
+    --accent-2-bright: #3a382f;
     color-scheme: light;
   }
 
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg: #131319;
-      --bg-inset: #0d0d12;
-      --surface: #1b1b23;
-      --surface-2: #21212b;
-      --ink: #f1ede1;
-      --ink-dim: #b3ada0;
-      --ink-faint: #7d7869;
-      --line: rgba(241,237,225,0.12);
-      --line-soft: rgba(241,237,225,0.07);
-      --gold: #d8ac5b;
-      --gold-bright: #eec87c;
-      --gold-ink: #f0d193;
-      --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6);
-      --silver: #a7abb5;
-      --bronze: #c98a55;
-      --pos: #5cb27e;
-      --neg: #d3735a;
-      --accent-2: #5fa8ad;
-      --accent-2-bright: #7ec1c6;
+      --bg: #121212;
+      --bg-inset: #121212;
+      --surface: #1a1a1a;
+      --surface-2: #242422;
+      --ink: #f2f0ea;
+      --ink-dim: #b8b5ab;
+      --ink-faint: #86837a;
+      --line: rgba(242,240,234,0.2);
+      --line-soft: rgba(242,240,234,0.1);
+      --gold: #f2f0ea;
+      --gold-bright: #cfccc2;
+      --gold-ink: #f2f0ea;
+      --shadow: 0 1px 2px rgba(0,0,0,0.4);
+      --silver: #a6a39a;
+      --bronze: #6e6c63;
+      --pos: #f2f0ea;
+      --neg: #9a978d;
+      --accent-2: #f2f0ea;
+      --accent-2-bright: #cfccc2;
       color-scheme: dark;
     }
   }
 
   :root[data-theme="dark"]{
-    --bg: #131319;
-    --bg-inset: #0d0d12;
-    --surface: #1b1b23;
-    --surface-2: #21212b;
-    --ink: #f1ede1;
-    --ink-dim: #b3ada0;
-    --ink-faint: #7d7869;
-    --line: rgba(241,237,225,0.12);
-    --line-soft: rgba(241,237,225,0.07);
-    --gold: #d8ac5b;
-    --gold-bright: #eec87c;
-    --gold-ink: #f0d193;
-    --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -14px rgba(0,0,0,0.6);
-    --silver: #a7abb5;
-    --bronze: #c98a55;
-    --pos: #5cb27e;
-    --neg: #d3735a;
-    --accent-2: #5fa8ad;
-    --accent-2-bright: #7ec1c6;
+    --bg: #121212;
+    --bg-inset: #121212;
+    --surface: #1a1a1a;
+    --surface-2: #242422;
+    --ink: #f2f0ea;
+    --ink-dim: #b8b5ab;
+    --ink-faint: #86837a;
+    --line: rgba(242,240,234,0.2);
+    --line-soft: rgba(242,240,234,0.1);
+    --gold: #f2f0ea;
+    --gold-bright: #cfccc2;
+    --gold-ink: #f2f0ea;
+    --shadow: 0 1px 2px rgba(0,0,0,0.4);
+    --silver: #a6a39a;
+    --bronze: #6e6c63;
+    --pos: #f2f0ea;
+    --neg: #9a978d;
+    --accent-2: #f2f0ea;
+    --accent-2-bright: #cfccc2;
     color-scheme: dark;
   }
 
@@ -85,14 +85,14 @@
     margin:0;
     background: var(--bg);
     color: var(--ink);
-    font-family: "Libre Franklin", ui-sans-serif, system-ui, sans-serif;
+    font-family: "EB Garamond", Georgia, "Times New Roman", serif;
     -webkit-font-smoothing: antialiased;
   }
   ::selection{ background: var(--gold); color: #1c1c22; }
   a{ color: inherit; }
   button{ font-family: inherit; }
-  .num{ font-family: "Spline Sans Mono", ui-monospace, SFMono-Regular, monospace; font-variant-numeric: tabular-nums; }
-  h1,h2,h3{ font-family: "Fraunces", Georgia, serif; text-wrap: balance; margin: 0; }
+  .num{ font-family: "EB Garamond", Georgia, serif; font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+  h1,h2,h3{ font-family: "Libre Caslon Display", Georgia, serif; font-weight: 400; text-wrap: balance; margin: 0; }
 
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
@@ -101,24 +101,14 @@
   /* ---------- Masthead ---------- */
   .masthead{
     position: relative;
-    overflow: hidden;
-    background: var(--bg-inset);
-    border-bottom: 1px solid var(--line);
-  }
-  .masthead::before{
-    content:"";
-    position:absolute; inset:0;
-    background-image:
-      repeating-conic-gradient(from 0deg, var(--ink) 0% 25%, transparent 0% 50%);
-    background-size: 64px 64px;
-    opacity: 0.035;
-    mask-image: linear-gradient(to bottom, black, transparent 85%);
+    background: var(--surface);
+    border-bottom: 1px solid var(--ink);
   }
   .masthead-inner{
     position: relative;
     max-width: 1180px;
     margin: 0 auto;
-    padding: 44px 28px 30px;
+    padding: 30px 28px 26px;
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
@@ -127,40 +117,38 @@
   }
   .brand{ display:flex; align-items:center; gap:16px; }
   .brand-mark{
-    width: 56px; height: 56px;
-    border-radius: 10px;
-    background: linear-gradient(155deg, #fbf8f0, #f0ead9);
+    width: 52px; height: 52px;
     display:flex; align-items:center; justify-content:center;
-    box-shadow: var(--shadow);
     flex: none;
-    padding: 7px;
   }
   .brand-mark img{ width:100%; height:100%; object-fit: contain; display:block; }
   .brand-text .eyebrow{
-    font-size: 11.5px;
-    letter-spacing: 0.14em;
+    font-size: 11px;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 700;
+    color: var(--ink-dim);
+    font-weight: 600;
     margin: 0 0 4px;
   }
   .brand-text h1{
-    font-size: clamp(26px, 4vw, 38px);
-    font-weight: 700;
-    line-height: 1.05;
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 400;
+    line-height: 1.08;
   }
   .season-chip{
     display:flex; flex-direction:column; align-items:flex-end; gap:6px;
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--ink-dim);
     text-align: right;
   }
   .season-chip .season-label{
-    font-family: "Spline Sans Mono", monospace;
-    font-size: 12px;
-    padding: 5px 10px;
-    border: 1px solid var(--line);
-    border-radius: 100px;
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border: 1px solid var(--ink);
     background: var(--surface);
   }
 
@@ -207,31 +195,32 @@
   /* ---------- View toggle ---------- */
   .view-toggle{
     display:inline-flex;
-    background: var(--surface-2);
-    border: 1px solid var(--line);
-    border-radius: 100px;
-    padding: 4px;
-    gap: 4px;
-    margin-bottom: 20px;
+    background: var(--surface);
+    border: 1px solid var(--ink);
+    padding: 0;
+    margin-bottom: 22px;
   }
   .view-toggle button{
     border:none; cursor:pointer;
     background: transparent;
-    color: var(--ink-dim);
-    padding: 9px 18px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: inherit;
+    color: var(--ink);
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: "EB Garamond", Georgia, serif;
     transition: background .15s ease, color .15s ease;
   }
-  .view-toggle button:hover{ color: var(--ink); }
+  .view-toggle button + button{ border-left: 1px solid var(--ink); }
+  .view-toggle button:hover{ background: var(--surface-2); }
   .view-toggle button.active{ background: var(--ink); color: var(--bg); }
+  .view-toggle button.active:hover{ background: var(--ink); }
 
   /* ---------- Tabs ---------- */
   .tabs{
     display:flex;
-    gap: 6px;
+    gap: 0;
     overflow-x: auto;
     padding-bottom: 2px;
   }
@@ -240,35 +229,33 @@
   .tab{
     position: relative;
     cursor: pointer;
-    border: 1px solid var(--line);
+    border: 1px solid var(--ink);
     background: var(--surface);
-    color: var(--ink-dim);
-    padding: 10px 18px 10px 16px;
-    font-size: 13.5px;
+    color: var(--ink);
+    padding: 9px 18px;
+    font-size: 12.5px;
     font-weight: 600;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     white-space: nowrap;
-    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 0 100%);
-    transition: color .15s ease, background .15s ease, border-color .15s ease;
+    transition: color .15s ease, background .15s ease;
   }
-  .tab:hover{ color: var(--ink); }
+  .tab + .tab{ border-left: none; }
+  .tab:hover{ background: var(--surface-2); }
   .tab.active{
     background: var(--ink);
     color: var(--bg);
-    border-color: var(--ink);
   }
+  .tab.active:hover{ background: var(--ink); }
   .tab.small{
-    padding: 7px 14px 7px 12px;
-    font-size: 12.5px;
-    border-radius: 0;
+    padding: 6px 14px;
+    font-size: 11.5px;
   }
 
   /* ---------- Standings card ---------- */
   .card{
     background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
+    border: 1px solid var(--ink);
     overflow: hidden;
   }
   .card-head{
@@ -319,17 +306,17 @@
   .ladder-body .ladder-row:focus-visible{ outline: 2px solid var(--gold); outline-offset: -2px; }
   .ladder-body .ladder-row.expanded{ background: var(--surface-2); }
 
-  .rank-cell{ font-family:"Spline Sans Mono", monospace; }
+  .rank-cell{ font-family:"EB Garamond", Georgia, serif; }
   .medal{
     width: 24px; height: 24px;
     border-radius: 50%;
     display:inline-flex; align-items:center; justify-content:center;
     font-size: 11.5px; font-weight: 700;
-    font-family: "Spline Sans Mono", monospace;
+    font-family: "EB Garamond", Georgia, serif;
   }
-  .medal.g{ background: var(--gold-bright); color:#3a2a05; }
-  .medal.s{ background: var(--silver); color:#2a2a2f; }
-  .medal.b{ background: var(--bronze); color:#3a1f0c; }
+  .medal.g{ background: var(--ink); color: var(--bg); }
+  .medal.s{ background: var(--silver); color: var(--bg); }
+  .medal.b{ background: var(--bronze); color: var(--ink); }
   .rank-plain{ color: var(--ink-faint); }
 
   .school-cell{ display:flex; align-items:center; gap:9px; min-width:0; }
@@ -345,7 +332,7 @@
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .ladder-row.expanded .chevron{ color: var(--gold); } }
   .school-name{ font-weight: 600; font-size: 14.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-  .trend{ font-family:"Spline Sans Mono", monospace; font-size: 12px; font-weight:600; white-space:nowrap; }
+  .trend{ font-family:"EB Garamond", Georgia, serif; font-size: 12px; font-weight:600; white-space:nowrap; }
   .trend.up{ color: var(--pos); }
   .trend.down{ color: var(--neg); }
   .trend.flat{ color: var(--ink-faint); }
@@ -367,10 +354,10 @@
     font-size: 13px;
   }
   .player-row:first-of-type{ border-top: none; }
-  .player-rank{ width: 16px; color: var(--ink-faint); font-family:"Spline Sans Mono", monospace; font-size:12px; flex:none; }
+  .player-rank{ width: 16px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; font-size:12px; flex:none; }
   .player-name{ flex:1; font-weight: 600; }
-  .player-grade{ font-size: 10.5px; color: var(--ink-faint); font-family:"Spline Sans Mono", monospace; flex:none; }
-  .player-rating{ font-family:"Spline Sans Mono", monospace; font-weight:700; color: var(--gold-ink); font-size: 13px; width: 44px; text-align:right; }
+  .player-grade{ font-size: 10.5px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; flex:none; }
+  .player-rating{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 13px; width: 44px; text-align:right; }
   :root[data-theme="dark"] .player-rating{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .player-rating{ color: var(--gold); } }
   :root[data-theme="dark"] .player-rating{ color: var(--gold); }
@@ -380,17 +367,17 @@
   .player-example .player-row{ border-top-style: dashed; }
 
   .bar-track{
-    height: 8px; border-radius: 5px;
+    height: 6px;
     background: var(--line-soft);
     overflow: hidden;
   }
-  .bar-fill{ display:block; height:100%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius: 5px; }
+  .bar-fill{ display:block; height:100%; background: var(--ink); }
 
-  .val{ font-weight: 700; font-family:"Spline Sans Mono", monospace; color: var(--gold-ink); font-size: 14px; }
+  .val{ font-weight: 700; font-family:"EB Garamond", Georgia, serif; color: var(--gold-ink); font-size: 14px; }
   :root[data-theme="dark"] .val{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .val{ color: var(--gold); } }
 
-  .behind{ font-family:"Spline Sans Mono", monospace; font-size: 12px; color: var(--ink-faint); }
+  .behind{ font-family:"EB Garamond", Georgia, serif; font-size: 12px; color: var(--ink-faint); }
   .behind.is-leader{ color: var(--gold-ink); font-weight: 700; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.06em; }
   :root[data-theme="dark"] .behind.is-leader{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .behind.is-leader{ color: var(--gold); } }
@@ -441,20 +428,20 @@
   /* ---------- Player-panel grade filter ---------- */
   .filter-chips{ display:flex; flex-wrap:wrap; gap:6px; padding: 10px 0 4px; }
   .filter-chip{
-    border: 1px solid var(--line);
+    border: 1px solid var(--ink);
     background: var(--surface);
-    color: var(--ink-dim);
-    font-family: inherit;
+    color: var(--ink);
+    font-family: "EB Garamond", Georgia, serif;
     font-size: 11.5px;
-    font-weight: 700;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     padding: 4px 11px;
-    border-radius: 100px;
     cursor: pointer;
   }
-  .filter-chip:hover{ color: var(--ink); }
-  .filter-chip.active{ background: var(--gold); color: #2a1c04; border-color: var(--gold); }
-  :root[data-theme="dark"] .filter-chip.active{ color: #241804; }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .filter-chip.active{ color: #241804; } }
+  .filter-chip:hover{ background: var(--surface-2); }
+  .filter-chip.active{ background: var(--ink); color: var(--bg); }
+  .filter-chip.active:hover{ background: var(--ink); }
 
   /* ---------- Sidebar ---------- */
   .rail{ display:flex; flex-direction:column; gap: 18px; position: sticky; top: 18px; }
@@ -464,7 +451,6 @@
   .leader-row{
     display:grid; grid-template-columns: 74px 1fr auto; align-items:center; gap:10px;
     padding: 10px 12px;
-    border-radius: 8px;
   }
   .leader-row:hover{ background: var(--surface-2); }
   .leader-row .division-tag{
@@ -474,18 +460,17 @@
   }
   .leader-row .lb-name{ flex:1; font-size: 13.5px; font-weight: 600; min-width:0; }
   .leader-row .lb-name .lb-sub{ display:block; font-weight:400; font-size: 11px; color: var(--ink-faint); }
-  .leader-row .lb-pts{ font-family:"Spline Sans Mono", monospace; font-weight:700; color: var(--gold-ink); font-size: 13px; }
+  .leader-row .lb-pts{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 13px; }
   :root[data-theme="dark"] .leader-row .lb-pts{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .leader-row .lb-pts{ color: var(--gold); } }
 
   .note-card{ padding: 16px 18px; font-size: 12.5px; color: var(--ink-dim); line-height:1.55; }
   .note-card strong{ color: var(--ink); }
   .note-card code{
-    font-family:"Spline Sans Mono", monospace;
+    font-family:"EB Garamond", Georgia, serif;
     background: var(--surface-2);
     border: 1px solid var(--line);
     padding: 1px 5px;
-    border-radius: 4px;
     font-size: 11.5px;
   }
 
@@ -500,15 +485,15 @@
   }
 
   /* ---------- Division crests ---------- */
-  .badge-section{ border-top: 1px solid var(--line); background: var(--bg-inset); }
+  .badge-section{ border-top: 1px solid var(--ink); background: var(--surface-2); }
   .badge-section-inner{ max-width: 1180px; margin: 0 auto; padding: 40px 28px 50px; }
   .badge-section-head{ max-width: 62ch; margin-bottom: 26px; }
-  .badge-section-head h2{ font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+  .badge-section-head h2{ font-size: 22px; font-weight: 400; margin-bottom: 8px; }
   .badge-section-head p{ margin:0; color: var(--ink-dim); font-size: 14px; line-height: 1.6; }
   .badge-section-head code{
-    font-family:"Spline Sans Mono", monospace;
-    background: var(--surface-2); border: 1px solid var(--line);
-    padding: 1px 5px; border-radius: 4px; font-size: 12.5px;
+    font-family:"EB Garamond", Georgia, serif;
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 1px 5px; font-size: 12.5px;
   }
   .badge-grid{
     display: grid;
@@ -518,8 +503,6 @@
   .badge-card{
     background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
     padding: 18px 14px 16px;
     display:flex; flex-direction:column; align-items:center; gap:12px;
   }
@@ -530,7 +513,7 @@
     font-weight:700; color: var(--ink-faint);
   }
   .badge-caption .badge-division{
-    display:block; font-family:"Fraunces", serif; font-size: 16px; font-weight:600; color: var(--ink);
+    display:block; font-family:"Libre Caslon Display", Georgia, serif; font-size: 16px; font-weight:600; color: var(--ink);
   }
 </style>
 </head>
@@ -547,7 +530,7 @@
     </div>
     <div class="season-chip">
       <span class="season-label" id="season-label">Season Points Ladder</span>
-      <span>Update <code style="font-family:'Spline Sans Mono',monospace">LEAGUE_DATA</code> as new scores come in</span>
+      <span>Update <code style="font-family:'EB Garamond', Georgia, serif">LEAGUE_DATA</code> as new scores come in</span>
     </div>
   </div>
   <div class="intro">
@@ -655,7 +638,7 @@
   <div class="badge-section-inner">
     <div class="badge-section-head">
       <h2>Division Crests</h2>
-      <p>One crest per borough &times; grade division. Manhattan and Brooklyn step through pawn (K&ndash;1), knight (Primary), and rook (Elementary), echoing how the pieces themselves get introduced; the leaguewide Overall crest steps up to bishop, queen, and king &mdash; together the full set. Ring color marks the borough, or a neutral tone for Overall. Built as inline SVG, so they stay crisp at any size; matching PNGs are in <code>chess-league/badges/</code>.</p>
+      <p>One crest per borough &times; grade division. Manhattan and Brooklyn step through pawn (K&ndash;1), knight (Primary), and rook (Elementary), echoing how the pieces themselves get introduced; the leaguewide Overall crest steps up to bishop, queen, and king &mdash; together the full set. Built as inline SVG, so they stay crisp at any size; matching PNGs are in <code>chess-league/badges/</code>.</p>
     </div>
     <div class="badge-grid" id="badge-grid"></div>
   </div>
@@ -1390,9 +1373,9 @@
   const OVERALL_PIECES = { k1: "♝", primary: "♛", elementary: "♚" };
 
   const CREST_BOROUGHS = [
-    { key: "overall", label: "Overall", accent: "#5b5346", pieces: OVERALL_PIECES },
-    { key: "manhattan", label: "Manhattan", accent: "#9c6f22", pieces: BOROUGH_PIECES },
-    { key: "brooklyn", label: "Brooklyn", accent: "#2b6f74", pieces: BOROUGH_PIECES }
+    { key: "overall", label: "Overall", pieces: OVERALL_PIECES },
+    { key: "manhattan", label: "Manhattan", pieces: BOROUGH_PIECES },
+    { key: "brooklyn", label: "Brooklyn", pieces: BOROUGH_PIECES }
   ];
   const CREST_DIVISIONS = [
     { key: "k1", label: "K–1" },
@@ -1400,29 +1383,40 @@
     { key: "elementary", label: "Elementary" }
   ];
 
+  /* Monochrome crest: a checkerboard ring (echoing the board itself)
+     around a plain plate, with the piece and arced borough/division
+     labels in ink. Fixed hex colors — these render standalone as
+     exported PNGs too, outside any page theme. */
   function buildCrestSVG(borough, division){
     const uid = `${borough.key}-${division.key}`;
-    const cx = 120, cy = 120, rOuter = 106, rArc = 90;
-    const topId = `arcTop-${uid}`, bottomId = `arcBottom-${uid}`, gradId = `plate-${uid}`;
+    const cx = 120, cy = 120, rOuter = 108, rInner = 90, rArc = 74;
+    const ink = "#161513", plate = "#fdfcf8";
+    const topId = `arcTop-${uid}`, bottomId = `arcBottom-${uid}`, chkId = `chk-${uid}`;
     return `
       <svg viewBox="0 0 240 240" role="img" aria-label="${borough.label} ${division.label} crest">
         <defs>
-          <linearGradient id="${gradId}" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#fbf8f0"/>
-            <stop offset="100%" stop-color="#f0ead9"/>
-          </linearGradient>
+          <pattern id="${chkId}" width="12" height="12" patternUnits="userSpaceOnUse">
+            <rect width="12" height="12" fill="#ffffff"/>
+            <rect width="6" height="6" fill="${ink}"/>
+            <rect x="6" y="6" width="6" height="6" fill="${ink}"/>
+          </pattern>
           <path id="${topId}" d="M ${cx - rArc} ${cy} A ${rArc} ${rArc} 0 1 1 ${cx + rArc} ${cy}" fill="none"/>
           <path id="${bottomId}" d="M ${cx - rArc} ${cy} A ${rArc} ${rArc} 0 1 0 ${cx + rArc} ${cy}" fill="none"/>
         </defs>
-        <circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="url(#${gradId})" stroke="${borough.accent}" stroke-width="3"/>
-        <circle cx="${cx}" cy="${cy}" r="${rOuter - 8}" fill="none" stroke="#1c1c22" stroke-opacity="0.12" stroke-width="1"/>
-        <text font-family="Fraunces, Georgia, serif" font-size="108" text-anchor="middle" fill="#1c1c22">
-          <tspan x="${cx}" y="${cy + 36}">${borough.pieces[division.key]}</tspan>
+        <circle cx="${cx}" cy="${cy}" r="${rInner}" fill="${plate}"/>
+        <path
+          d="M ${cx - rOuter} ${cy} a ${rOuter} ${rOuter} 0 1 0 ${2 * rOuter} 0 a ${rOuter} ${rOuter} 0 1 0 ${-2 * rOuter} 0 Z
+             M ${cx - rInner} ${cy} a ${rInner} ${rInner} 0 1 0 ${2 * rInner} 0 a ${rInner} ${rInner} 0 1 0 ${-2 * rInner} 0 Z"
+          fill="url(#${chkId})" fill-rule="evenodd"/>
+        <circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="none" stroke="${ink}" stroke-width="1.5"/>
+        <circle cx="${cx}" cy="${cy}" r="${rInner}" fill="none" stroke="${ink}" stroke-width="1"/>
+        <text font-family="Libre Caslon Display, Georgia, serif" font-size="86" text-anchor="middle" fill="${ink}">
+          <tspan x="${cx}" y="${cy + 29}">${borough.pieces[division.key]}</tspan>
         </text>
-        <text font-family="Libre Franklin, sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="${borough.accent}">
+        <text font-family="Oswald, sans-serif" font-size="14" font-weight="600" letter-spacing="2.5" fill="${ink}">
           <textPath href="#${topId}" startOffset="50%" text-anchor="middle">${borough.label.toUpperCase()}</textPath>
         </text>
-        <text font-family="Libre Franklin, sans-serif" font-size="12.5" font-weight="700" letter-spacing="2.5" fill="${borough.accent}">
+        <text font-family="Oswald, sans-serif" font-size="12.5" font-weight="600" letter-spacing="2" fill="${ink}">
           <textPath href="#${bottomId}" startOffset="50%" text-anchor="middle">${division.label.toUpperCase()}</textPath>
         </text>
       </svg>`;
