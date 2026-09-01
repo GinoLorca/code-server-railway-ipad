@@ -124,7 +124,7 @@
   }
   .brand{ display:flex; align-items:center; gap:16px; }
   .brand-mark{
-    width: 73px; height: 73px;
+    width: 102px; height: 102px;
     display:flex; align-items:center; justify-content:center;
     flex: none;
   }
@@ -327,6 +327,12 @@
   .rank-plain{ color: var(--ink-faint); }
 
   .school-cell{ display:flex; align-items:center; gap:9px; min-width:0; }
+  .team-swatch{
+    width: 16px; height: 12px;
+    border: 1px solid var(--ink);
+    flex: none;
+    display:inline-block;
+  }
   .chevron{
     flex: none;
     width: 14px; text-align:center;
@@ -637,6 +643,8 @@
       <strong>Weekly trend arrows:</strong> before pasting in new totals, set each school's <code>prevPoints</code> to its <em>current</em> <code>points</code> value, then update <code>points</code> to the new total &mdash; the arrow and delta appear automatically.
       <br><br>
       <strong>Player data:</strong> loaded from the ICN top-50-by-grade lists (K&ndash;5, Aug 2026) &mdash; both the school drill-down and the Player Rankings view. Only schools with a player in one of those lists have a roster.
+      <br><br>
+      <strong>School colors (test):</strong> a handful of schools tint their score bar and get a small color swatch, pulled from <code>SCHOOL_COLORS</code>. Everyone else keeps the plain black bar until more schools are added there.
     </div>
   </aside>
 </main>
@@ -654,6 +662,27 @@
 <footer>ICN Chess League &middot; a standings board for Impact Coaching Network&rsquo;s after-school chess programs.</footer>
 
 <script>
+  /* ============================================================
+     SCHOOL_COLORS — experimental: a school's two team colors,
+     [primary, secondary], used to tint its score bar and a small
+     swatch next to its name. Only a handful of schools are filled
+     in as a test; anyone missing here just keeps the plain black
+     bar. Add more by pushing a ["#hex","#hex"] pair keyed by the
+     exact school name used in LEAGUE_DATA.
+     ============================================================ */
+  const SCHOOL_COLORS = {
+    "Nest+M":  ["#111111", "#ffffff"],
+    "PS 166":  ["#152a54", "#ffffff"],
+    "PS 11":   ["#2a4bd7", "#f5c518"],
+    "PS 290":  ["#5b2a86", "#ffffff"],
+    "PS 10":   ["#c31f2d", "#111111"],
+    "PS 77":   ["#152a54", "#f5c518"],
+    "PS 281":  ["#a9d3ec", "#152a54"],
+    "PS 59":   ["#152a54", "#f5c518"],
+    "PS 282":  ["#2a4bd7", "#f5c518"],
+    "PS 118":  ["#6e1e35", "#ffffff"]
+  };
+
   /* ============================================================
      LEAGUE_DATA — each region (Overall + boroughs) holds three grade
      divisions (k1, primary, elementary). Each entry is a school's
@@ -1200,6 +1229,13 @@
       ? `<span class="behind is-leader">Leader</span>`
       : `<span class="behind">&minus;${leaderPoints - school.points}</span>`;
     const isExpanded = expandedSchool === school.name;
+    const colors = SCHOOL_COLORS[school.name];
+    const swatchHtml = colors
+      ? `<span class="team-swatch" style="background:linear-gradient(to right, ${colors[0]} 50%, ${colors[1]} 50%)"></span>`
+      : "";
+    const barStyle = colors
+      ? `width:${pct}%; background:linear-gradient(to bottom, ${colors[0]} 50%, ${colors[1]} 50%); border:1px solid var(--ink);`
+      : `width:${pct}%;`;
 
     const row = document.createElement("div");
     row.className = "ladder-row" + (rankIndex === 1 ? " leader" : "") + (isExpanded ? " expanded" : "");
@@ -1210,9 +1246,10 @@
       <span class="rank-cell">${rankHtml}</span>
       <span class="school-cell">
         <span class="chevron">&#9656;</span>
+        ${swatchHtml}
         <span class="school-name">${school.name}</span>
       </span>
-      <span class="bar-track"><span class="bar-fill" style="width:${pct}%"></span></span>
+      <span class="bar-track"><span class="bar-fill" style="${barStyle}"></span></span>
       <span class="val num">${school.points.toLocaleString()}</span>
       ${trendHtml(deltaFor(school))}
       ${behindHtml}
