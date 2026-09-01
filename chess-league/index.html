@@ -31,6 +31,11 @@
     color-scheme: light;
   }
 
+  /* Dark mode is intentionally off — impactcoachingnetwork.org doesn't have one,
+     and this app matches that site's branding. The tokens stay below in
+     :root[data-theme="dark"] as ready-to-go infrastructure: to bring dark mode
+     back later, either uncomment this auto (system-preference) block, or add a
+     UI toggle that sets data-theme="dark" on <html> (that selector already works).
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       --bg: #121212;
@@ -55,6 +60,7 @@
       color-scheme: dark;
     }
   }
+  */
 
   :root[data-theme="dark"]{
     --bg: #121212;
