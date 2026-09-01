@@ -395,8 +395,6 @@
   :root[data-theme="dark"] .player-rating{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .player-rating{ color: var(--gold); } }
   .player-empty{ font-size: 15px; color: var(--ink-dim); padding: 4px 0 12px; line-height:1.5; }
-  .player-example{ opacity: 0.55; }
-  .player-example .player-row{ border-top-style: dashed; }
 
   .bar-track{
     height: 6px;
@@ -562,7 +560,6 @@
     </div>
     <div class="season-chip">
       <span class="season-label" id="season-label">Season Points Ladder</span>
-      <span>Update <code style="font-family:'EB Garamond', Georgia, serif">LEAGUE_DATA</code> as new scores come in</span>
     </div>
   </div>
   <div class="intro">
@@ -655,16 +652,6 @@
         <li><b>Top 5 / Top 50</b> Click a school for its top 5 players, or switch to Player Rankings for every grade's top 50 by USCF rating.</li>
       </ul>
     </div>
-
-    <div class="card note-card">
-      <strong>This board is running on the standings you shared.</strong> Manhattan and Brooklyn are loaded; add Queens, the Bronx, Staten Island, or new schools by editing the <code>LEAGUE_DATA</code> object near the top of the <code>&lt;script&gt;</code> in <code>chess-league/index.html</code>.
-      <br><br>
-      <strong>Weekly trend arrows:</strong> before pasting in new totals, set each school's <code>prevPoints</code> to its <em>current</em> <code>points</code> value, then update <code>points</code> to the new total &mdash; the arrow and delta appear automatically.
-      <br><br>
-      <strong>Player data:</strong> loaded from the ICN top-50-by-grade lists (K&ndash;5, Aug 2026) &mdash; both the school drill-down and the Player Rankings view. Only schools with a player in one of those lists have a roster.
-      <br><br>
-      <strong>School colors (test):</strong> a handful of schools tint their score bar and get a small color swatch, pulled from <code>SCHOOL_COLORS</code>. Everyone else keeps the plain black bar until more schools are added there.
-    </div>
   </aside>
 </main>
 
@@ -672,7 +659,7 @@
   <div class="badge-section-inner">
     <div class="badge-section-head">
       <h2>Division Crests</h2>
-      <p>One crest per borough &times; grade division. Manhattan and Brooklyn step through pawn (K&ndash;1), knight (Primary), and rook (Elementary), echoing how the pieces themselves get introduced; the leaguewide Overall crest steps up to bishop, queen, and king &mdash; together the full set. Built as inline SVG, so they stay crisp at any size; matching PNGs are in <code>chess-league/badges/</code>.</p>
+      <p>Manhattan and Brooklyn step through pawn (K&ndash;1), knight (Primary), and rook (Elementary), echoing how the pieces themselves get introduced; the leaguewide Overall crest steps up to bishop, queen, and king &mdash; together the full set.</p>
     </div>
     <div class="badge-grid" id="badge-grid"></div>
   </div>
@@ -1143,14 +1130,6 @@
   }, {});
   Object.values(PLAYERS_BY_GRADE).forEach(list => list.sort((a, b) => b.rating - a.rating));
 
-  const EXAMPLE_PLAYERS = [
-    { name: "Example Player", rating: 950 },
-    { name: "Example Player", rating: 820 },
-    { name: "Example Player", rating: 705 },
-    { name: "Example Player", rating: 640 },
-    { name: "Example Player", rating: 560 }
-  ];
-
   let currentView = "teams";
   let currentRegionIndex = 0;
   let currentDivisionKey = "k1";
@@ -1212,18 +1191,7 @@
     const fullRoster = PLAYERS_BY_SCHOOL[schoolName];
 
     if(!fullRoster || !fullRoster.length){
-      const exampleRows = EXAMPLE_PLAYERS.map((p, i) => `
-        <div class="player-row">
-          <span class="player-rank num">${i + 1}</span>
-          <span class="player-name">${p.name}</span>
-          <span class="player-rating">${p.rating}</span>
-        </div>
-      `).join("");
-      return `
-        <div class="player-empty">No USCF roster loaded yet for ${schoolName}. Add it to <code>PLAYERS_BY_SCHOOL</code> (via <code>ALL_PLAYERS</code>) once more data is in.</div>
-        <div class="player-panel-head">Example format</div>
-        <div class="player-example">${exampleRows}</div>
-      `;
+      return `<div class="player-empty">No USCF ratings on file yet for ${schoolName}.</div>`;
     }
 
     const section = DIVISIONS.find(d => d.key === currentDivisionKey);
