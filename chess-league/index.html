@@ -130,7 +130,7 @@
   }
   .brand-mark img{ width:100%; height:100%; object-fit: contain; display:block; }
   .brand-text .eyebrow{
-    font-size: 15px;
+    font-size: 13px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-dim);
@@ -144,13 +144,13 @@
   }
   .season-chip{
     display:flex; flex-direction:column; align-items:flex-end; gap:6px;
-    font-size: 17px;
+    font-size: 15px;
     color: var(--ink-dim);
     text-align: right;
   }
   .season-chip .season-label{
     font-family: "EB Garamond", Georgia, serif;
-    font-size: 15.5px;
+    font-size: 13.5px;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -172,13 +172,13 @@
     margin:0;
     max-width: 62ch;
     color: var(--ink-dim);
-    font-size: 20px;
+    font-size: 17.5px;
     line-height: 1.6;
   }
   .intro-legend{
     display:flex; flex-wrap:wrap; gap: 10px 18px;
     align-items:center;
-    font-size: 17px;
+    font-size: 15px;
     color: var(--ink-faint);
   }
   .intro-legend span{ display:inline-flex; align-items:center; gap:6px; }
@@ -212,7 +212,7 @@
     background: transparent;
     color: var(--ink);
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -240,7 +240,7 @@
     background: var(--surface);
     color: var(--ink);
     padding: 9px 18px;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -256,7 +256,7 @@
   .tab.active:hover{ background: var(--ink); }
   .tab.small{
     padding: 6px 14px;
-    font-size: 15.5px;
+    font-size: 13.5px;
   }
 
   /* ---------- Standings card ---------- */
@@ -271,8 +271,8 @@
     padding: 14px 16px 14px 20px;
     border-bottom: 1px solid var(--line-soft);
   }
-  .card-head h2{ font-size: 27px; font-weight: 600; }
-  .card-head .sub{ font-size: 17px; color: var(--ink-faint); white-space:nowrap; }
+  .card-head h2{ font-size: 24px; font-weight: 600; }
+  .card-head .sub{ font-size: 15px; color: var(--ink-faint); white-space:nowrap; }
   .card-head-right{ display:flex; align-items:center; gap:10px; flex:none; }
   .board-crest{ display:flex; flex:none; }
   .board-crest svg{ display:block; width:38px; height:38px; }
@@ -286,7 +286,7 @@
   }
   .ladder-head{
     padding-top: 10px; padding-bottom: 10px;
-    font-size: 15px;
+    font-size: 13px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-faint);
@@ -320,7 +320,7 @@
     width: 32px; height: 32px;
     border-radius: 50%;
     display:inline-flex; align-items:center; justify-content:center;
-    font-size: 15.5px; font-weight: 700;
+    font-size: 13.5px; font-weight: 700;
     font-family: "EB Garamond", Georgia, serif;
     box-shadow: inset 0 0 0 1px rgba(20,20,20,0.25);
   }
@@ -355,16 +355,16 @@
   .chevron{
     flex: none;
     width: 19px; text-align:center;
-    font-size: 13.5px;
+    font-size: 12px;
     color: var(--ink-faint);
     transition: transform .15s ease;
   }
   .ladder-row.expanded .chevron{ transform: rotate(90deg); color: var(--gold-ink); }
   :root[data-theme="dark"] .ladder-row.expanded .chevron{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .ladder-row.expanded .chevron{ color: var(--gold); } }
-  .school-name{ font-weight: 600; font-size: 19.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .school-name{ font-weight: 600; font-size: 17px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-  .trend{ font-family:"EB Garamond", Georgia, serif; font-size: 16px; font-weight:600; white-space:nowrap; }
+  .trend{ font-family:"EB Garamond", Georgia, serif; font-size: 14px; font-weight:600; white-space:nowrap; }
   .trend.up{ color: var(--pos); }
   .trend.down{ color: var(--neg); }
   .trend.flat{ color: var(--ink-faint); }
@@ -375,7 +375,7 @@
     background: var(--surface-2);
   }
   .player-panel-head{
-    font-size: 14px; letter-spacing:0.08em; text-transform: uppercase;
+    font-size: 12.5px; letter-spacing:0.08em; text-transform: uppercase;
     color: var(--ink-faint); font-weight: 700;
     padding: 10px 0 8px;
   }
@@ -383,18 +383,18 @@
     display:flex; align-items:center; gap: 12px;
     padding: 6px 0;
     border-top: 1px solid var(--line-soft);
-    font-size: 17.5px;
+    font-size: 15.5px;
   }
   .player-row:first-of-type{ border-top: none; }
-  .player-rank{ width: 16px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; font-size:16px; flex:none; }
+  .player-rank{ width: 16px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; font-size:14px; flex:none; }
   .player-name{ flex:1; font-weight: 600; }
-  .player-grade{ font-size: 14px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; flex:none; }
-  .player-rating{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 17.5px; width: 44px; text-align:right; }
+  .player-grade{ font-size: 12.5px; color: var(--ink-faint); font-family:"EB Garamond", Georgia, serif; flex:none; }
+  .player-rating{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 15.5px; width: 44px; text-align:right; }
   :root[data-theme="dark"] .player-rating{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .player-rating{ color: var(--gold); } }
   :root[data-theme="dark"] .player-rating{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .player-rating{ color: var(--gold); } }
-  .player-empty{ font-size: 17px; color: var(--ink-dim); padding: 4px 0 12px; line-height:1.5; }
+  .player-empty{ font-size: 15px; color: var(--ink-dim); padding: 4px 0 12px; line-height:1.5; }
   .player-example{ opacity: 0.55; }
   .player-example .player-row{ border-top-style: dashed; }
 
@@ -405,12 +405,12 @@
   }
   .bar-fill{ display:block; height:100%; background: var(--ink); }
 
-  .val{ font-weight: 700; font-family:"EB Garamond", Georgia, serif; color: var(--gold-ink); font-size: 19px; }
+  .val{ font-weight: 700; font-family:"EB Garamond", Georgia, serif; color: var(--gold-ink); font-size: 16.5px; }
   :root[data-theme="dark"] .val{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .val{ color: var(--gold); } }
 
-  .behind{ font-family:"EB Garamond", Georgia, serif; font-size: 16px; color: var(--ink-faint); }
-  .behind.is-leader{ color: var(--gold-ink); font-weight: 700; text-transform: uppercase; font-size: 14px; letter-spacing: 0.06em; }
+  .behind{ font-family:"EB Garamond", Georgia, serif; font-size: 14px; color: var(--ink-faint); }
+  .behind.is-leader{ color: var(--gold-ink); font-weight: 700; text-transform: uppercase; font-size: 12.5px; letter-spacing: 0.06em; }
   :root[data-theme="dark"] .behind.is-leader{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .behind.is-leader{ color: var(--gold); } }
 
@@ -423,7 +423,7 @@
     position: absolute; left: 0; top: -8px;
     background: var(--surface);
     padding: 0 8px 0 0;
-    font-size: 13.5px; letter-spacing:0.08em; text-transform: uppercase;
+    font-size: 12px; letter-spacing:0.08em; text-transform: uppercase;
     color: var(--gold-ink); font-weight: 700;
   }
   :root[data-theme="dark"] .cutoff span{ color: var(--gold); }
@@ -431,7 +431,7 @@
 
   .card-foot{
     padding: 12px 20px 16px;
-    font-size: 15.5px;
+    font-size: 13.5px;
     color: var(--ink-faint);
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
   }
@@ -451,7 +451,7 @@
   .ladder-head.plist-head span:nth-child(3){ text-align:right; }
   .ladder-row.plist-row .val{ text-align:right; }
   .player-cell{ display:flex; flex-direction:column; gap:1px; min-width:0; }
-  .player-cell .school-sub{ font-size: 15.5px; color: var(--ink-faint); font-weight: 400; }
+  .player-cell .school-sub{ font-size: 13.5px; color: var(--ink-faint); font-weight: 400; }
   @media (max-width: 560px){
     .ladder-head.plist-head, .ladder-row.plist-row{ grid-template-columns: 40px 1fr 86px; }
     .ladder-head.plist-head span:nth-child(4), .ladder-row.plist-row .behind{ display:none; }
@@ -464,7 +464,7 @@
     background: var(--surface);
     color: var(--ink);
     font-family: "EB Garamond", Georgia, serif;
-    font-size: 15.5px;
+    font-size: 13.5px;
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -477,7 +477,7 @@
 
   /* ---------- Sidebar ---------- */
   .rail{ display:flex; flex-direction:column; gap: 18px; position: sticky; top: 18px; }
-  .rail .card-head h2{ font-size: 21.5px; }
+  .rail .card-head h2{ font-size: 19px; }
 
   .leaders{ padding: 6px 8px 14px; display:flex; flex-direction:column; gap:2px; }
   .leader-row{
@@ -486,46 +486,46 @@
   }
   .leader-row:hover{ background: var(--surface-2); }
   .leader-row .division-tag{
-    font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase;
+    font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase;
     color: var(--ink-faint); font-weight: 700;
     white-space: nowrap;
   }
-  .leader-row .lb-name{ flex:1; font-size: 18px; font-weight: 600; min-width:0; }
-  .leader-row .lb-name .lb-sub{ display:block; font-weight:400; font-size: 15px; color: var(--ink-faint); }
-  .leader-row .lb-pts{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 17.5px; }
+  .leader-row .lb-name{ flex:1; font-size: 16px; font-weight: 600; min-width:0; }
+  .leader-row .lb-name .lb-sub{ display:block; font-weight:400; font-size: 13px; color: var(--ink-faint); }
+  .leader-row .lb-pts{ font-family:"EB Garamond", Georgia, serif; font-weight:700; color: var(--gold-ink); font-size: 15.5px; }
   :root[data-theme="dark"] .leader-row .lb-pts{ color: var(--gold); }
   @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .leader-row .lb-pts{ color: var(--gold); } }
 
-  .note-card{ padding: 16px 18px; font-size: 17px; color: var(--ink-dim); line-height:1.55; }
+  .note-card{ padding: 16px 18px; font-size: 15px; color: var(--ink-dim); line-height:1.55; }
   .note-card strong{ color: var(--ink); }
   .note-card code{
     font-family:"EB Garamond", Georgia, serif;
     background: var(--surface-2);
     border: 1px solid var(--line);
     padding: 1px 5px;
-    font-size: 15.5px;
+    font-size: 13.5px;
   }
 
   .structure-card{ padding: 16px 18px 18px; }
   .structure-list{ list-style:none; margin: 10px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; }
-  .structure-list li{ font-size: 17px; color: var(--ink-dim); display:flex; gap:10px; }
+  .structure-list li{ font-size: 15px; color: var(--ink-dim); display:flex; gap:10px; }
   .structure-list b{ color: var(--ink); font-weight:700; min-width: 78px; flex:none; }
 
   footer{
     max-width: 1180px; margin: 0 auto; padding: 0 28px 50px;
-    color: var(--ink-faint); font-size: 15.5px;
+    color: var(--ink-faint); font-size: 13.5px;
   }
 
   /* ---------- Division crests ---------- */
   .badge-section{ border-top: 1px solid var(--ink); background: var(--surface-2); }
   .badge-section-inner{ max-width: 1180px; margin: 0 auto; padding: 40px 28px 50px; }
   .badge-section-head{ max-width: 62ch; margin-bottom: 26px; }
-  .badge-section-head h2{ font-size: 29.5px; font-weight: 400; margin-bottom: 8px; }
-  .badge-section-head p{ margin:0; color: var(--ink-dim); font-size: 19px; line-height: 1.6; }
+  .badge-section-head h2{ font-size: 26px; font-weight: 400; margin-bottom: 8px; }
+  .badge-section-head p{ margin:0; color: var(--ink-dim); font-size: 16.5px; line-height: 1.6; }
   .badge-section-head code{
     font-family:"EB Garamond", Georgia, serif;
     background: var(--surface); border: 1px solid var(--line);
-    padding: 1px 5px; font-size: 17px;
+    padding: 1px 5px; font-size: 15px;
   }
   .badge-grid{
     display: grid;
@@ -541,11 +541,11 @@
   .badge-card svg{ width: 100%; height: auto; max-width: 200px; }
   .badge-caption{ text-align:center; }
   .badge-caption .badge-borough{
-    display:block; font-size: 14px; letter-spacing:0.08em; text-transform:uppercase;
+    display:block; font-size: 12.5px; letter-spacing:0.08em; text-transform:uppercase;
     font-weight:700; color: var(--ink-faint);
   }
   .badge-caption .badge-division{
-    display:block; font-family:"Libre Caslon Display", Georgia, serif; font-size: 21.5px; font-weight:600; color: var(--ink);
+    display:block; font-family:"Libre Caslon Display", Georgia, serif; font-size: 19px; font-weight:600; color: var(--ink);
   }
 </style>
 </head>
@@ -648,7 +648,7 @@
       <div class="card-head" style="border:none; padding-bottom:0;"><h2>How It Works</h2></div>
       <ul class="structure-list">
         <li><b>Region</b> Overall (leaguewide) or a borough &mdash; Manhattan, Brooklyn.</li>
-        <li><b>Division</b> A grade band: K&ndash;1, Primary, or Elementary.</li>
+        <li><b>Division</b> A competitive section: K&ndash;1, Primary (K&ndash;3), or Elementary (K&ndash;5) &mdash; eligibility ceilings, not exclusive grade buckets.</li>
         <li><b>School</b> An ICN partner school competing as a team.</li>
         <li><b>Points</b> Cumulative season score for that school in that division.</li>
         <li><b>Trend</b> Change since last week's saved score.</li>
@@ -797,10 +797,20 @@
     ]
   };
 
+  /* ============================================================
+     DIVISIONS — the single source of truth for ICN's competitive
+     sections. label is the section name; shortLabel is the grade
+     range shown as a subtitle; eligibleGrades lists every grade
+     that section is open to (ICN's sections are eligibility
+     ceilings, not exclusive buckets — e.g. Primary is K-3, not just
+     grades 2-3, so a K-1 player's school standing here still counts
+     toward Primary). Change ICN's grade groupings by editing this
+     one object — nothing else needs to know the rule.
+     ============================================================ */
   const DIVISIONS = [
-    { key: "k1", label: "K–1" },
-    { key: "primary", label: "Primary" },
-    { key: "elementary", label: "Elementary" }
+    { key: "k1", label: "K–1", shortLabel: "Grades K–1", eligibleGrades: ["K", "1"] },
+    { key: "primary", label: "Primary", shortLabel: "K–3", eligibleGrades: ["K", "1", "2", "3"] },
+    { key: "elementary", label: "Elementary", shortLabel: "K–5", eligibleGrades: ["K", "1", "2", "3", "4", "5"] }
   ];
 
   /* ============================================================
@@ -1158,10 +1168,11 @@
     return school.points - prev;
   }
 
-  function topPlayers(schoolName, gradeFilter){
+  function topPlayers(schoolName, gradeFilter, eligibleGrades){
     let roster = PLAYERS_BY_SCHOOL[schoolName];
     if(!roster || !roster.length) return [];
     if(gradeFilter && gradeFilter !== "all") roster = roster.filter(p => p.grade === gradeFilter);
+    else if(eligibleGrades) roster = roster.filter(p => eligibleGrades.includes(p.grade));
     return [...roster].sort((a, b) => b.rating - a.rating).slice(0, 5);
   }
 
@@ -1215,14 +1226,20 @@
       `;
     }
 
-    const availableGrades = GRADES.filter(g => fullRoster.some(p => p.grade === g.key));
+    const section = DIVISIONS.find(d => d.key === currentDivisionKey);
+    const availableGrades = GRADES.filter(g =>
+      section.eligibleGrades.includes(g.key) && fullRoster.some(p => p.grade === g.key)
+    );
     const chips = ["all", ...availableGrades.map(g => g.key)].map(g => `
       <button type="button" class="filter-chip${playerFilterGrade === g ? " active" : ""}" data-grade="${g}">
-        ${g === "all" ? "All grades" : gradeChipLabel(g)}
+        ${g === "all" ? "All eligible" : gradeChipLabel(g)}
       </button>
     `).join("");
 
-    const players = topPlayers(schoolName, playerFilterGrade);
+    const players = topPlayers(schoolName, playerFilterGrade, section.eligibleGrades);
+    const emptyMsg = playerFilterGrade === "all"
+      ? `No ${section.label} (${section.shortLabel})-eligible players from this school in the top 50.`
+      : `No players from this school in that grade&rsquo;s top 50.`;
     const rows = players.length ? players.map((p, i) => `
       <div class="player-row">
         <span class="player-rank num">${i + 1}</span>
@@ -1230,11 +1247,11 @@
         <span class="player-grade">${p.grade === "K" ? "K" : "Gr " + p.grade}</span>
         <span class="player-rating">${p.rating}</span>
       </div>
-    `).join("") : `<div class="player-empty">No players from this school in that grade&rsquo;s top 50.</div>`;
+    `).join("") : `<div class="player-empty">${emptyMsg}</div>`;
 
     return `
       <div class="filter-chips">${chips}</div>
-      <div class="player-panel-head">Top ${players.length} by USCF rating${playerFilterGrade !== "all" ? " &middot; " + GRADES.find(g => g.key === playerFilterGrade).label : ""}</div>
+      <div class="player-panel-head">Top ${players.length} by USCF rating${playerFilterGrade !== "all" ? " &middot; " + GRADES.find(g => g.key === playerFilterGrade).label : " &middot; " + section.label + " eligible"}</div>
       ${rows}
     `;
   }
@@ -1291,12 +1308,13 @@
 
   function renderBoard(){
     const region = LEAGUE_DATA.regions[currentRegionIndex];
-    const divLabel = DIVISIONS.find(d => d.key === currentDivisionKey).label;
+    const section = DIVISIONS.find(d => d.key === currentDivisionKey);
     const schools = sortedSchools(region.divisions[currentDivisionKey] || []);
     const leaderPoints = schools.length ? schools[0].points : 0;
 
-    document.getElementById("board-title").textContent = `${region.label} — ${divLabel}`;
-    document.getElementById("board-sub").textContent = `${schools.length} school${schools.length === 1 ? "" : "s"}`;
+    document.getElementById("board-title").textContent = `${region.label} — ${section.label}`;
+    document.getElementById("board-sub").textContent =
+      `${section.shortLabel} · ${schools.length} school${schools.length === 1 ? "" : "s"}`;
 
     const crestBorough = CREST_BOROUGHS.find(b => b.key === region.key);
     const crestDivision = CREST_DIVISIONS.find(d => d.key === currentDivisionKey);
