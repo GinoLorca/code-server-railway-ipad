@@ -653,27 +653,49 @@
 
 <script>
   /* ============================================================
-     SCHOOL_COLORS — experimental: a school's two team colors,
-     [primary, secondary], used to tint its score bar and a small
-     swatch next to its name. Only a handful of schools are filled
-     in as a test; anyone missing here just keeps the plain black
-     bar. Add more by pushing a ["#hex","#hex"] pair keyed by the
-     exact school name used in LEAGUE_DATA.
+     SCHOOL_COLORS — each school's two official team colors,
+     [primary, secondary], sourced from the school's official crest
+     artwork, used to tint its score bar and a small swatch next to
+     its name. A school missing here just keeps the plain black bar.
+     Add more by pushing a ["#hex","#hex"] pair keyed by the exact
+     school name used in LEAGUE_DATA.
      ============================================================ */
   const SCHOOL_COLORS = {
-    "Nest+M":  ["#111111", "#ffffff"],
-    "PS 166":  ["#152a54", "#ffffff"],
-    "PS 11":   ["#2a4bd7", "#f5c518"],
-    "PS 290":  ["#5b2a86", "#ffffff"],
-    "PS 10":   ["#c31f2d", "#111111"],
-    "PS 77":   ["#152a54", "#f5c518"],
-    "PS 281":  ["#a9d3ec", "#152a54"],
-    "PS 59":   ["#152a54", "#f5c518"],
-    "PS 282":  ["#2a4bd7", "#f5c518"],
-    "PS 118":  ["#6e1e35", "#ffffff"],
-    "PS 33":   ["#d9631e", "#111111"],
-    "PS 40":   ["#c31f2d", "#ffffff"],
-    "PS 527":  ["#8c8f93", "#111111"]
+    "A-S":                  ["#2a4bd7", "#c9a227"],
+    "BASIS-B":              ["#111111", "#c31f2d"],
+    "Brooklyn Prospect IES":["#1b4332", "#ffffff"],
+    "BSI":                  ["#2a4bd7", "#ffffff"],
+    "Nest+M":               ["#152a54", "#ffffff"],
+    "PS 3":                 ["#111111", "#ffffff"],
+    "PS 10":                ["#c31f2d", "#ffffff"],
+    "PS 11":                ["#2a4bd7", "#f5c518"],
+    "PS 111":               ["#1f7a3d", "#ffffff"],
+    "PS 116":               ["#2a4bd7", "#ffffff"],
+    "PS 118":               ["#800000", "#ffffff"],
+    "PS 124":               ["#c31f2d", "#111111"],
+    "PS 130":               ["#f5c518", "#2a4bd7"],
+    "PS 130M":              ["#800000", "#f5c518"],
+    "PS 166":               ["#152a54", "#ffffff"],
+    "PS 184M":              ["#f5c518", "#c31f2d"],
+    "PS 198":               ["#7ec8e3", "#f5c518"],
+    "PS 20":                ["#800000", "#ffffff"],
+    "PS 230":               ["#111111", "#f5c518"],
+    "PS 281":               ["#7ec8e3", "#111111"],
+    "PS 282":               ["#2a4bd7", "#d9631e"],
+    "PS 290":               ["#111111", "#ffffff"],
+    "PS 31":                ["#8c8f93", "#ffffff"],
+    "PS 32":                ["#1fa2a6", "#f5c518"],
+    "PS 33":                ["#d9631e", "#2a4bd7"],
+    "PS 333":               ["#111111", "#ffffff"],
+    "PS 34":                ["#d9631e", "#152a54"],
+    "PS 340":               ["#1f7a3d", "#111111"],
+    "PS 39":                ["#1f7a3d", "#ffffff"],
+    "PS 40":                ["#c31f2d", "#ffffff"],
+    "PS 527":               ["#8c8f93", "#111111"],
+    "PS 59":                ["#152a54", "#f5c518"],
+    "PS 77":                ["#152a54", "#f5c518"],
+    "PS 889":               ["#5b2a86", "#8c8f93"],
+    "Town School":          ["#5b6b8c", "#ffffff"]
   };
 
   /* ============================================================
