@@ -199,6 +199,30 @@
   @media (max-width: 900px){
     .page{ grid-template-columns: 1fr; }
   }
+  /* Grid items default to a content-based auto min-width, so a wide
+     child (like the grade tab bar below, six buttons wide) can force
+     this whole column -- and the page -- wider than the viewport
+     instead of scrolling within its own overflow-x:auto. min-width:0
+     lets it actually shrink to the grid track and scroll internally. */
+  .page > section,
+  .page > aside.rail{
+    min-width: 0;
+  }
+  /* Independent scroll panes: on wide viewports, the standings/rankings
+     column and the sidebar each pin near the top and scroll within their
+     own height instead of one long page scroll, so scrolling the sidebar
+     (e.g. reading "How It Works") never blocks scrolling the ladder, or
+     vice versa. Mobile keeps a single natural page scroll (see the
+     max-width:900px rule above, which stacks these into one column). */
+  @media (min-width: 901px){
+    .page > section,
+    .page > aside.rail{
+      position: sticky;
+      top: 18px;
+      max-height: calc(100vh - 36px);
+      overflow-y: auto;
+    }
+  }
 
   /* ---------- View toggle ---------- */
   .view-toggle{
@@ -462,7 +486,10 @@
   .ladder-head.plist-head span:nth-child(3){ text-align:right; }
   .ladder-row.plist-row .val{ text-align:right; }
   .player-cell{ display:flex; flex-direction:column; gap:1px; min-width:0; }
-  .player-cell .school-sub{ font-size: 13.5px; color: var(--ink-faint); font-weight: 400; }
+  .player-cell .school-sub{
+    font-size: 13.5px; color: var(--ink-faint); font-weight: 400;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
   @media (max-width: 560px){
     .ladder-head.plist-head, .ladder-row.plist-row{ grid-template-columns: 40px 1fr 86px; }
     .ladder-head.plist-head span:nth-child(4), .ladder-row.plist-row .behind{ display:none; }
@@ -487,7 +514,7 @@
   .filter-chip.active:hover{ background: var(--ink); }
 
   /* ---------- Sidebar ---------- */
-  .rail{ display:flex; flex-direction:column; gap: 18px; position: sticky; top: 18px; }
+  .rail{ display:flex; flex-direction:column; gap: 18px; }
   .rail .card-head h2{ font-size: 19px; }
 
   .leaders{ padding: 6px 8px 14px; display:flex; flex-direction:column; gap:2px; }
