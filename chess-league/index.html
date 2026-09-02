@@ -1314,12 +1314,16 @@
     const barStyle = colors
       ? `width:${pct}%; background:linear-gradient(to bottom, ${colors[0]} 50%, ${colors[1]} 50%); border:1px solid var(--ink);`
       : `width:${pct}%;`;
+    const rowTint = (medal && colors)
+      ? `linear-gradient(to right, color-mix(in srgb, ${colors[0]} 25%, white), color-mix(in srgb, ${colors[1]} 25%, white))`
+      : null;
 
     const row = document.createElement("div");
     row.className = "ladder-row" + (rankIndex === 1 ? " leader" : "") + (isExpanded ? " expanded" : "");
     row.setAttribute("role", "button");
     row.setAttribute("tabindex", "0");
     row.setAttribute("aria-expanded", String(isExpanded));
+    if(rowTint) row.style.background = rowTint;
     row.innerHTML = `
       <span class="rank-cell">${rankHtml}</span>
       <span class="school-cell">
