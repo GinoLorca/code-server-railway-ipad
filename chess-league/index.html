@@ -353,6 +353,20 @@
     flex: none;
     display:inline-block;
   }
+  .team-logo{
+    width: 24px; height: 24px;
+    border: 1px solid var(--ink);
+    background: #ffffff;
+    flex: none;
+    display:inline-flex;
+    align-items:center; justify-content:center;
+    overflow: hidden;
+  }
+  .team-logo img{
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+  }
   .chevron{
     flex: none;
     width: 19px; text-align:center;
@@ -665,7 +679,7 @@
     "BASIS-B":              ["#111111", "#c31f2d"],
     "Brooklyn Prospect IES":["#1b4332", "#ffffff"],
     "BSI":                  ["#2a4bd7", "#ffffff"],
-    "Nest+M":               ["#152a54", "#ffffff"],
+    "Nest+M":               ["#111111", "#ffffff"],
     "PS 3":                 ["#111111", "#ffffff"],
     "PS 10":                ["#c31f2d", "#ffffff"],
     "PS 11":                ["#2a4bd7", "#f5c518"],
@@ -685,7 +699,7 @@
     "PS 290":               ["#111111", "#ffffff"],
     "PS 31":                ["#8c8f93", "#ffffff"],
     "PS 32":                ["#1fa2a6", "#f5c518"],
-    "PS 33":                ["#d9631e", "#2a4bd7"],
+    "PS 33":                ["#d9631e", "#111111"],
     "PS 333":               ["#111111", "#ffffff"],
     "PS 34":                ["#d9631e", "#152a54"],
     "PS 340":               ["#1f7a3d", "#111111"],
@@ -696,6 +710,19 @@
     "PS 77":                ["#152a54", "#f5c518"],
     "PS 889":               ["#5b2a86", "#8c8f93"],
     "Town School":          ["#5b6b8c", "#ffffff"]
+  };
+
+  /* ============================================================
+     SCHOOL_LOGOS — each school's official crest, keyed by the exact
+     school name used in LEAGUE_DATA, pointing at an SVG in
+     chess-league/logos/. Displayed at a fixed 24x24 with
+     object-fit:contain (see .team-logo), so wide, tall, or square
+     source art all sit centered and undistorted next to the school
+     name. A school missing here just keeps the plain color swatch
+     (or a blank space if it has no colors either) — add an entry
+     once that school's crest file exists in logos/.
+     ============================================================ */
+  const SCHOOL_LOGOS = {
   };
 
   /* ============================================================
@@ -1245,9 +1272,12 @@
       : `<span class="behind">&minus;${leaderPoints - school.points}</span>`;
     const isExpanded = expandedSchool === school.name;
     const colors = SCHOOL_COLORS[school.name];
-    const swatchHtml = colors
-      ? `<span class="team-swatch" style="background:linear-gradient(to right, ${colors[0]} 50%, ${colors[1]} 50%)"></span>`
-      : "";
+    const logoPath = SCHOOL_LOGOS[school.name];
+    const markHtml = logoPath
+      ? `<span class="team-logo"><img src="${logoPath}" alt="" loading="lazy"></span>`
+      : colors
+        ? `<span class="team-swatch" style="background:linear-gradient(to right, ${colors[0]} 50%, ${colors[1]} 50%)"></span>`
+        : "";
     const barStyle = colors
       ? `width:${pct}%; background:linear-gradient(to bottom, ${colors[0]} 50%, ${colors[1]} 50%); border:1px solid var(--ink);`
       : `width:${pct}%;`;
@@ -1261,7 +1291,7 @@
       <span class="rank-cell">${rankHtml}</span>
       <span class="school-cell">
         <span class="chevron">&#9656;</span>
-        ${swatchHtml}
+        ${markHtml}
         <span class="school-name">${school.name}</span>
       </span>
       <span class="bar-track"><span class="bar-fill" style="${barStyle}"></span></span>
