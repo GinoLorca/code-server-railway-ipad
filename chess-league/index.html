@@ -208,21 +208,6 @@
   .page > aside.rail{
     min-width: 0;
   }
-  /* Independent scroll panes: on wide viewports, the standings/rankings
-     column and the sidebar each pin near the top and scroll within their
-     own height instead of one long page scroll, so scrolling the sidebar
-     (e.g. reading "How It Works") never blocks scrolling the ladder, or
-     vice versa. Mobile keeps a single natural page scroll (see the
-     max-width:900px rule above, which stacks these into one column). */
-  @media (min-width: 901px){
-    .page > section,
-    .page > aside.rail{
-      position: sticky;
-      top: 18px;
-      max-height: calc(100vh - 36px);
-      overflow-y: auto;
-    }
-  }
 
   /* ---------- View toggle ---------- */
   .view-toggle{
