@@ -257,40 +257,6 @@
   .export-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .export-status { font-size: 12px; color: var(--s-muted); margin-top: 8px; text-align: right; min-height: 1.2em; }
 
-  /* ---------- roster ---------- */
-  .roster h2 { margin-bottom: 4px; }
-  .roster-empty {
-    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;
-    padding: 30px 16px; color: var(--muted); font-size: 14px;
-  }
-  details.profile { border-bottom: 1px solid var(--line); padding-block: 12px; }
-  details.profile:last-child { border-bottom: none; }
-  details.profile summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; }
-  details.profile summary::-webkit-details-marker { display: none; }
-  details.profile summary .initials {
-    width: 38px; height: 38px; border-radius: 50%; background: var(--pine-soft); color: var(--pine);
-    display: flex; align-items: center; justify-content: center; font-family: "Fraunces", serif; font-weight: 500; flex: none;
-  }
-  details.profile summary .who { flex: 1; min-width: 0; }
-  details.profile summary .who .name { font-weight: 600; }
-  details.profile summary .who .school { font-size: 12.5px; color: var(--muted); }
-  details.profile summary .latest { text-align: right; font-size: 13px; color: var(--muted); }
-  details.profile summary .latest .num { color: var(--accent-strong); font-weight: 700; }
-  details.profile summary .chev { transition: transform 0.2s ease; color: var(--muted); flex: none; }
-  details.profile[open] summary .chev { transform: rotate(90deg); }
-
-  .entry-row {
-    display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 10px;
-    padding: 10px 0 10px 50px; font-size: 13.5px; border-top: 1px solid var(--line);
-  }
-  @media (max-width: 480px) { .entry-row { grid-template-columns: 1fr; padding-left: 50px; gap: 4px; } }
-  .entry-row .ev { font-weight: 500; }
-  .entry-row .dt { color: var(--muted); }
-  .entry-row .del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 4px; }
-  .entry-row .del:hover { color: var(--clay); }
-
-  .storage-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
-
   @media (prefers-reduced-motion: reduce) {
     .btn, .arrow-col polygon, .arrow-col .delta,
     .side .thumb, .side .thumb img, .side .thumb .avatar, .side .thumb::after {
@@ -335,8 +301,7 @@
     <div class="fields">
       <div class="field span2">
         <label for="studentName">Student name</label>
-        <input type="text" id="studentName" list="studentNames" placeholder="e.g. Maya Chen" autocomplete="off">
-        <datalist id="studentNames"></datalist>
+        <input type="text" id="studentName" placeholder="e.g. Maya Chen" autocomplete="off">
       </div>
       <div class="field">
         <label for="school">School <span class="optional">(optional)</span></label>
@@ -395,7 +360,7 @@
     </div>
 
     <div class="cta-row">
-      <button class="btn btn-primary" id="revealBtn">Save &amp; reveal growth</button>
+      <button class="btn btn-primary" id="revealBtn">Reveal growth</button>
       <button class="btn btn-ghost" id="replayBtn">Replay animation</button>
       <span class="form-note" id="formNote"></span>
     </div>
@@ -448,20 +413,12 @@
     <p class="export-status" id="exportStatus" aria-live="polite"></p>
   </section>
 
-  <section class="panel roster">
-    <h2>Roster history</h2>
-    <p class="sub">Saved on this device only — grouped automatically by student name.</p>
-    <div id="rosterBody"></div>
-    <p class="storage-note">Photos aren't stored here — only names, schools, events and ratings are kept, so history stays lightweight. A school's logo, once added, is remembered here for next time.</p>
-  </section>
-
 </div>
 
 <script>
 (function () {
   "use strict";
 
-  var STORAGE_KEY = "chessRatingReveal.entries.v1";
   var LOGO_KEY = "chessRatingReveal.logos.v1";
   var COLOR_KEY = "chessRatingReveal.stageColor.v1";
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -480,7 +437,6 @@
     logoImg: document.getElementById("logoImg"),
     logoPh: document.getElementById("logoPh"),
     studentName: document.getElementById("studentName"),
-    studentNames: document.getElementById("studentNames"),
     school: document.getElementById("school"),
     eventSelect: document.getElementById("eventSelect"),
     eventOtherField: document.getElementById("eventOtherField"),
@@ -505,7 +461,6 @@
     numEnd: document.getElementById("numEnd"),
     arrowCol: document.getElementById("arrowCol"),
     deltaLabel: document.getElementById("deltaLabel"),
-    rosterBody: document.getElementById("rosterBody"),
     exportPictureBtn: document.getElementById("exportPictureBtn"),
     exportVideoBtn: document.getElementById("exportVideoBtn"),
     exportStatus: document.getElementById("exportStatus")
@@ -522,8 +477,6 @@
   function saveJSON(key, value) {
     try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* storage unavailable */ }
   }
-  function loadEntries() { return loadJSON(STORAGE_KEY, []); }
-  function saveEntries(list) { saveJSON(STORAGE_KEY, list); }
   function loadLogos() { return loadJSON(LOGO_KEY, {}); }
   function persistSchoolLogo(school, dataUrl) {
     var key = (school || "").trim().toLowerCase();
@@ -666,70 +619,6 @@
     if (saved) { applyStageColor(saved); markActiveSwatch(saved); }
   })();
 
-  // ---------- roster ----------
-  function refreshDatalist(entries) {
-    var names = [];
-    entries.forEach(function (e) { if (names.indexOf(e.name) === -1) names.push(e.name); });
-    els.studentNames.innerHTML = names.map(function (n) { return '<option value="' + escapeHtml(n) + '"></option>'; }).join("");
-  }
-
-  function renderRoster() {
-    var entries = loadEntries();
-    refreshDatalist(entries);
-
-    if (!entries.length) {
-      els.rosterBody.innerHTML =
-        '<div class="roster-empty"><strong>No entries yet</strong>' +
-        "<span>Save your first reveal above and it will show up here, grouped by student.</span></div>";
-      return;
-    }
-
-    var groups = {};
-    var order = [];
-    entries.forEach(function (e) {
-      var key = e.name.trim().toLowerCase();
-      if (!groups[key]) { groups[key] = []; order.push(key); }
-      groups[key].push(e);
-    });
-    order.sort(function (a, b) {
-      var la = groups[a][groups[a].length - 1].date, lb = groups[b][groups[b].length - 1].date;
-      return new Date(lb) - new Date(la);
-    });
-
-    els.rosterBody.innerHTML = order.map(function (key) {
-      var list = groups[key].slice().sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
-      var latest = list[0];
-      var name = latest.name;
-      var school = list.map(function (e) { return e.school; }).filter(Boolean)[0] || "";
-      var rows = list.map(function (e) {
-        var delta = e.end - e.start;
-        return '<div class="entry-row">' +
-          '<span class="ev">' + escapeHtml(e.event) + "</span>" +
-          '<span class="dt">' + formatDate(e.date) + "</span>" +
-          '<span class="rt num">' + Math.round(e.start) + " → " + Math.round(e.end) +
-            ' <span style="color:var(--accent-strong)">(' + (delta >= 0 ? "+" : "−") + Math.abs(delta) + ")</span></span>" +
-          '<button class="del" data-id="' + e.id + '" aria-label="Delete entry" title="Delete entry">×</button>' +
-          "</div>";
-      }).join("");
-      return '<details class="profile"><summary>' +
-        '<span class="initials">' + escapeHtml(initials(name)) + "</span>" +
-        '<span class="who"><div class="name">' + escapeHtml(name) + "</div>" +
-          (school ? '<div class="school">' + escapeHtml(school) + "</div>" : "") + "</span>" +
-        '<span class="latest">' + list.length + (list.length === 1 ? " entry" : " entries") +
-          '<br><span class="num">' + Math.round(latest.end) + "</span> peak</span>" +
-        '<span class="chev">›</span></summary>' + rows + "</details>";
-    }).join("");
-
-    Array.prototype.forEach.call(els.rosterBody.querySelectorAll(".del"), function (btn) {
-      btn.addEventListener("click", function (ev) {
-        ev.preventDefault();
-        var id = btn.getAttribute("data-id");
-        saveEntries(loadEntries().filter(function (e) { return e.id !== id; }));
-        renderRoster();
-      });
-    });
-  }
-
   // ---------- the reveal ----------
   function animateCount(el, from, to, duration) {
     if (reduceMotion || from === to) { el.textContent = Math.round(to); return; }
@@ -817,7 +706,6 @@
     els.formNote.textContent = "";
 
     var data = {
-      id: (Date.now().toString(36) + Math.random().toString(36).slice(2, 8)),
       name: els.studentName.value.trim(),
       school: els.school.value.trim(),
       event: currentEventName(),
@@ -826,15 +714,9 @@
       date: new Date().toISOString()
     };
 
-    var entries = loadEntries();
-    entries.push(data);
-    saveEntries(entries);
-    renderRoster();
-
     lastRevealed = Object.assign({}, data, { before: photoData.before, after: photoData.after, logo: photoData.logo, isExample: false });
     playStage(lastRevealed);
     els.exportStatus.textContent = "";
-    els.formNote.textContent = "Saved to roster history.";
   });
 
   els.replayBtn.addEventListener("click", function () {
@@ -846,19 +728,41 @@
     return (name || "student").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "student";
   }
   function setExportStatus(msg) { els.exportStatus.textContent = msg; }
-  async function getDownloads() {
-    try { if (!window.claude || !window.claude.use) return null; return await window.claude.use("downloads"); }
-    catch (e) { return null; }
-  }
-  function handleDownloadError(err) {
-    var messages = {
-      declined: "Save was cancelled.",
-      too_large: "That file is too large to save here.",
-      rate_limited: "Give it a moment and try again.",
-      unavailable: "Saving isn't available in this view.",
-      not_granted: "Saving isn't available in this view."
-    };
-    setExportStatus((err && messages[err.code]) || "Could not save the file.");
+
+  // Saves a file two ways: through Claude's artifact "downloads" capability
+  // when running inside the artifact preview, or a plain browser download
+  // once this page is deployed on its own (e.g. from the zip). Either path
+  // ends with the same { ok, message } shape so callers don't need to care
+  // which one ran.
+  async function saveFile(filename, blob) {
+    try {
+      if (window.claude && window.claude.use) {
+        var downloads = await window.claude.use("downloads");
+        if (downloads) {
+          await downloads.save({ filename: filename, data: blob });
+          return { ok: true, message: null };
+        }
+      }
+    } catch (err) {
+      var messages = {
+        declined: "Save was cancelled.",
+        too_large: "That file is too large to save here.",
+        rate_limited: "Give it a moment and try again."
+      };
+      if (err && messages[err.code]) return { ok: false, message: messages[err.code] };
+      // Any other capability error (unavailable, not_granted, ...) falls
+      // through to the plain browser download below.
+    }
+    try {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      return { ok: true, message: null };
+    } catch (e) {
+      return { ok: false, message: "Could not save the file." };
+    }
   }
 
   els.exportPictureBtn.addEventListener("click", async function () {
@@ -870,12 +774,9 @@
       canvas.toBlob(async function (blob) {
         els.exportPictureBtn.disabled = false;
         if (!blob) { setExportStatus("Could not create the image."); return; }
-        var downloads = await getDownloads();
-        if (!downloads) { setExportStatus("Saving isn't available in this view."); return; }
-        try {
-          await downloads.save({ filename: safeFilename(lastRevealed && lastRevealed.name) + "-growth.png", data: blob });
-          setExportStatus("Image saved.");
-        } catch (err) { handleDownloadError(err); }
+        var name = safeFilename(lastRevealed && lastRevealed.name) + "-growth.png";
+        var result = await saveFile(name, blob);
+        setExportStatus(result.ok ? "Image saved." : result.message);
       }, "image/png");
     } catch (e) {
       els.exportPictureBtn.disabled = false;
@@ -934,14 +835,13 @@
       await stopped;
 
       var blob = new Blob(chunks, { type: videoMime.split(";")[0] });
-      var ext = videoMime.indexOf("mp4") !== -1 ? "mp4" : "webm";
-      var downloads = await getDownloads();
+      var ext = videoIsMp4 ? "mp4" : "webm";
+      var name = safeFilename(lastRevealed.name) + "-growth." + ext;
+      var result = await saveFile(name, blob);
       els.exportVideoBtn.disabled = false; els.exportPictureBtn.disabled = false;
-      if (!downloads) { setExportStatus("Saving isn't available in this view."); return; }
-      try {
-        await downloads.save({ filename: safeFilename(lastRevealed.name) + "-growth." + ext, data: blob });
-        setExportStatus(videoIsMp4 ? "Video saved (MP4)." : "Video saved as WebM — this browser can't record MP4, so some apps may not accept it directly.");
-      } catch (err) { handleDownloadError(err); }
+      setExportStatus(result.ok
+        ? (videoIsMp4 ? "Video saved (MP4)." : "Video saved as WebM — this browser can't record MP4, so some apps may not accept it directly.")
+        : result.message);
     } catch (e) {
       els.exportVideoBtn.disabled = false; els.exportPictureBtn.disabled = false;
       setExportStatus("Could not record the video.");
@@ -954,6 +854,5 @@
     start: 412, end: 683, date: new Date().toISOString(), before: null, after: null, logo: null, isExample: true
   };
   playStage(lastRevealed);
-  renderRoster();
 })();
 </script>
