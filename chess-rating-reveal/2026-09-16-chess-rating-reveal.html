@@ -885,11 +885,21 @@
 
   var videoMime = null;
   if (window.MediaRecorder && document.createElement("canvas").captureStream) {
-    ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm", "video/mp4"].some(function (t) {
+    // MP4/H.264 first: it's the format Instagram, TikTok, and iOS sharing expect.
+    // WebM is only a fallback for browsers that can't record MP4 (mainly Firefox).
+    [
+      "video/mp4;codecs=avc1.42E01E",
+      "video/mp4;codecs=h264",
+      "video/mp4",
+      "video/webm;codecs=vp9",
+      "video/webm;codecs=vp8",
+      "video/webm"
+    ].some(function (t) {
       if (MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) { videoMime = t; return true; }
       return false;
     });
   }
+  var videoIsMp4 = !!videoMime && videoMime.indexOf("mp4") !== -1;
   els.exportVideoBtn.hidden = !videoMime;
 
   els.exportVideoBtn.addEventListener("click", async function () {
@@ -930,7 +940,7 @@
       if (!downloads) { setExportStatus("Saving isn't available in this view."); return; }
       try {
         await downloads.save({ filename: safeFilename(lastRevealed.name) + "-growth." + ext, data: blob });
-        setExportStatus("Video saved.");
+        setExportStatus(videoIsMp4 ? "Video saved (MP4)." : "Video saved as WebM — this browser can't record MP4, so some apps may not accept it directly.");
       } catch (err) { handleDownloadError(err); }
     } catch (e) {
       els.exportVideoBtn.disabled = false; els.exportPictureBtn.disabled = false;
