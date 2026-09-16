@@ -1,0 +1,661 @@
+<title>Chess Rating Reveal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+  :root {
+    --ink: #1E2A22;
+    --paper: #EEEBDD;
+    --surface: #FBF9F1;
+    --surface-2: #FFFFFF;
+    --line: rgba(30,42,34,0.16);
+    --muted: #5B6660;
+    --accent: #B8842E;
+    --accent-strong: #8F6A22;
+    --accent-soft: rgba(184,132,46,0.14);
+    --pine: #35513F;
+    --pine-soft: rgba(53,81,63,0.12);
+    --clay: #8A5A46;
+    --shadow: 0 18px 40px -22px rgba(20,28,22,0.35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ECE8DC;
+      --paper: #131C16;
+      --surface: #1A2620;
+      --surface-2: #1F2E26;
+      --line: rgba(236,232,220,0.14);
+      --muted: #97A79E;
+      --accent: #E0AE5C;
+      --accent-strong: #F2C57A;
+      --accent-soft: rgba(224,174,92,0.16);
+      --pine: #7FB093;
+      --pine-soft: rgba(127,176,147,0.14);
+      --clay: #C98F76;
+      --shadow: 0 18px 44px -20px rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #ECE8DC;
+    --paper: #131C16;
+    --surface: #1A2620;
+    --surface-2: #1F2E26;
+    --line: rgba(236,232,220,0.14);
+    --muted: #97A79E;
+    --accent: #E0AE5C;
+    --accent-strong: #F2C57A;
+    --accent-soft: rgba(224,174,92,0.16);
+    --pine: #7FB093;
+    --pine-soft: rgba(127,176,147,0.14);
+    --clay: #C98F76;
+    --shadow: 0 18px 44px -20px rgba(0,0,0,0.55);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+    padding-inline: 16px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding-block: 28px 64px; }
+
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; text-wrap: balance; margin: 0; }
+  .num { font-family: "Space Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  a { color: inherit; }
+  button { font: inherit; }
+
+  /* ---------- masthead ---------- */
+  .masthead { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+  .masthead svg { width: 34px; height: 34px; flex: none; }
+  .masthead .eyebrow {
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .masthead h1 { font-size: 26px; font-weight: 600; }
+
+  /* ---------- panel shell ---------- */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 28px;
+  }
+  .panel > h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .panel .sub { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; }
+
+  /* ---------- photo plates ---------- */
+  .plates { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  @media (max-width: 520px) { .plates { grid-template-columns: 1fr; } }
+
+  .plate {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    max-width: 100%;
+    border: 1.5px dashed var(--line);
+    border-radius: 12px;
+    background: var(--surface-2);
+    overflow: hidden;
+    cursor: pointer;
+    display: block;
+  }
+  .plate input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .plate img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .plate .avatar {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: "Fraunces", serif; font-size: 15px; font-weight: 500; color: var(--muted);
+    background: var(--pine-soft);
+  }
+  .plate .avatar strong { font-size: 34px; color: var(--pine); display: block; }
+  .plate .tag {
+    position: absolute; top: 8px; left: 10px;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); background: color-mix(in srgb, var(--surface) 82%, transparent);
+    padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line);
+  }
+  .plate .coord {
+    position: absolute; font-family: "Space Mono", monospace; font-size: 10px; color: var(--muted); opacity: 0.55;
+  }
+  .plate .coord.tl { top: 6px; right: 8px; }
+  .plate .coord.br { bottom: 6px; left: 8px; }
+  .plate .hint {
+    position: absolute; bottom: 8px; right: 10px; font-size: 11px; color: var(--muted);
+    background: color-mix(in srgb, var(--surface) 82%, transparent); padding: 2px 8px; border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+  .plate:focus-within, .plate:hover { border-color: var(--accent); }
+
+  /* ---------- form fields ---------- */
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 520px) { .fields { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.span2 { grid-column: 1 / -1; }
+  .field label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+  .field .optional { font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .field input, .field select {
+    font: inherit; font-size: 15px; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px;
+    padding: 10px 12px; width: 100%;
+  }
+  .field input:focus-visible, .field select:focus-visible, .plate:focus-within {
+    outline: 2px solid var(--accent); outline-offset: 1px;
+  }
+  .ratings-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 10px; }
+  .ratings-row .arrow-glyph { color: var(--muted); font-size: 18px; padding-bottom: 10px; }
+
+  .cta-row { display: flex; align-items: center; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+  .btn {
+    border: none; border-radius: 999px; padding: 12px 22px; font-weight: 600; font-size: 14.5px;
+    cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-primary { background: var(--accent); color: #201603; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 20px -12px var(--accent); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .btn-ghost:hover { border-color: var(--accent); }
+  .form-note { font-size: 12.5px; color: var(--muted); }
+
+  /* ---------- stage (the reveal) ---------- */
+  .stage {
+    background: linear-gradient(180deg, var(--surface) 0%, var(--surface) 100%);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 26px 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+  }
+  .stage-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .stage-id h3 { font-size: 22px; font-weight: 600; }
+  .stage-id .school { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--pine-soft); color: var(--pine); border: 1px solid var(--line);
+    padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.02em; white-space: nowrap;
+  }
+  .example-flag {
+    display: inline-block; margin-bottom: 10px; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent-strong); background: var(--accent-soft); border: 1px solid var(--line);
+    padding: 3px 10px; border-radius: 999px;
+  }
+
+  .grow-grid { display: grid; grid-template-columns: 1fr 88px 1fr; align-items: center; gap: 10px; }
+  @media (max-width: 560px) { .grow-grid { grid-template-columns: 1fr; } .grow-grid .arrow-col { order: 2; margin-block: 4px; } .grow-grid .side.before { order: 1; } .grow-grid .side.after { order: 3; } }
+
+  .side { display: flex; gap: 14px; align-items: center; }
+  .side .thumb { width: 84px; height: 100px; border-radius: 10px; overflow: hidden; flex: none; background: var(--pine-soft); }
+  .side .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .side .thumb .avatar { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: "Fraunces", serif; font-weight: 500; color: var(--pine); font-size: 22px; }
+  .side .meta .label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .side .meta .rating { font-size: 30px; font-weight: 700; }
+  .side.after .meta .rating { color: var(--accent-strong); }
+
+  .arrow-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .arrow-col svg { width: 32px; height: 68px; overflow: visible; }
+  .arrow-col path { fill: none; stroke: var(--accent); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  .arrow-col polygon { fill: var(--accent); opacity: 0; transform: translateY(6px); transition: opacity 0.25s ease, transform 0.35s ease; }
+  .arrow-col.revealed polygon { opacity: 1; transform: translateY(0); }
+  .arrow-col .delta {
+    font-family: "Space Mono", monospace; font-weight: 700; font-size: 14px; color: var(--accent-strong);
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+  .arrow-col.declined path, .arrow-col.declined polygon { stroke: var(--clay); fill: var(--clay); }
+  .arrow-col.declined .delta { color: var(--clay); }
+  .arrow-col .delta.shown { opacity: 1; }
+
+  .stage-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 10px; flex-wrap: wrap; }
+  .stage-foot .date { font-size: 12.5px; color: var(--muted); }
+
+  /* ---------- roster ---------- */
+  .roster h2 { margin-bottom: 4px; }
+  .roster-empty {
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;
+    padding: 30px 16px; color: var(--muted); font-size: 14px;
+  }
+  details.profile { border-bottom: 1px solid var(--line); padding-block: 12px; }
+  details.profile:last-child { border-bottom: none; }
+  details.profile summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px;
+  }
+  details.profile summary::-webkit-details-marker { display: none; }
+  details.profile summary .initials {
+    width: 38px; height: 38px; border-radius: 50%; background: var(--pine-soft); color: var(--pine);
+    display: flex; align-items: center; justify-content: center; font-family: "Fraunces", serif; font-weight: 500; flex: none;
+  }
+  details.profile summary .who { flex: 1; min-width: 0; }
+  details.profile summary .who .name { font-weight: 600; }
+  details.profile summary .who .school { font-size: 12.5px; color: var(--muted); }
+  details.profile summary .latest { text-align: right; font-size: 13px; color: var(--muted); }
+  details.profile summary .latest .num { color: var(--accent-strong); font-weight: 700; }
+  details.profile summary .chev { transition: transform 0.2s ease; color: var(--muted); flex: none; }
+  details.profile[open] summary .chev { transform: rotate(90deg); }
+
+  .entry-row {
+    display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 10px;
+    padding: 10px 0 10px 50px; font-size: 13.5px; border-top: 1px solid var(--line);
+  }
+  @media (max-width: 480px) { .entry-row { grid-template-columns: 1fr; padding-left: 50px; gap: 4px; } }
+  .entry-row .ev { font-weight: 500; }
+  .entry-row .dt { color: var(--muted); }
+  .entry-row .rt { }
+  .entry-row .del {
+    background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 4px;
+  }
+  .entry-row .del:hover { color: var(--clay); }
+
+  .storage-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .arrow-col polygon, .arrow-col .delta { transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" style="color:var(--pine)" d="M12 2c-1.1 0-2 .9-2 2 0 .74.4 1.38 1 1.72V7H9.5C8.67 7 8 7.67 8 8.5c0 .6.35 1.12.86 1.36C8.35 10.28 8 11.14 8 12v1.5l-1.6 4.8c-.2.6.24 1.2.87 1.2h9.46c.63 0 1.07-.6.87-1.2L16 13.5V12c0-.86-.35-1.72-.86-2.14.51-.24.86-.76.86-1.36 0-.83-.67-1.5-1.5-1.5H13V5.72c.6-.34 1-.98 1-1.72 0-1.1-.9-2-2-2zM6 21h12v1.5a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5V21z"/></svg>
+    <div>
+      <div class="eyebrow">Classroom test build</div>
+      <h1>Chess Rating Reveal</h1>
+    </div>
+  </div>
+
+  <section class="panel" id="entryPanel">
+    <h2>New reveal</h2>
+    <p class="sub">Add two photos and two ratings, then watch the climb animate in.</p>
+
+    <div class="plates">
+      <label class="plate" id="plateBefore">
+        <input type="file" accept="image/*" id="photoBefore" aria-label="Starting photo">
+        <span class="tag">Starting</span>
+        <span class="coord tl">a8</span>
+        <span class="avatar" id="avatarBefore"><strong>?</strong>Tap to add photo</span>
+        <span class="coord br">h1</span>
+      </label>
+      <label class="plate" id="plateAfter">
+        <input type="file" accept="image/*" id="photoAfter" aria-label="Current photo">
+        <span class="tag">Peak / current</span>
+        <span class="coord tl">a8</span>
+        <span class="avatar" id="avatarAfter"><strong>?</strong>Tap to add photo</span>
+        <span class="coord br">h1</span>
+      </label>
+    </div>
+
+    <div class="fields">
+      <div class="field span2">
+        <label for="studentName">Student name</label>
+        <input type="text" id="studentName" list="studentNames" placeholder="e.g. Maya Chen" autocomplete="off">
+        <datalist id="studentNames"></datalist>
+      </div>
+      <div class="field">
+        <label for="school">School <span class="optional">(optional)</span></label>
+        <input type="text" id="school" placeholder="e.g. Lincoln Elementary">
+      </div>
+      <div class="field">
+        <label for="eventSelect">Event</label>
+        <select id="eventSelect">
+          <option>Summer Camp</option>
+          <option>Holiday Camp</option>
+          <option>State Championships</option>
+          <option>Elementary Nationals</option>
+          <option>ICN Saturday Team Tournament</option>
+          <option>ICN Saturday Grand Prix</option>
+          <option value="__other__">Other…</option>
+        </select>
+      </div>
+      <div class="field span2" id="eventOtherField" hidden>
+        <label for="eventOther">Custom event name</label>
+        <input type="text" id="eventOther" placeholder="Name the event">
+      </div>
+      <div class="field span2">
+        <div class="ratings-row">
+          <div class="field">
+            <label for="ratingStart">Starting rating</label>
+            <input type="number" id="ratingStart" inputmode="numeric" min="0" max="3500" placeholder="e.g. 412">
+          </div>
+          <span class="arrow-glyph">→</span>
+          <div class="field">
+            <label for="ratingEnd">Peak / current rating</label>
+            <input type="number" id="ratingEnd" inputmode="numeric" min="0" max="3500" placeholder="e.g. 683">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button class="btn btn-primary" id="revealBtn">Save &amp; reveal growth</button>
+      <button class="btn btn-ghost" id="replayBtn">Replay animation</button>
+      <span class="form-note" id="formNote"></span>
+    </div>
+  </section>
+
+  <section class="stage" id="stage" aria-live="polite">
+    <span class="example-flag" id="exampleFlag">Example — edit the form above, then save your own</span>
+    <div class="stage-top">
+      <div class="stage-id">
+        <h3 id="stageName">Maya Chen</h3>
+        <div class="school" id="stageSchool">Lincoln Elementary</div>
+      </div>
+      <span class="pill" id="stageEvent">Summer Camp</span>
+    </div>
+
+    <div class="grow-grid">
+      <div class="side before">
+        <div class="thumb" id="thumbBefore"><div class="avatar">MC</div></div>
+        <div class="meta">
+          <div class="label">Starting</div>
+          <div class="rating num" id="numStart">412</div>
+        </div>
+      </div>
+      <div class="arrow-col" id="arrowCol">
+        <svg viewBox="0 0 32 68">
+          <path pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" d="M16 62 L16 14"></path>
+          <polygon points="16,2 5,20 27,20"></polygon>
+        </svg>
+        <div class="delta num" id="deltaLabel">+271</div>
+      </div>
+      <div class="side after">
+        <div class="meta" style="text-align:right">
+          <div class="label">Peak now</div>
+          <div class="rating num" id="numEnd">412</div>
+        </div>
+        <div class="thumb" id="thumbAfter"><div class="avatar">MC</div></div>
+      </div>
+    </div>
+
+    <div class="stage-foot">
+      <span class="date" id="stageDate">Ready when you are</span>
+    </div>
+  </section>
+
+  <section class="panel roster">
+    <h2>Roster history</h2>
+    <p class="sub">Saved on this device only — grouped automatically by student name.</p>
+    <div id="rosterBody"></div>
+    <p class="storage-note">Photos aren't stored here — only names, schools, events and ratings are kept, so history stays lightweight on this device.</p>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "chessRatingReveal.entries.v1";
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var els = {
+    photoBefore: document.getElementById("photoBefore"),
+    photoAfter: document.getElementById("photoAfter"),
+    avatarBefore: document.getElementById("avatarBefore"),
+    avatarAfter: document.getElementById("avatarAfter"),
+    plateBefore: document.getElementById("plateBefore"),
+    plateAfter: document.getElementById("plateAfter"),
+    studentName: document.getElementById("studentName"),
+    studentNames: document.getElementById("studentNames"),
+    school: document.getElementById("school"),
+    eventSelect: document.getElementById("eventSelect"),
+    eventOtherField: document.getElementById("eventOtherField"),
+    eventOther: document.getElementById("eventOther"),
+    ratingStart: document.getElementById("ratingStart"),
+    ratingEnd: document.getElementById("ratingEnd"),
+    revealBtn: document.getElementById("revealBtn"),
+    replayBtn: document.getElementById("replayBtn"),
+    formNote: document.getElementById("formNote"),
+    stage: document.getElementById("stage"),
+    exampleFlag: document.getElementById("exampleFlag"),
+    stageName: document.getElementById("stageName"),
+    stageSchool: document.getElementById("stageSchool"),
+    stageEvent: document.getElementById("stageEvent"),
+    stageDate: document.getElementById("stageDate"),
+    thumbBefore: document.getElementById("thumbBefore"),
+    thumbAfter: document.getElementById("thumbAfter"),
+    numStart: document.getElementById("numStart"),
+    numEnd: document.getElementById("numEnd"),
+    arrowCol: document.getElementById("arrowCol"),
+    deltaLabel: document.getElementById("deltaLabel"),
+    rosterBody: document.getElementById("rosterBody")
+  };
+
+  var photoData = { before: null, after: null };
+  var lastRevealed = null;
+  var isExample = true;
+
+  function loadEntries() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+  function saveEntries(list) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch (e) { /* storage unavailable */ }
+  }
+
+  function initials(name) {
+    var parts = (name || "").trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "?";
+    return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+  }
+
+  function wireUpload(input, avatarEl, side) {
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        photoData[side] = reader.result;
+        avatarEl.outerHTML = '<img src="' + reader.result + '" alt="">';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  wireUpload(els.photoBefore, els.avatarBefore, "before");
+  wireUpload(els.photoAfter, els.avatarAfter, "after");
+
+  els.studentName.addEventListener("input", function () {
+    var i = initials(els.studentName.value);
+    var b = els.plateBefore.querySelector(".avatar strong");
+    var a = els.plateAfter.querySelector(".avatar strong");
+    if (b) b.textContent = i;
+    if (a) a.textContent = i;
+  });
+
+  els.eventSelect.addEventListener("change", function () {
+    els.eventOtherField.hidden = els.eventSelect.value !== "__other__";
+  });
+
+  function currentEventName() {
+    return els.eventSelect.value === "__other__"
+      ? (els.eventOther.value.trim() || "Other")
+      : els.eventSelect.value;
+  }
+
+  function refreshDatalist(entries) {
+    var names = [];
+    entries.forEach(function (e) { if (names.indexOf(e.name) === -1) names.push(e.name); });
+    els.studentNames.innerHTML = names.map(function (n) {
+      return '<option value="' + escapeHtml(n) + '"></option>';
+    }).join("");
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function formatDate(iso) {
+    var d = new Date(iso);
+    return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+  }
+
+  function setThumb(el, dataUrl, label) {
+    el.innerHTML = dataUrl
+      ? '<img src="' + dataUrl + '" alt="">'
+      : '<div class="avatar">' + escapeHtml(label) + "</div>";
+  }
+
+  function animateCount(el, from, to, duration) {
+    if (reduceMotion || from === to) { el.textContent = Math.round(to); return; }
+    var start = performance.now();
+    function step(now) {
+      var t = Math.min(1, (now - start) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(from + (to - from) * eased);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function playStage(data) {
+    els.exampleFlag.hidden = !data.isExample;
+    els.stageName.textContent = data.name;
+    els.stageSchool.textContent = data.school || "";
+    els.stageSchool.hidden = !data.school;
+    els.stageEvent.textContent = data.event;
+    els.stageDate.textContent = data.isExample ? "Ready when you are" : formatDate(data.date);
+
+    setThumb(els.thumbBefore, data.before, initials(data.name));
+    setThumb(els.thumbAfter, data.after, initials(data.name));
+
+    var start = Number(data.start), end = Number(data.end);
+    var declined = end < start;
+    els.numStart.textContent = Math.round(start);
+    els.numEnd.textContent = Math.round(start);
+
+    var arrow = els.arrowCol;
+    arrow.classList.remove("revealed", "declined");
+    arrow.querySelector("path").style.strokeDashoffset = "1";
+    arrow.querySelector("path").style.transition = "none";
+    els.deltaLabel.classList.remove("shown");
+    if (declined) arrow.classList.add("declined");
+    if (declined) arrow.style.transform = "scaleY(-1)"; else arrow.style.transform = "none";
+    arrow.querySelector(".delta").style.transform = declined ? "scaleY(-1)" : "none";
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        var path = arrow.querySelector("path");
+        path.style.transition = reduceMotion ? "none" : "stroke-dashoffset 0.9s cubic-bezier(.3,.7,.2,1)";
+        path.style.strokeDashoffset = "0";
+        arrow.classList.add("revealed");
+        animateCount(els.numEnd, start, end, reduceMotion ? 0 : 1100);
+        setTimeout(function () {
+          var delta = end - start;
+          els.deltaLabel.textContent = (delta >= 0 ? "+" : "−") + Math.abs(Math.round(delta));
+          els.deltaLabel.classList.add("shown");
+        }, reduceMotion ? 0 : 950);
+      });
+    });
+
+    els.stage.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" });
+  }
+
+  function renderRoster() {
+    var entries = loadEntries();
+    refreshDatalist(entries);
+
+    if (!entries.length) {
+      els.rosterBody.innerHTML =
+        '<div class="roster-empty">' +
+        "<strong>No entries yet</strong>" +
+        "<span>Save your first reveal above and it will show up here, grouped by student.</span>" +
+        "</div>";
+      return;
+    }
+
+    var groups = {};
+    var order = [];
+    entries.forEach(function (e) {
+      var key = e.name.trim().toLowerCase();
+      if (!groups[key]) { groups[key] = []; order.push(key); }
+      groups[key].push(e);
+    });
+    order.sort(function (a, b) {
+      var la = groups[a][groups[a].length - 1].date, lb = groups[b][groups[b].length - 1].date;
+      return new Date(lb) - new Date(la);
+    });
+
+    els.rosterBody.innerHTML = order.map(function (key) {
+      var list = groups[key].slice().sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+      var latest = list[0];
+      var name = latest.name;
+      var school = list.map(function (e) { return e.school; }).filter(Boolean)[0] || "";
+      var rows = list.map(function (e) {
+        var delta = e.end - e.start;
+        return '<div class="entry-row">' +
+          '<span class="ev">' + escapeHtml(e.event) + "</span>" +
+          '<span class="dt">' + formatDate(e.date) + "</span>" +
+          '<span class="rt num">' + Math.round(e.start) + " → " + Math.round(e.end) +
+            ' <span style="color:var(--accent-strong)">(' + (delta >= 0 ? "+" : "−") + Math.abs(delta) + ")</span></span>" +
+          '<button class="del" data-id="' + e.id + '" aria-label="Delete entry" title="Delete entry">×</button>' +
+          "</div>";
+      }).join("");
+      return '<details class="profile">' +
+        "<summary>" +
+        '<span class="initials">' + escapeHtml(initials(name)) + "</span>" +
+        '<span class="who"><div class="name">' + escapeHtml(name) + "</div>" +
+          (school ? '<div class="school">' + escapeHtml(school) + "</div>" : "") + "</span>" +
+        '<span class="latest">' + list.length + (list.length === 1 ? " entry" : " entries") +
+          '<br><span class="num">' + Math.round(latest.end) + "</span> peak</span>" +
+        '<span class="chev">›</span>' +
+        "</summary>" + rows + "</details>";
+    }).join("");
+
+    Array.prototype.forEach.call(els.rosterBody.querySelectorAll(".del"), function (btn) {
+      btn.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        var id = btn.getAttribute("data-id");
+        var list = loadEntries().filter(function (e) { return e.id !== id; });
+        saveEntries(list);
+        renderRoster();
+      });
+    });
+  }
+
+  function validate() {
+    var name = els.studentName.value.trim();
+    var start = els.ratingStart.value;
+    var end = els.ratingEnd.value;
+    if (!name) return "Add the student's name first.";
+    if (start === "" || end === "") return "Both ratings are needed to show the climb.";
+    return null;
+  }
+
+  els.revealBtn.addEventListener("click", function () {
+    var problem = validate();
+    if (problem) { els.formNote.textContent = problem; return; }
+    els.formNote.textContent = "";
+
+    var data = {
+      id: (Date.now().toString(36) + Math.random().toString(36).slice(2, 8)),
+      name: els.studentName.value.trim(),
+      school: els.school.value.trim(),
+      event: currentEventName(),
+      start: Number(els.ratingStart.value),
+      end: Number(els.ratingEnd.value),
+      date: new Date().toISOString()
+    };
+
+    var entries = loadEntries();
+    entries.push(data);
+    saveEntries(entries);
+    renderRoster();
+
+    isExample = false;
+    lastRevealed = Object.assign({}, data, { before: photoData.before, after: photoData.after, isExample: false });
+    playStage(lastRevealed);
+    els.formNote.textContent = "Saved to roster history.";
+  });
+
+  els.replayBtn.addEventListener("click", function () {
+    if (lastRevealed) playStage(lastRevealed);
+  });
+
+  // Seed the stage with a worked example so the reveal is visible immediately.
+  lastRevealed = {
+    name: "Maya Chen", school: "Lincoln Elementary", event: "Summer Camp",
+    start: 412, end: 683, date: new Date().toISOString(), before: null, after: null, isExample: true
+  };
+  playStage(lastRevealed);
+  renderRoster();
+})();
+</script>
