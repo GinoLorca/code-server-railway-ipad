@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Defended, Loose, Hanging</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -363,9 +368,18 @@ h1 .q{color:var(--red)}
   align-items:center;
   gap:12px 22px;
 }
+.pb-text{flex:1 1 340px;min-width:0}
+.presentbar:focus{outline:none}
+.presentbar:focus-visible{outline:3px solid var(--yellow);outline-offset:-6px}
+.pb-hint{
+  margin:5px 0 0;
+  font-size:.78rem;
+  font-weight:400;
+  letter-spacing:.02em;
+  opacity:.62;
+}
+.pb-hint b{font-weight:700;opacity:.9}
 .pb-caption{
-  flex:1 1 340px;
-  min-width:0;
   margin:0;
   font-size:clamp(1.05rem,2.1vw,1.45rem);
   font-weight:600;
@@ -381,6 +395,25 @@ h1 .q{color:var(--red)}
 .pb-dots{display:flex;gap:5px;margin-right:6px}
 .pb-dot{width:11px;height:11px;border:2px solid var(--ground);background:transparent}
 .pb-dot.on{background:var(--ground)}
+
+/* blank the screen so the class looks at the teacher, not the board */
+.blankout{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#000;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:28px;
+}
+.blankout[hidden]{display:none}
+.blankout p{
+  margin:0;
+  font-size:.9rem;
+  letter-spacing:.06em;
+  color:rgba(255,255,255,.22);
+}
 
 .visually-hidden{
   position:absolute;width:1px;height:1px;
@@ -413,7 +446,7 @@ body.presenting{padding-bottom:160px}
   .pb-inner{padding:12px 13px 14px}
   .pb-controls{margin-left:0;width:100%}
   .pb-dots{display:none}
-  body.presenting{padding-bottom:200px}
+  body.presenting{padding-bottom:265px}
 }
 
 /* ---------- motion ---------- */
@@ -456,7 +489,7 @@ body:not(.presenting) .arrowhead,
   .arrow{stroke-dashoffset:0;animation:none !important}
   .arrowhead{opacity:1;animation:none !important}
   .unit{animation:none !important}
-  .toolbar,.presentbar{display:none !important}
+  .toolbar,.presentbar,.blankout{display:none !important}
 
   .sheet{max-width:none;padding:0}
   .checkstrip{height:10px}
@@ -486,6 +519,8 @@ body:not(.presenting) .arrowhead,
   .state,.footer{break-inside:avoid;page-break-inside:avoid}
 }
 </style>
+</head>
+<body>
 
 <div class="checkstrip"></div>
 
@@ -512,7 +547,7 @@ body:not(.presenting) .arrowhead,
 
   <div class="toolbar">
     <button type="button" class="btn btn--primary" id="startPresent">Present this lesson</button>
-    <p class="toolbar-hint">Reveals one step at a time, so the class can count out loud before the answer appears.</p>
+    <p class="toolbar-hint">Reveals one step at a time, so the class can count out loud before the answer appears. Works with a Bluetooth clicker &mdash; click the page once first so it has the keyboard.</p>
   </div>
 
   <main class="states" id="states"></main>
@@ -531,14 +566,22 @@ body:not(.presenting) .arrowhead,
 
 </div>
 
-<div class="presentbar" id="presentbar" hidden>
+<div class="blankout" id="blankout" hidden>
+  <p>Screen is blank &mdash; press any clicker button to bring the lesson back.</p>
+</div>
+
+<div class="presentbar" id="presentbar" tabindex="-1" hidden>
   <div class="pb-inner">
-    <p class="pb-caption" id="caption" aria-live="polite"></p>
+    <div class="pb-text">
+      <p class="pb-caption" id="caption" aria-live="polite"></p>
+      <p class="pb-hint">Clicker: page up / page down, or the arrow keys &middot; <b>b</b> blanks the screen &middot; <b>f</b> full screen &middot; <b>esc</b> exits</p>
+    </div>
     <p class="visually-hidden" id="stepStatus" aria-live="polite"></p>
     <div class="pb-controls">
       <div class="pb-dots" id="dots" aria-hidden="true"></div>
       <button type="button" class="btn" id="btnPrev">Back</button>
       <button type="button" class="btn btn--primary" id="btnNext">Next</button>
+      <button type="button" class="btn" id="btnFull" hidden>Full screen</button>
       <button type="button" class="btn" id="btnAll">Show all</button>
       <button type="button" class="btn" id="btnExit">Exit</button>
     </div>
@@ -832,11 +875,32 @@ body:not(.presenting) .arrowhead,
   var btnPrev = document.getElementById('btnPrev');
   var btnAll = document.getElementById('btnAll');
   var btnExit = document.getElementById('btnExit');
+  var btnFull = document.getElementById('btnFull');
   var btnStart = document.getElementById('startPresent');
+  var blankout = document.getElementById('blankout');
 
   var presenting = false;
+  var blanked = false;
   var step = 0;
   var lastBand = -1;
+  var lastNav = 0;
+
+  /* Bluetooth clickers are just HID keyboards, and they disagree about what
+     "next" means. Logitech-style remotes send Page Down / Page Up; cheaper
+     ones send arrows, Enter, or even the volume keys. Accept the lot. */
+  var NEXT_KEYS = ['arrowright','arrowdown','pagedown',' ','enter','n',
+                   'audiovolumeup','mediatracknext','mediaplaypause'];
+  var PREV_KEYS = ['arrowleft','arrowup','pageup','backspace','p',
+                   'audiovolumedown','mediatrackprevious'];
+
+  function navGuard(){
+    /* some clickers fire a keypress twice; 140ms kills the echo
+       without making deliberate clicking feel laggy */
+    var now = Date.now();
+    if (now - lastNav < 140) return false;
+    lastNav = now;
+    return true;
+  }
 
   for (var d = 0; d < TOTAL; d++){
     var dot = document.createElement('span');
@@ -863,6 +927,28 @@ body:not(.presenting) .arrowhead,
       if (k < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
+  }
+
+  function setBlank(on){
+    blanked = on;
+    blankout.hidden = !on;
+    if (!on) bar.focus();
+  }
+
+  function fullscreenOn(){
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function toggleFullscreen(){
+    var root = document.documentElement;
+    if (fullscreenOn()){
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      var req = root.requestFullscreen || root.webkitRequestFullscreen;
+      if (req) req.call(root);
+    }
+  }
+  function syncFullBtn(){
+    btnFull.textContent = fullscreenOn() ? 'Leave full screen' : 'Full screen';
   }
 
   function applyStep(n, animate){
@@ -911,7 +997,9 @@ body:not(.presenting) .arrowhead,
     bar.hidden = false;
     lastBand = -1;
     applyStep(0, false);
-    btnNext.focus();
+    /* focus the bar itself, never a button: a clicker that sends Enter or
+       Space would otherwise re-trigger whichever button held focus */
+    bar.focus();
   }
 
   function exit(){
@@ -921,34 +1009,70 @@ body:not(.presenting) .arrowhead,
     revealables.forEach(function(node){ node.classList.remove('shown'); });
     verdictCells.forEach(function(cell){ cell.classList.remove('lit'); });
     bands.forEach(function(sec){ sec.classList.remove('is-active', 'pending'); });
+    setBlank(false);
     document.querySelectorAll('.tally').forEach(function(t){
       t.textContent = t.getAttribute('data-count');
     });
     btnStart.focus();
   }
 
-  btnStart.addEventListener('click', enter);
-  btnExit.addEventListener('click', exit);
-  btnNext.addEventListener('click', function(){ applyStep(step + 1, true); });
-  btnPrev.addEventListener('click', function(){ applyStep(step - 1, false); });
-  btnAll.addEventListener('click', function(){ applyStep(TOTAL - 1, false); });
+  /* e.detail is 0 when a click came from the keyboard, so a keyboard user
+     keeps focus while a mouse/touch user hands it back to the document */
+  function onClick(btn, fn){
+    btn.addEventListener('click', function(e){
+      fn();
+      if (e.detail > 0 && btn !== btnStart && btn !== btnExit) bar.focus();
+    });
+  }
+  onClick(btnStart, enter);
+  onClick(btnExit, exit);
+  onClick(btnNext, function(){ applyStep(step + 1, true); });
+  onClick(btnPrev, function(){ applyStep(step - 1, false); });
+  onClick(btnAll, function(){ applyStep(TOTAL - 1, false); });
+  onClick(btnFull, toggleFullscreen);
+
+  if (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen){
+    btnFull.hidden = false;
+    document.addEventListener('fullscreenchange', syncFullBtn);
+    document.addEventListener('webkitfullscreenchange', syncFullBtn);
+    syncFullBtn();
+  }
 
   document.addEventListener('keydown', function(e){
     if (!presenting) return;
-    var tag = e.target && e.target.tagName;
-    /* let a focused button handle its own activation keys */
-    if (tag === 'BUTTON' && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){
-      e.preventDefault(); applyStep(step + 1, true);
-    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){
-      e.preventDefault(); applyStep(step - 1, false);
-    } else if (e.key === 'Escape'){
-      e.preventDefault(); exit();
-    } else if (e.key === 'Home'){
+    var raw = e.key || '';
+    var k = raw.toLowerCase();
+
+    /* while blanked, any clicker button brings the lesson back and nothing else */
+    if (blanked){
+      e.preventDefault();
+      setBlank(false);
+      return;
+    }
+
+    /* a keyboard user activating a focused button keeps that behaviour */
+    if (e.target && e.target.tagName === 'BUTTON' && (raw === 'Enter' || raw === ' ')) return;
+
+    if (NEXT_KEYS.indexOf(k) > -1){
+      e.preventDefault();
+      if (!e.repeat && navGuard()) applyStep(step + 1, true);
+    } else if (PREV_KEYS.indexOf(k) > -1){
+      e.preventDefault();
+      if (!e.repeat && navGuard()) applyStep(step - 1, false);
+    } else if (k === 'b' || k === '.' || k === 'w'){
+      e.preventDefault(); setBlank(true);
+    } else if (k === 'f'){
+      e.preventDefault(); toggleFullscreen();
+    } else if (k === 'home'){
       e.preventDefault(); applyStep(0, false);
-    } else if (e.key === 'End'){
+    } else if (k === 'end'){
       e.preventDefault(); applyStep(TOTAL - 1, false);
+    } else if (k === 'escape'){
+      /* let the browser leave full screen first; a second press exits */
+      if (fullscreenOn()) return;
+      e.preventDefault(); exit();
     }
   });
 
@@ -960,3 +1084,6 @@ body:not(.presenting) .arrowhead,
   window.addEventListener('beforeprint', function(){ if (presenting) exit(); });
 })();
 </script>
+
+</body>
+</html>
