@@ -299,27 +299,6 @@ h1 .q{color:var(--red)}
 .vrule{margin:0;font-weight:600;font-size:1.02rem;line-height:1.3}
 .vdo{margin:0;font-size:.95rem;font-weight:400;opacity:.93;line-height:1.35}
 
-/* ---------- footer ---------- */
-.footer{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:14px 22px;
-  padding:18px 20px;
-  border:var(--rule) solid var(--line);
-  border-top:0;
-  background:var(--line);
-  color:var(--ground);
-}
-.footer h2{margin:0;font-weight:800;font-size:1.24rem;text-transform:lowercase;letter-spacing:-.01em}
-.footer p{margin:2px 0 0;font-size:.98rem;font-weight:300;opacity:.82}
-.steps{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
-.step{
-  font-weight:600;font-size:.88rem;
-  padding:7px 14px;
-  border:2px solid var(--ground);
-}
-
 /* ============================================================
    PRESENT MODE
    ============================================================ */
@@ -345,9 +324,6 @@ h1 .q{color:var(--red)}
 .presenting .state:not(.is-active){opacity:.38}
 .presenting .state.pending{display:none}
 .presenting .toolbar{display:none}
-/* the closing summary compares three bands seen side by side; on a slide
-   only one band is visible, so it says nothing and crowds the diagram */
-.presenting .footer{display:none}
 
 /* unit marks pop in one at a time, so the class can count along */
 .presenting .crow.shown .unit{animation:pop .28s var(--pop-delay,0s) backwards}
@@ -445,7 +421,6 @@ body.presenting{padding-bottom:160px}
   .unit{width:38px;height:38px}
   .unit .pc{font-size:22px}
   .tally{font-size:2.3rem}
-  .steps{margin-left:0}
   .pb-inner{padding:12px 13px 14px}
   .pb-controls{margin-left:0;width:100%}
   .pb-dots{display:none}
@@ -493,34 +468,31 @@ body:not(.presenting) .arrowhead,
   .arrowhead{opacity:1;animation:none !important}
   .unit{animation:none !important}
   .toolbar,.presentbar,.blankout{display:none !important}
-  .footer{display:flex !important}
 
   .sheet{max-width:none;padding:0}
   .checkstrip{height:10px}
   .masthead{padding:8px 0 9px;border-bottom-width:4px}
-  h1{font-size:2.25rem}
+  h1{font-size:2.45rem}
   .deck{font-size:.92rem;margin-top:7px}
   .legend-row{padding:7px 11px;gap:9px}
-  .state{grid-template-columns:206px minmax(0,1fr) 214px}
-  .cell{padding:14px}
+  .state{grid-template-columns:232px minmax(0,1fr) 190px}
+  .cell{padding:16px}
   .cell--verdict{grid-column:auto;border-left:var(--rule) solid var(--line);border-top:0;flex-direction:column}
   .vbody{flex-direction:column;flex-wrap:nowrap;gap:5px}
   .vmark,.vname,.vrule,.vdo{flex:0 0 auto}
   .board-wrap{max-width:none;margin:0}
-  .board .pc{font-size:34px}
+  .board .pc{font-size:38px}
   .count{gap:9px}
-  .crow{grid-template-columns:80px minmax(0,1fr) 46px;gap:9px}
-  .unit{width:38px;height:38px}
-  .unit .pc{font-size:23px}
-  .tally{font-size:2.5rem}
+  .crow{grid-template-columns:86px minmax(0,1fr) 42px;gap:10px}
+  .unit{width:37px;height:37px}
+  .unit .pc{font-size:22px}
+  .tally{font-size:2.65rem}
   .compare{font-size:.93rem;padding-top:8px}
   .vmark{width:32px;height:32px}
-  .vname{font-size:1.95rem}
+  .vname{font-size:2rem}
   .vrule{font-size:.94rem}
   .vdo{font-size:.86rem}
-  .footer{padding:10px 14px}
-  .steps{margin-left:auto}
-  .state,.footer{break-inside:avoid;page-break-inside:avoid}
+  .state{break-inside:avoid;page-break-inside:avoid}
 }
 </style>
 </head>
@@ -555,18 +527,6 @@ body:not(.presenting) .arrowhead,
   </div>
 
   <main class="states" id="states"></main>
-
-  <footer class="footer">
-    <div>
-      <h2>Same board, every time.</h2>
-      <p>Only the number of defenders changed &mdash; and that changed everything.</p>
-    </div>
-    <div class="steps">
-      <span class="step">1. Pick a piece</span>
-      <span class="step">2. Count both sides</span>
-      <span class="step">3. Which is more?</span>
-    </div>
-  </footer>
 
 </div>
 
