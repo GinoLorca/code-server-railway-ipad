@@ -345,6 +345,9 @@ h1 .q{color:var(--red)}
 .presenting .state:not(.is-active){opacity:.38}
 .presenting .state.pending{display:none}
 .presenting .toolbar{display:none}
+/* the closing summary compares three bands seen side by side; on a slide
+   only one band is visible, so it says nothing and crowds the diagram */
+.presenting .footer{display:none}
 
 /* unit marks pop in one at a time, so the class can count along */
 .presenting .crow.shown .unit{animation:pop .28s var(--pop-delay,0s) backwards}
@@ -490,6 +493,7 @@ body:not(.presenting) .arrowhead,
   .arrowhead{opacity:1;animation:none !important}
   .unit{animation:none !important}
   .toolbar,.presentbar,.blankout{display:none !important}
+  .footer{display:flex !important}
 
   .sheet{max-width:none;padding:0}
   .checkstrip{height:10px}
