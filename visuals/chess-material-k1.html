@@ -330,14 +330,41 @@ h1 .q{color:var(--red)}
 @keyframes pop{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:none}}
 
 .presentbar{
+  /* --bar is what this step is about, set from script. Neutral on the
+     intro, red while attackers are counted, blue while defenders are,
+     and the state's own colour on a verdict step. It must never carry
+     the state colour early or it answers the question for the class. */
+  --bar:var(--ground);
+  --on-bar:var(--line);
+  /* the bar's own ground and foreground, so nothing has to resolve
+     currentColor against a colour it is setting in the same rule */
+  --bar-bg:var(--line);
+  --bar-fg:var(--ground);
+
   position:fixed;
   left:0;right:0;bottom:0;
   z-index:50;
-  background:var(--line);
-  color:var(--ground);
-  border-top:6px solid var(--blue);
+  background:var(--bar-bg);
+  color:var(--bar-fg);
+  transition:background-color .4s ease,color .4s ease;
 }
+/* on a verdict step the whole bar floods with the state's colour, the
+   same beat the verdict block does */
+.presentbar.lit{--bar-bg:var(--bar);--bar-fg:var(--on-bar)}
 .presentbar[hidden]{display:none}
+
+/* progress strip: width is how far in, colour is what the step is about */
+.pb-progress{position:relative;height:7px;overflow:hidden}
+.pb-progress::before{content:'';position:absolute;inset:0;background:var(--bar-fg);opacity:.17}
+.pb-progress i{
+  position:relative;
+  display:block;
+  height:100%;
+  width:0;
+  background:var(--bar);
+  transition:width .42s cubic-bezier(.4,0,.2,1),background-color .4s ease;
+}
+.presentbar.lit .pb-progress i{background:var(--bar-fg)}
 .pb-inner{
   max-width:1020px;
   margin:0 auto;
@@ -358,22 +385,37 @@ h1 .q{color:var(--red)}
   opacity:.62;
 }
 .pb-hint b{font-weight:700;opacity:.9}
+/* a flooded bar leaves no contrast budget for dimmed text; the hint and
+   the step count stay subordinate by size and weight instead */
+.presentbar.lit .pb-hint,
+.presentbar.lit .pb-hint b,
+.presentbar.lit .pb-count{opacity:1}
 .pb-caption{
   margin:0;
   font-size:clamp(1.05rem,2.1vw,1.45rem);
   font-weight:600;
   line-height:1.25;
 }
+@keyframes captionIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.pb-caption.anim{animation:captionIn .34s cubic-bezier(.2,.7,.3,1) both}
+.pb-count{
+  font-weight:700;
+  font-size:.86rem;
+  letter-spacing:.08em;
+  font-variant-numeric:tabular-nums;
+  opacity:.68;
+  margin-right:4px;
+}
 .pb-controls{display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap}
-.presentbar .btn{border-color:var(--ground);color:var(--ground)}
-.presentbar .btn:hover{background:var(--ground);color:var(--line)}
-.presentbar .btn--primary{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
-.presentbar .btn--primary:hover{background:var(--ground);border-color:var(--ground);color:var(--line)}
-.presentbar .btn[disabled]:hover{background:transparent;color:var(--ground)}
-
-.pb-dots{display:flex;gap:5px;margin-right:6px}
-.pb-dot{width:11px;height:11px;border:2px solid var(--ground);background:transparent}
-.pb-dot.on{background:var(--ground)}
+.presentbar .btn{background:transparent;border-color:var(--bar-fg);color:var(--bar-fg);
+  transition:background-color .3s ease,border-color .3s ease,color .3s ease}
+.presentbar .btn:hover{background:var(--bar-fg);color:var(--bar-bg)}
+.presentbar .btn--primary{background:var(--bar);border-color:var(--bar);color:var(--on-bar)}
+.presentbar .btn--primary:hover{background:var(--bar-fg);border-color:var(--bar-fg);color:var(--bar-bg)}
+.presentbar.lit .btn--primary{background:var(--bar-fg);border-color:var(--bar-fg);color:var(--bar-bg)}
+.presentbar.lit .btn--primary:hover{background:transparent;color:var(--bar-fg)}
+.presentbar .btn--primary[disabled]:hover,
+.presentbar .btn[disabled]:hover{background:transparent;color:var(--bar-fg)}
 
 /* blank the screen so the class looks at the teacher, not the board */
 .blankout{
@@ -423,7 +465,6 @@ body.presenting{padding-bottom:160px}
   .tally{font-size:2.3rem}
   .pb-inner{padding:12px 13px 14px}
   .pb-controls{margin-left:0;width:100%}
-  .pb-dots{display:none}
   body.presenting{padding-bottom:265px}
 }
 
@@ -440,8 +481,9 @@ body:not(.presenting) .arrowhead,
 @media (prefers-reduced-motion:reduce){
   .arrow{stroke-dashoffset:0}
   .arrowhead{opacity:1}
-  .arrow,.arrowhead,.unit{animation:none !important}
-  [data-reveal],.cell--verdict,.vbody,.state{transition:none !important}
+  .arrow,.arrowhead,.unit,.pb-caption{animation:none !important}
+  [data-reveal],.cell--verdict,.vbody,.state,
+  .presentbar,.presentbar .btn,.pb-progress i{transition:none !important}
 }
 
 /* ---------- print: one Letter sheet, always light, always complete ---------- */
@@ -535,6 +577,7 @@ body:not(.presenting) .arrowhead,
 </div>
 
 <div class="presentbar" id="presentbar" tabindex="-1" hidden>
+  <div class="pb-progress" aria-hidden="true"><i id="pbFill"></i></div>
   <div class="pb-inner">
     <div class="pb-text">
       <p class="pb-caption" id="caption" aria-live="polite"></p>
@@ -542,7 +585,7 @@ body:not(.presenting) .arrowhead,
     </div>
     <p class="visually-hidden" id="stepStatus" aria-live="polite"></p>
     <div class="pb-controls">
-      <div class="pb-dots" id="dots" aria-hidden="true"></div>
+      <span class="pb-count" id="pbCount" aria-hidden="true"></span>
       <button type="button" class="btn" id="btnPrev">Back</button>
       <button type="button" class="btn btn--primary" id="btnNext">Next</button>
       <button type="button" class="btn" id="btnFull" hidden>Full screen</button>
@@ -834,7 +877,8 @@ body:not(.presenting) .arrowhead,
   var bar = document.getElementById('presentbar');
   var caption = document.getElementById('caption');
   var stepStatus = document.getElementById('stepStatus');
-  var dots = document.getElementById('dots');
+  var pbFill = document.getElementById('pbFill');
+  var pbCount = document.getElementById('pbCount');
   var btnNext = document.getElementById('btnNext');
   var btnPrev = document.getElementById('btnPrev');
   var btnAll = document.getElementById('btnAll');
@@ -866,12 +910,17 @@ body:not(.presenting) .arrowhead,
     return true;
   }
 
-  for (var d = 0; d < TOTAL; d++){
-    var dot = document.createElement('span');
-    dot.className = 'pb-dot';
-    dots.appendChild(dot);
-  }
-  var dotEls = Array.prototype.slice.call(dots.children);
+  /* What each step is about, derived from the reveal plan rather than
+     hardcoded, so the two can never drift apart:
+     [colour token, text-on-colour token, fill the whole bar?] */
+  var STEP_STYLE = [];
+  STATES.forEach(function(st, bi){
+    var plan = PLAN[bi];
+    if (bi === 0) STEP_STYLE[plan.board] = ['--ground', '--line', false];
+    STEP_STYLE[plan.att]     = ['--red',  '--on-red',  false];
+    STEP_STYLE[plan.def]     = ['--blue', '--on-blue', false];
+    STEP_STYLE[plan.verdict] = ['--' + st.key, '--on-' + st.key, true];
+  });
 
   function bandOf(n){
     for (var i = PLAN.length - 1; i >= 0; i--){
@@ -943,8 +992,20 @@ body:not(.presenting) .arrowhead,
     });
 
     caption.textContent = CAPTIONS[step];
+    if (!reduced){
+      caption.classList.remove('anim');
+      void caption.offsetWidth;          /* reflow, so the run restarts */
+      caption.classList.add('anim');
+    }
+
+    var sty = STEP_STYLE[step];
+    bar.style.setProperty('--bar', 'var(' + sty[0] + ')');
+    bar.style.setProperty('--on-bar', 'var(' + sty[1] + ')');
+    bar.classList.toggle('lit', sty[2]);
+    pbFill.style.width = ((step + 1) / TOTAL * 100).toFixed(1) + '%';
+
+    pbCount.textContent = (step + 1) + ' / ' + TOTAL;
     stepStatus.textContent = 'Step ' + (step + 1) + ' of ' + TOTAL;
-    dotEls.forEach(function(dot, i){ dot.classList.toggle('on', i <= step); });
 
     btnPrev.disabled = step === 0;
     btnNext.disabled = step === TOTAL - 1;
@@ -973,6 +1034,7 @@ body:not(.presenting) .arrowhead,
     revealables.forEach(function(node){ node.classList.remove('shown'); });
     verdictCells.forEach(function(cell){ cell.classList.remove('lit'); });
     bands.forEach(function(sec){ sec.classList.remove('is-active', 'pending'); });
+    bar.classList.remove('lit');
     setBlank(false);
     document.querySelectorAll('.tally').forEach(function(t){
       t.textContent = t.getAttribute('data-count');
